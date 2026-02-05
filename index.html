@@ -5,31 +5,22 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Array Cheats</title>
   <meta name="theme-color" content="#070b10" />
-
-  <!-- Tab icon (favicon). Put icon.png next to this HTML file (same folder). -->
   <link rel="icon" type="image/png" href="icon.png">
-
   <style>
     :root{
       --bg:#05080d;
       --bg2:#071520;
-
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
-
       --shadow: 0 26px 70px rgba(0,0,0,.50);
       --radius:18px;
-
       --glowA:#00e5ff;
       --glowB:#00ff95;
       --glowC:#7dffcc;
     }
-
     *{ box-sizing:border-box; }
-
     *::selection{ background: transparent; }
     *::-moz-selection{ background: transparent; }
-
     body, body *{
       -webkit-user-select:none;
       user-select:none;
@@ -40,9 +31,7 @@
       user-select:text !important;
       -webkit-tap-highlight-color: initial;
     }
-
     html{ height:100%; background: var(--bg); }
-
     body{
       min-height:100%;
       margin:0;
@@ -53,8 +42,6 @@
       position: relative;
       isolation: isolate;
     }
-
-    /* ===== Background layers (NO negative z-index) ===== */
     .bg{
       position:fixed;
       inset:0;
@@ -63,7 +50,6 @@
       background: linear-gradient(180deg, #05080d, #071520);
       transform: translateZ(0);
     }
-
     @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
       .bg{
         background:
@@ -73,7 +59,6 @@
           linear-gradient(180deg, var(--bg), var(--bg2));
       }
     }
-
     .gridlines{
       position:fixed; inset:0;
       z-index:0;
@@ -86,7 +71,6 @@
       background-position: 0 0;
       transform: translateZ(0);
     }
-
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -112,13 +96,11 @@
       transform: translateZ(0);
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
-
     body.frozen.fx::before{ animation-play-state: paused !important; }
     body.frozen.fx::before,
     body.frozen.fx::after{ opacity:0 !important; }
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
-
     #starCanvas{
       position:fixed;
       inset:0;
@@ -127,26 +109,18 @@
       width:100%;
       height:100%;
     }
-
     header, main, .view, .modalBack{ position: relative; z-index: 1; }
-
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
-
-    /* ============================================================
-       Hover Animated Gradient Ring (apply via .ring class)
-       ============================================================ */
     .ring{
       position: relative;
       z-index: 0;
       border: none !important;
       outline: none !important;
     }
-
     @media (hover:hover) and (pointer:fine){
       .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
     }
-
     @supports (-webkit-mask-composite: xor) {
       @media (hover:hover) and (pointer:fine){
         .ring:hover{ box-shadow: none; }
@@ -179,14 +153,11 @@
         }
       }
     }
-
     @keyframes borderFlow{
-      0%   { background-position: 0% 50%; }
+      0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
     body.frozen .ring:hover::after{ animation-play-state: paused !important; }
-
-    /* ===== Header / Nav ===== */
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
@@ -194,7 +165,6 @@
       -webkit-backdrop-filter: blur(14px) saturate(120%);
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
-
     .brand{
       display:flex; align-items:center; gap:12px;
       letter-spacing:.3px;
@@ -204,7 +174,6 @@
     .brand:hover{ background: rgba(255,255,255,.03); }
     .brand h1{ font-size:14px; margin:0; font-weight:700; line-height:1.1; }
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
-
     nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
     nav a{
       padding:10px 10px;
@@ -217,7 +186,6 @@
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
       color:rgba(255,255,255,.92);
     }
-
     .actions{ display:flex; align-items:center; gap:10px; }
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
@@ -235,7 +203,6 @@
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
-
     .btn.primary{
       background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
       box-shadow: 0 0 34px rgba(0,255,149,.10);
@@ -250,10 +217,8 @@
       z-index: 0;
     }
     .btn.primary:hover::before{ opacity:1; }
-
     .view{ display:none; }
     .view.show{ display:block; }
-
     main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
@@ -263,7 +228,6 @@
       margin-top: 18px;
     }
     @media (max-width: 920px){ .hero{ grid-template-columns:1fr; } nav{ display:none; } }
-
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border-radius: var(--radius);
@@ -289,7 +253,6 @@
       z-index: 1;
     }
     .panel > *{ position:relative; z-index:2; }
-
     .heroLeft{ padding: 26px 26px 22px; }
     .kicker{
       display:inline-flex; align-items:center; gap:10px;
@@ -307,7 +270,6 @@
     }
     body.frozen .dot{ animation-play-state: paused !important; }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
-
     .title{
       margin: 14px 0 10px;
       font-size: clamp(30px, 4.2vw, 46px);
@@ -327,7 +289,6 @@
       font-size: 14px;
       margin: 0 0 18px;
     }
-
     .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
     .metaRow{ display:flex; gap:14px; flex-wrap:wrap; margin-top: 18px; color: rgba(255,255,255,.65); font-size: 12px; }
     .pill{
@@ -336,10 +297,8 @@
       border-radius: 999px;
       background: rgba(255,255,255,.05);
     }
-
     .heroRight{ padding: 18px; }
     .stack{ display:flex; flex-direction:column; gap:12px; }
-
     .miniCard{
       padding: 14px;
       border-radius: 16px;
@@ -351,7 +310,6 @@
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
-
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .miniTitle{ font-weight:700; font-size:13px; margin:0; }
     .badge{
@@ -366,7 +324,6 @@
       background: rgba(0,255,149,.08);
       box-shadow: 0 0 22px rgba(0,255,149,.10);
     }
-
     .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
     .bar{
       height: 10px;
@@ -387,11 +344,9 @@
       opacity:.75;
     }
     @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
-
     section{ margin-top: 22px; }
     .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
-
     .feat{
       padding: 16px;
       border-radius: 18px;
@@ -403,10 +358,8 @@
     }
     .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
-
     .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
-
     .priceCard{
       padding: 18px;
       border-radius: 18px;
@@ -419,7 +372,6 @@
     }
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
-
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .priceCard h4{ margin:0; font-size:14px; }
     .price{ font-size: 30px; letter-spacing:-.5px; margin: 10px 0 4px; }
@@ -427,7 +379,6 @@
     .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.72); font-size: 12.5px; line-height:1.8; }
     .list li{ display:flex; gap:8px; align-items:flex-start; }
     .check{ margin-top:4px; width:14px; height:14px; flex:0 0 14px; opacity:.9; }
-
     footer{
       margin-top: 34px;
       padding: 18px 0 34px;
@@ -435,7 +386,6 @@
       font-size: 12px;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-
     footer a{
       display:inline-flex;
       align-items:center;
@@ -450,8 +400,6 @@
       transform: translateY(-1px);
     }
     footer a:focus, footer a:focus-visible{ outline:none !important; }
-
-    /* ===== Modals ===== */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -477,7 +425,6 @@
     }
     .modalBack.show{ display:grid; }
     .modalBack.show .modal{ transform: translateY(0) scale(1); opacity:1; }
-
     .modalHead{
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
@@ -505,10 +452,8 @@
     input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .hint{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.58); line-height:1.45; }
-
     .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.on{ opacity:1; transform: translateY(0); }
-
     .linkblue{
       color: rgba(0,229,255,.95);
       cursor:pointer;
@@ -516,8 +461,6 @@
       transition: opacity .15s ease, border-color .15s ease;
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
-
-    /* ===== Download view + enter animation ===== */
     .downloadWrap{ padding: 52px 0 72px; }
     .downloadHero{
       padding: 26px;
@@ -546,7 +489,6 @@
       max-width: 70ch;
       font-size:14px;
     }
-
     .downloadEnter .downloadHero,
     .downloadEnter .downloadAnim{
       opacity:0;
@@ -560,7 +502,6 @@
       animation-delay: .08s;
     }
     @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
-
     @media (prefers-reduced-motion: reduce){
       #starCanvas{ display:none; }
       body.fx::before, body.fx::after{ display:none; }
@@ -568,12 +509,10 @@
     }
   </style>
 </head>
-
 <body class="fx">
   <div class="bg" aria-hidden="true"></div>
   <div class="gridlines" aria-hidden="true"></div>
   <canvas id="starCanvas" aria-hidden="true"></canvas>
-
   <header>
     <div class="wrap topbar">
       <div class="brand" aria-label="Brand">
@@ -582,7 +521,6 @@
           <small>The official Array portal</small>
         </div>
       </div>
-
       <nav aria-label="Primary">
         <a class="active ring" href="#" data-view="home">Home</a>
         <a class="ring" href="#status" data-jump>Status</a>
@@ -590,15 +528,12 @@
         <a class="ring" href="#faq" data-jump>FAQ</a>
         <a class="ring" href="#" data-view="download">Download</a>
       </nav>
-
       <div class="actions">
         <button class="btn ring" id="openSupport" type="button">Support</button>
         <button class="btn primary ring" id="openModal" type="button">Access Panel</button>
       </div>
     </div>
   </header>
-
-  <!-- HOME -->
   <div id="viewHome" class="view show">
     <main class="wrap">
       <div class="hero">
@@ -606,19 +541,16 @@
           <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
           <h2 class="title"><span class="grad">Array Cheats</span></h2>
           <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
-
           <div class="ctaRow">
             <button class="btn primary ring" id="scrollPricing" type="button">View Plans</button>
             <button class="btn ring" id="goDownload" type="button">Go to Download</button>
           </div>
-
           <div class="metaRow">
             <span class="pill">Fast delivery</span>
             <span class="pill">Smooth UI</span>
             <span class="pill">Secure checkout</span>
           </div>
         </div>
-
         <aside class="panel heroRight" id="status">
           <div class="stack">
             <div class="miniCard">
@@ -631,7 +563,6 @@
                 <div class="bar" aria-label="Status bar"><i style="--w:100%"></i></div>
               </div>
             </div>
-
             <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Detectability</p>
@@ -642,7 +573,6 @@
                 <div class="bar"><i style="--w:99%"></i></div>
               </div>
             </div>
-
             <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Latest Drop</p>
@@ -656,7 +586,6 @@
           </div>
         </aside>
       </div>
-
       <section id="pricing" class="reveal">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
         <div class="pricing">
@@ -670,7 +599,6 @@
             </ul>
             <div class="row"><button class="btn ring" type="button" data-open>Choose</button></div>
           </div>
-
           <div class="priceCard pop">
             <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
             <div class="price">$19 <small>/ mo</small></div>
@@ -681,7 +609,6 @@
             </ul>
             <div class="row"><button class="btn primary ring" type="button" data-open>Get Pro</button></div>
           </div>
-
           <div class="priceCard">
             <div class="priceTop"><h4>Elite</h4><span class="badge ring">Custom</span></div>
             <div class="price">$49 <small>/ mo</small></div>
@@ -694,7 +621,6 @@
           </div>
         </div>
       </section>
-
       <section id="faq" class="reveal">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">FAQ</h3>
         <div class="grid3">
@@ -712,7 +638,6 @@
           </div>
         </div>
       </section>
-
       <footer>
         <div class="wrap foot">
           <div>© <span id="year"></span> Array Cheats. All rights reserved.</div>
@@ -726,22 +651,18 @@
       </footer>
     </main>
   </div>
-
-  <!-- DOWNLOAD -->
   <div id="viewDownload" class="view downloadEnter">
     <div class="wrap downloadWrap">
       <div class="downloadHero">
         <div class="kicker"><span class="dot"></span> Download category</div>
         <div class="downloadTitle">Download</div>
         <p class="downloadSub">Download & install the official Array Loader.</p>
-
         <div class="ctaRow" style="margin-top:16px;">
           <button class="btn primary ring" type="button" id="downloadPrimary">Download Latest</button>
           <button class="btn ring" type="button" id="downloadAlt">Mirror</button>
           <button class="btn ring" type="button" id="backHome">Back to Home</button>
         </div>
       </div>
-
       <section class="downloadAnim reveal" style="margin-top:18px;">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Temporary elements</h3>
         <div class="grid3">
@@ -750,7 +671,6 @@
           <div class="feat"><h3>Notes</h3><p>This is the first release, expect the unexpected.</p></div>
         </div>
       </section>
-
       <footer>
         <div class="wrap foot">
           <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
@@ -761,8 +681,6 @@
       </footer>
     </div>
   </div>
-
-  <!-- Access Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
       <div class="modalHead">
@@ -790,8 +708,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Support Confirm Modal -->
   <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
     <div class="modal ring">
       <div class="modalHead">
@@ -818,10 +734,8 @@
       </div>
     </div>
   </div>
-
   <script>
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
-
     window.addEventListener("keydown", (e) => {
       const k = e.key.toLowerCase();
       const ctrl = e.ctrlKey || e.metaKey;
@@ -829,12 +743,10 @@
       if (ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); e.stopPropagation(); }
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
-
-    // Ensure gradient outline applies to main panels too
     function applyRings(){
       const selectors = [
         "nav a","footer a",".btn",".badge",".kicker",".pill",
-        ".panel",              /* ✅ main page panels */
+        ".panel",
         ".miniCard",".priceCard",".feat",".downloadHero",
         ".modal",".x"
       ].join(",");
@@ -842,24 +754,19 @@
       document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
     }
     applyRings();
-
-    // Pointer hotspot (throttled + only when hovering primary buttons)
     let pmRAF = 0;
     let lastX = 0, lastY = 0;
     let hotspotEnabled = false;
-
     function applyHotspot(){
       pmRAF = 0;
       document.documentElement.style.setProperty("--mx", (lastX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (lastY / innerHeight) * 100 + "%");
     }
-
     window.addEventListener("pointermove", (e) => {
       if (!hotspotEnabled) return;
       lastX = e.clientX; lastY = e.clientY;
       if (!pmRAF) pmRAF = requestAnimationFrame(applyHotspot);
     }, { passive:true });
-
     function bindPrimaryHover(){
       document.querySelectorAll(".btn.primary").forEach(el => {
         el.addEventListener("pointerenter", () => { hotspotEnabled = true; });
@@ -867,8 +774,6 @@
       });
     }
     bindPrimaryHover();
-
-    // Reveal on scroll
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -879,24 +784,19 @@
       });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
-
-    // View switching + Download enter animation
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
     const navLinks = [...document.querySelectorAll("nav a")];
-
     function setActiveNav(view){
       navLinks.forEach(a => a.classList.remove("active"));
       const match = navLinks.find(a => a.dataset.view === view);
       if (match) match.classList.add("active");
     }
-
     function playDownloadEnter(){
       viewDownload.classList.remove("play");
       void viewDownload.offsetWidth;
       viewDownload.classList.add("play");
     }
-
     function showHome(){
       viewDownload.classList.remove("show");
       viewHome.classList.add("show");
@@ -912,23 +812,18 @@
       targetScroll = 0; currentScroll = 0;
       playDownloadEnter();
     }
-
     document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
     document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
-
     document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
     document.getElementById("goDownload").addEventListener("click", showDownload);
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
-
-    // Smooth easing scroll
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
     const SCROLL_SPEED = 1.0;
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let scrollRaf = null;
-
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
     function animateScroll(){
       currentScroll += (targetScroll - currentScroll) * EASE;
@@ -942,7 +837,6 @@
       scrollRaf = requestAnimationFrame(animateScroll);
     }
     function ensureScrollAnim(){ if (scrollRaf == null) scrollRaf = requestAnimationFrame(animateScroll); }
-
     window.addEventListener("wheel", (e) => {
       if (reduceMotion) return;
       if (e.ctrlKey) return;
@@ -951,7 +845,6 @@
       targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
       ensureScrollAnim();
     }, { passive: false });
-
     function smoothJumpTo(hash){
       const el = document.querySelector(hash);
       if (!el) return;
@@ -971,8 +864,6 @@
       if (!viewHome.classList.contains("show")) showHome();
       smoothJumpTo("#pricing");
     });
-
-    // Access Modal
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -982,19 +873,16 @@
     const submit = document.getElementById("submit");
     const demoFill = document.getElementById("demoFill");
     const hint = document.getElementById("hint");
-
     function openModal(){ modalBack.classList.add("show"); setTimeout(() => key.focus(), 50); }
     function closeModal(){
       modalBack.classList.remove("show");
       hint.textContent = "Demo template: replace this with your purchase / redeem / download flow.";
       key.value = ""; user.value = "";
     }
-
     openModalBtn.addEventListener("click", openModal);
     openBtns.forEach(b => b.addEventListener("click", openModal));
     closeModalBtn.addEventListener("click", closeModal);
     modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
-
     demoFill.addEventListener("click", () => {
       key.value = "ARRAY-4X7Q-9K2P";
       user.value = "demo_user";
@@ -1005,66 +893,48 @@
       if(!k || !u){ hint.textContent = "Please enter both an access key and username."; return; }
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
-
-    // Support confirm modal -> Discord
     const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
     const supportBack = document.getElementById("supportBack");
     const openSupport = document.getElementById("openSupport");
     const closeSupport = document.getElementById("closeSupport");
     const cancelSupport = document.getElementById("cancelSupport");
     const confirmSupport = document.getElementById("confirmSupport");
-
     function openSupportModal(){ supportBack.classList.add("show"); }
     function closeSupportModal(){ supportBack.classList.remove("show"); }
-
     openSupport.addEventListener("click", openSupportModal);
     closeSupport.addEventListener("click", closeSupportModal);
     cancelSupport.addEventListener("click", closeSupportModal);
     supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
-
     confirmSupport.addEventListener("click", () => {
-      // open in new tab safely
       window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
       closeSupportModal();
     });
-
-    // Download placeholders
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
     document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
-
-    // Footer year
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
-
-    // Stars (freeze only when tab backgrounded) — GC-free typed-array pooling
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-
     let dpr = 1, cw = 0, ch = 0;
-
     function resizeCanvas(){
       const maxPixels = 2_000_000;
       const w = Math.floor(window.innerWidth);
       const h = Math.floor(window.innerHeight);
       const scale = Math.min(2, Math.max(1, Math.sqrt(maxPixels / Math.max(1, (w * h)))));
       dpr = scale;
-
       cw = w; ch = h;
-      canvas.width  = Math.floor(cw * dpr);
+      canvas.width = Math.floor(cw * dpr);
       canvas.height = Math.floor(ch * dpr);
       canvas.style.width = cw + "px";
       canvas.style.height = ch + "px";
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-
     function destroyCanvasBackingStore(){
       canvas.width = 0;
       canvas.height = 0;
     }
-
     window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive: true });
-
     const STAR_COUNT = 60;
     const sx = new Float32Array(STAR_COUNT);
     const sy = new Float32Array(STAR_COUNT);
@@ -1075,20 +945,16 @@
     const cr = new Uint8Array(STAR_COUNT);
     const cg = new Uint8Array(STAR_COUNT);
     const cb = new Uint8Array(STAR_COUNT);
-
     function rand(min, max){ return Math.random() * (max - min) + min; }
     function lerp(a, b, t){ return a + (b - a) * t; }
-
     const c1 = [0, 229, 255];
     const c2 = [0, 255, 149];
-
     function assignStarColor(i){
       const t = cw > 1 ? (sx[i] / cw) : 0.5;
       cr[i] = (lerp(c1[0], c2[0], t) + 0.5) | 0;
       cg[i] = (lerp(c1[1], c2[1], t) + 0.5) | 0;
       cb[i] = (lerp(c1[2], c2[2], t) + 0.5) | 0;
     }
-
     function resetStar(i, startFromBottom = true){
       sx[i] = rand(0, cw);
       sy[i] = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
@@ -1098,44 +964,32 @@
       sfadeTop[i] = rand(0.18, 0.28);
       assignStarColor(i);
     }
-
     let starRaf = null;
     let lastT = 0;
-
     function drawStars(t){
       if (document.hidden) { stopStars(); return; }
-
       const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
       lastT = t;
-
       ctx.clearRect(0, 0, cw, ch);
-
       for (let i = 0; i < STAR_COUNT; i++){
         sy[i] -= svy[i] * dt;
-
         let alpha = sa[i];
         const topZone = ch * sfadeTop[i];
         if (sy[i] < topZone) alpha *= Math.max(0, sy[i] / topZone);
         if (sy[i] > ch - 30) alpha *= Math.min(1, (ch - sy[i]) / 30);
-
         if (sy[i] < -50){
           resetStar(i, true);
           continue;
         }
-
         const r = sr[i];
         const rr = cr[i], gg = cg[i], bb = cb[i];
-
         ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
         ctx.beginPath(); ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2); ctx.fill();
-
         ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha * 0.25})`;
         ctx.beginPath(); ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2); ctx.fill();
       }
-
       starRaf = requestAnimationFrame(drawStars);
     }
-
     function startStars(){
       if (starRaf != null) return;
       resizeCanvas();
@@ -1143,7 +997,6 @@
       lastT = performance.now();
       starRaf = requestAnimationFrame(drawStars);
     }
-
     function stopStars(){
       if (starRaf == null) return;
       cancelAnimationFrame(starRaf);
@@ -1151,7 +1004,6 @@
       ctx.clearRect(0, 0, cw, ch);
       destroyCanvasBackingStore();
     }
-
     function freezeAll(){
       document.body.classList.add("frozen");
       hotspotEnabled = false;
@@ -1161,7 +1013,6 @@
       document.body.classList.remove("frozen");
       if (!document.hidden) startStars();
     }
-
     document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
     window.addEventListener("blur", freezeAll);
     window.addEventListener("focus", unfreezeAll);
@@ -1169,8 +1020,6 @@
     window.addEventListener("pageshow", unfreezeAll);
     document.addEventListener("freeze", freezeAll);
     document.addEventListener("resume", unfreezeAll);
-
-    // init
     startStars();
   </script>
 </body>
