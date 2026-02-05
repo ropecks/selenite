@@ -13,12 +13,12 @@
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
 
+      --shadow: 0 30px 80px rgba(0,0,0,.55);
       --radius:18px;
 
-      /* Cyan -> Green theme */
-      --glowA:#00e5ff; /* cyan */
-      --glowB:#00ff95; /* green */
-      --glowC:#7dffcc; /* mint */
+      --glowA:#00e5ff;
+      --glowB:#00ff95;
+      --glowC:#7dffcc;
     }
 
     *{ box-sizing:border-box; }
@@ -32,7 +32,6 @@
       overflow-x:hidden;
     }
 
-    /* ===== FIXED BACKGROUND ===== */
     .bg{
       position:fixed;
       inset:0;
@@ -45,24 +44,25 @@
       transform: translateZ(0);
     }
 
-    /* Brighter grey checker-line grid (no filled boxes) */
+    /* ✅ Checker grid that does NOT fade out at the bottom */
     .gridlines{
       position:fixed; inset:0;
       z-index:-5;
       pointer-events:none;
-      opacity:.28; /* brighter */
+      opacity:.18;
       background:
-        linear-gradient(to right, rgba(255,255,255,.24) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.24) 1px, transparent 1px);
-      background-size: 60px 60px;
-      /* keep the grid mostly center, fade out edges */
-      mask-image: radial-gradient(80% 70% at 50% 35%, rgba(0,0,0,1), transparent 72%);
-      -webkit-mask-image: radial-gradient(80% 70% at 50% 35%, rgba(0,0,0,1), transparent 72%);
-      filter: blur(.15px);
+        linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
+      background-size: 64px 64px;
+
+      /* Previously this used a radial mask that fades edges.
+         Now: no mask, so it stays consistent top-to-bottom. */
+      mask-image: none;
+      -webkit-mask-image: none;
+
       transform: translateZ(0);
     }
 
-    /* scanline + noise */
     .fx::before{
       content:"";
       position:fixed; inset:0;
@@ -87,7 +87,6 @@
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
     @keyframes drift{ 0%{transform:translate3d(-2%, -2%,0)} 50%{transform:translate3d(2%,1%,0)} 100%{transform:translate3d(-2%,-2%,0)} }
 
-    /* Floating particles */
     #stars{
       position:fixed; inset:0;
       z-index:-2;
@@ -96,77 +95,55 @@
     }
     .star{
       position:absolute;
-      width:3px; height:3px;
+      width:2px; height:2px;
       border-radius:999px;
-      background: radial-gradient(circle, rgba(0,229,255,.95), rgba(0,255,149,.65));
-      opacity:0;
-      filter: blur(.15px);
-      animation: floatUp var(--dur, 10s) linear infinite;
+      background: rgba(255,255,255,.8);
+      opacity:.0;
+      filter: blur(.2px);
+      animation: floatUp var(--dur, 8s) linear infinite;
       animation-delay: var(--delay, 0s);
-      box-shadow:
-        0 0 18px rgba(0,229,255,.28),
-        0 0 28px rgba(0,255,149,.22),
-        0 0 46px rgba(125,255,204,.12);
     }
     @keyframes floatUp{
-      0%   { transform: translate3d(var(--dx, 0px), 0, 0) scale(var(--s,1)); opacity:0; }
-      10%  { opacity: var(--o,.55); }
-      70%  { opacity: calc(var(--o,.55) * .65); }
-      100% { transform: translate3d(calc(var(--dx, 0px) * 2), -110vh, 0) scale(calc(var(--s,1) * 1.2)); opacity:0; }
+      0%   { transform: translate3d(0, 0, 0) scale(var(--s,1)); opacity:0; }
+      12%  { opacity: var(--o,.55); }
+      75%  { opacity: calc(var(--o,.55) * .7); }
+      100% { transform: translate3d(0, -110vh, 0) scale(calc(var(--s,1) * 1.15)); opacity:0; }
     }
 
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    /* ===== "OUTLINES -> GLOW" DESIGN SYSTEM =====
-       Remove heavy borders and use soft gaussian glow via box-shadow + blurred pseudo overlays
-    */
-    .softBorder{ border: 1px solid rgba(255,255,255,.04); } /* barely there */
-    .glowCard{
-      box-shadow:
-        0 22px 70px rgba(0,0,0,.50),
-        0 0 0 1px rgba(255,255,255,.03),
-        0 0 40px rgba(0,229,255,.10),
-        0 0 60px rgba(0,255,149,.08);
-    }
-
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
       background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
-    }
-
-    .brand{ display:flex; align-items:center; gap:12px; user-select:none; }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+    .brand{ display:flex; align-items:center; gap:12px; letter-spacing:.3px; user-select:none; }
     .logo{
       width:38px; height:38px; border-radius:12px;
       background:
         radial-gradient(circle at 30% 30%, rgba(0,229,255,.95), transparent 45%),
         radial-gradient(circle at 70% 70%, rgba(0,255,149,.92), transparent 45%),
         rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.04); /* minimal outline */
-      box-shadow:
-        0 0 0 14px rgba(0,229,255,.06),
-        0 0 60px rgba(0,255,149,.16);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 30px rgba(0,255,149,.18);
       position:relative;
     }
     .logo::after{
       content:"";
-      position:absolute; inset:-12px;
-      border-radius:18px;
+      position:absolute; inset:-8px;
+      border-radius:16px;
       background: conic-gradient(from 120deg,
         rgba(0,229,255,.0),
-        rgba(0,229,255,.28),
-        rgba(0,255,149,.22),
-        rgba(125,255,204,.18),
+        rgba(0,229,255,.32),
+        rgba(0,255,149,.28),
+        rgba(125,255,204,.22),
         rgba(0,229,255,.0)
       );
-      filter: blur(18px);
-      opacity:.7;
+      filter: blur(14px);
+      opacity:.6;
       z-index:-1;
       animation: spin 10s linear infinite;
     }
@@ -174,88 +151,52 @@
     .brand h1{ font-size:14px; margin:0; font-weight:700; }
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
 
-    nav{
-      display:flex; align-items:center; gap:8px;
-      color:rgba(255,255,255,.72);
-      font-size:13px;
-    }
-    nav a{
-      padding:10px 10px;
-      border-radius:12px;
-      transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
-      border: 1px solid rgba(255,255,255,.03); /* subtle, not “outlined” */
-    }
-    nav a:hover{
-      background:rgba(255,255,255,.06);
-      color:rgba(255,255,255,.92);
-      transform: translateY(-1px);
-      box-shadow:
-        0 0 18px rgba(0,229,255,.10),
-        0 0 26px rgba(0,255,149,.07);
-    }
+    nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
+    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
-      background: linear-gradient(180deg, rgba(0,229,255,.14), rgba(0,255,149,.10));
-      border-color: rgba(255,255,255,.03);
-      box-shadow:
-        0 0 0 14px rgba(0,229,255,.05),
-        0 0 60px rgba(0,255,149,.10);
+      background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
+      border: 1px solid rgba(0,229,255,.22);
+      padding:9px 9px;
       color:rgba(255,255,255,.92);
     }
 
     .actions{ display:flex; align-items:center; gap:10px; }
-
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
       gap:10px;
       padding:11px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.03); /* minimal */
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.05);
       color:rgba(255,255,255,.9);
       font-weight:600;
       font-size:13px;
       cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
       position:relative;
       overflow:hidden;
-      box-shadow:
-        0 18px 48px rgba(0,0,0,.34),
-        0 0 30px rgba(0,229,255,.06);
-      backdrop-filter: blur(10px);
     }
-    .btn:hover{
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.07);
-      box-shadow:
-        0 20px 56px rgba(0,0,0,.38),
-        0 0 46px rgba(0,229,255,.10),
-        0 0 56px rgba(0,255,149,.08);
-    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18); }
     .btn:active{ transform: translateY(0); }
-
     .btn.primary{
-      background: linear-gradient(180deg, rgba(0,229,255,.20), rgba(0,255,149,.12));
-      box-shadow:
-        0 22px 60px rgba(0,0,0,.42),
-        0 0 0 16px rgba(0,229,255,.06),
-        0 0 75px rgba(0,255,149,.14);
+      border-color: rgba(0,229,255,.35);
+      background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
+      box-shadow: 0 0 0 6px rgba(0,229,255,.07), 0 0 46px rgba(0,255,149,.14);
     }
     .btn.primary::before{
       content:"";
       position:absolute; inset:-2px;
-      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.24), transparent 60%);
+      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.30), transparent 55%);
       opacity:0;
       transition: opacity .2s ease;
       pointer-events:none;
-      filter: blur(14px);
     }
     .btn.primary:hover::before{ opacity:1; }
 
-    /* Views */
     .view{ display:none; }
     .view.show{ display:block; }
 
-    /* Main view */
     main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
@@ -267,33 +208,26 @@
     @media (max-width: 920px){ .hero{ grid-template-columns:1fr; } nav{ display:none; } }
 
     .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10);
       border-radius: var(--radius);
+      box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
       transform: translateY(10px);
       opacity:0;
       animation: rise .7s ease forwards;
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.03); /* minimal outline */
-      backdrop-filter: blur(12px);
-      box-shadow:
-        0 30px 90px rgba(0,0,0,.55),
-        0 0 0 18px rgba(0,229,255,.035),
-        0 0 95px rgba(0,255,149,.06);
     }
     @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
-
-    /* “real glow” via blurred overlay instead of visible stroke */
     .panel::after{
       content:"";
-      position:absolute; inset:-2px;
+      position:absolute; inset:-1px;
       background:
-        radial-gradient(650px 240px at 18% -10%, rgba(0,229,255,.18), transparent 62%),
-        radial-gradient(560px 240px at 82% -10%, rgba(0,255,149,.16), transparent 62%),
-        radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.10), transparent 68%);
+        radial-gradient(600px 220px at 20% 0%, rgba(0,229,255,.14), transparent 60%),
+        radial-gradient(520px 220px at 80% 0%, rgba(0,255,149,.12), transparent 60%),
+        radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.08), transparent 65%);
       pointer-events:none;
-      opacity:.95;
-      filter: blur(16px); /* gaussian glow */
+      opacity:.9;
     }
     .panel > *{ position:relative; z-index:1; }
 
@@ -303,17 +237,14 @@
       padding: 7px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.10);
       color: rgba(255,255,255,.78);
       font-size:12px;
-      box-shadow:
-        0 0 26px rgba(0,229,255,.06),
-        0 0 40px rgba(0,255,149,.04);
     }
     .dot{
       width:8px; height:8px; border-radius:999px;
       background: var(--glowA);
-      box-shadow: 0 0 20px rgba(0,229,255,.72);
+      box-shadow: 0 0 16px rgba(0,229,255,.75);
       animation: pulse 1.6s ease-in-out infinite;
     }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
@@ -329,7 +260,7 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      filter: drop-shadow(0 0 28px rgba(0,229,255,.14));
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.16));
     }
 
     .subtitle{
@@ -341,26 +272,16 @@
     }
 
     .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    .metaRow{
-      display:flex; gap:14px; flex-wrap:wrap;
-      margin-top: 18px;
-      color: rgba(255,255,255,.65);
-      font-size: 12px;
-    }
+    .metaRow{ display:flex; gap:14px; flex-wrap:wrap; margin-top: 18px; color: rgba(255,255,255,.65); font-size: 12px; }
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.02);
-      box-shadow:
-        0 0 34px rgba(0,255,149,.05),
-        0 14px 40px rgba(0,0,0,.25);
-      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.09);
     }
     .pill svg{ opacity:.9; }
 
-    /* Right card (status) */
     .heroRight{ padding: 18px; }
     .stack{ display:flex; flex-direction:column; gap:12px; }
 
@@ -368,34 +289,13 @@
       padding: 14px;
       border-radius: 16px;
       background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.02); /* minimal */
-      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
-      box-shadow:
-        0 18px 55px rgba(0,0,0,.32),
-        0 0 40px rgba(0,229,255,.06);
-      backdrop-filter: blur(12px);
-      position:relative;
-      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
-    .miniCard::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(520px 160px at 20% 0%, rgba(0,229,255,.12), transparent 62%),
-        radial-gradient(520px 180px at 80% 0%, rgba(0,255,149,.10), transparent 62%);
-      filter: blur(18px);
-      opacity:.75;
-      pointer-events:none;
-    }
-    .miniCard > *{ position:relative; z-index:1; }
-
     .miniCard:hover{
       transform: translateY(-2px);
+      border-color: rgba(0,229,255,.22);
       background: rgba(0,0,0,.22);
-      box-shadow:
-        0 22px 65px rgba(0,0,0,.36),
-        0 0 55px rgba(0,229,255,.10),
-        0 0 65px rgba(0,255,149,.08);
     }
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .miniTitle{ font-weight:700; font-size:13px; margin:0; }
@@ -404,31 +304,25 @@
       font-size:11px;
       padding: 6px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.02); /* not an outline look */
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.82);
+      color: rgba(255,255,255,.78);
       white-space:nowrap;
-      box-shadow: 0 0 26px rgba(0,229,255,.06);
     }
     .badge.ok{
-      background: linear-gradient(180deg, rgba(0,255,149,.20), rgba(0,0,0,.0));
-      box-shadow:
-        0 0 0 14px rgba(0,255,149,.07),
-        0 0 52px rgba(0,255,149,.14);
+      border-color: rgba(0,255,149,.30);
+      box-shadow: 0 0 0 6px rgba(0,255,149,.06);
     }
 
     .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
-
     .bar{
       height: 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.02);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.09);
       overflow:hidden;
       margin-top:12px;
       position:relative;
-      box-shadow:
-        0 0 34px rgba(0,229,255,.05);
     }
     .bar > i{
       display:block;
@@ -436,7 +330,7 @@
       width: var(--w, 72%);
       background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(0,255,149,.82), rgba(125,255,204,.78));
       border-radius: 999px;
-      filter: drop-shadow(0 0 18px rgba(0,229,255,.22)) blur(.15px);
+      filter: drop-shadow(0 0 14px rgba(0,229,255,.28));
       animation: load 1.2s ease forwards;
       transform-origin:left;
       transform: scaleX(.65);
@@ -444,115 +338,65 @@
     }
     @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
 
-    /* Sections */
     section{ margin-top: 22px; }
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
+    .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
 
     .feat{
       padding: 16px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.02); /* minimal */
+      border: 1px solid rgba(255,255,255,.10);
       position:relative;
       overflow:hidden;
-      box-shadow:
-        0 18px 60px rgba(0,0,0,.34),
-        0 0 52px rgba(0,229,255,.07),
-        0 0 62px rgba(0,255,149,.05);
-      backdrop-filter: blur(12px);
     }
     .feat::before{
       content:"";
       position:absolute; inset:-2px;
-      background: radial-gradient(560px 170px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.16), transparent 62%);
-      opacity:0;
+      background: radial-gradient(520px 160px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.12), transparent 60%);
+      opacity:.0;
       transition: opacity .25s ease;
       pointer-events:none;
-      filter: blur(18px); /* gaussian */
     }
     .feat:hover::before{ opacity:1; }
     .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
 
-    /* Pricing */
-    .pricing{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 14px;
-    }
+    .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
 
     .priceCard{
       padding: 18px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.02); /* minimal */
+      border: 1px solid rgba(255,255,255,.10);
       position:relative;
       overflow:hidden;
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-      box-shadow:
-        0 18px 70px rgba(0,0,0,.36),
-        0 0 60px rgba(0,229,255,.07),
-        0 0 70px rgba(0,255,149,.06);
-      backdrop-filter: blur(12px);
+      transition: transform .2s ease, border-color .2s ease;
     }
-    .priceCard::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(520px 160px at 18% 0%, rgba(0,229,255,.12), transparent 62%),
-        radial-gradient(520px 180px at 82% 0%, rgba(0,255,149,.10), transparent 62%);
-      filter: blur(18px);
-      opacity:.75;
-      pointer-events:none;
-    }
-    .priceCard > *{ position:relative; z-index:1; }
-
-    .priceCard:hover{
-      transform: translateY(-3px);
-      background: rgba(255,255,255,.045);
-      box-shadow:
-        0 22px 80px rgba(0,0,0,.40),
-        0 0 78px rgba(0,229,255,.10),
-        0 0 84px rgba(0,255,149,.08);
-    }
+    .priceCard:hover{ transform: translateY(-3px); border-color: rgba(0,229,255,.22); }
     .priceCard.pop{
-      box-shadow:
-        0 22px 80px rgba(0,0,0,.42),
-        0 0 0 16px rgba(0,229,255,.05),
-        0 0 100px rgba(0,255,149,.10);
+      border-color: rgba(0,229,255,.30);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 55px rgba(0,255,149,.10);
     }
 
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .priceCard h4{ margin:0; font-size:14px; }
-    .price{
-      font-size: 30px;
-      letter-spacing:-.5px;
-      margin: 10px 0 4px;
-    }
+    .price{ font-size: 30px; letter-spacing:-.5px; margin: 10px 0 4px; }
     .price small{ font-size:12px; color: rgba(255,255,255,.65); }
     .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.72); font-size: 12.5px; line-height:1.8; }
     .list li{ display:flex; gap:8px; align-items:flex-start; }
     .check{ margin-top:4px; width:14px; height:14px; flex:0 0 14px; opacity:.9; }
 
-    /* Footer */
     footer{
       margin-top: 34px;
       padding: 18px 0 34px;
       color: rgba(255,255,255,.60);
       font-size: 12px;
-      border-top: 1px solid rgba(255,255,255,.04);
+      border-top: 1px solid rgba(255,255,255,.08);
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-    /* Modal */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -565,16 +409,12 @@
       width: min(520px, 96vw);
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.02); /* minimal */
-      box-shadow:
-        0 30px 90px rgba(0,0,0,.60),
-        0 0 0 18px rgba(0,229,255,.04),
-        0 0 100px rgba(0,255,149,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,.6);
       overflow:hidden;
       transform: translateY(10px) scale(.98);
       opacity:0;
       transition: transform .2s ease, opacity .2s ease;
-      backdrop-filter: blur(14px);
     }
     .modalBack.show{ display:grid; }
     .modalBack.show .modal{ transform: translateY(0) scale(1); opacity:1; }
@@ -582,15 +422,14 @@
     .modalHead{
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
-      border-bottom: 1px solid rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.10);
     }
     .modalHead strong{ font-size:13px; }
     .x{
       width:36px; height:36px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
       cursor:pointer;
-      box-shadow: 0 0 40px rgba(0,229,255,.08);
     }
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
@@ -599,69 +438,50 @@
       height: 42px;
       padding: 0 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.20);
       color: rgba(255,255,255,.92);
       outline:none;
-      transition: box-shadow .2s ease, background .2s ease;
-      box-shadow: 0 0 30px rgba(0,255,149,.04);
-      backdrop-filter: blur(10px);
+      transition: border-color .2s ease, box-shadow .2s ease;
     }
     input:focus{
-      box-shadow:
-        0 0 0 16px rgba(0,229,255,.06),
-        0 0 60px rgba(0,255,149,.06);
-      background: rgba(0,0,0,.26);
+      border-color: rgba(0,229,255,.28);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.07);
     }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .hint{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.58); line-height:1.45; }
 
-    /* Reveal animations */
-    .reveal{
-      opacity:0; transform: translateY(10px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
+    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.on{ opacity:1; transform: translateY(0); }
 
     .linkblue{
       color: rgba(0,229,255,.95);
       cursor:pointer;
-      border-bottom: 1px solid rgba(0,229,255,.25);
-      transition: opacity .15s ease, border-color .15s ease, text-shadow .15s ease;
+      border-bottom: 1px solid rgba(0,229,255,.35);
+      transition: opacity .15s ease, border-color .15s ease;
     }
-    .linkblue:hover{
-      opacity:.92;
-      border-color: rgba(0,229,255,.55);
-      text-shadow: 0 0 18px rgba(0,229,255,.22);
-    }
+    .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
-    /* Download view */
     .downloadWrap{ padding: 52px 0 72px; }
     .downloadHero{
       padding: 26px;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.03); /* minimal */
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
-      box-shadow:
-        0 30px 90px rgba(0,0,0,.55),
-        0 0 0 18px rgba(0,229,255,.035),
-        0 0 110px rgba(0,255,149,.08);
-      backdrop-filter: blur(14px);
     }
     .downloadHero::after{
       content:"";
-      position:absolute; inset:-2px;
+      position:absolute; inset:-1px;
       background:
-        radial-gradient(760px 260px at 25% 0%, rgba(0,229,255,.18), transparent 64%),
-        radial-gradient(720px 280px at 80% 10%, rgba(0,255,149,.14), transparent 66%);
+        radial-gradient(700px 240px at 25% 0%, rgba(0,229,255,.16), transparent 62%),
+        radial-gradient(680px 260px at 80% 10%, rgba(0,255,149,.12), transparent 64%);
       pointer-events:none;
       opacity:.95;
-      filter: blur(18px);
     }
     .downloadHero > *{ position:relative; z-index:1; }
-
     .downloadTitle{
       margin: 10px 0 8px;
       font-size: clamp(38px, 5vw, 58px);
@@ -671,7 +491,7 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      filter: drop-shadow(0 0 30px rgba(0,229,255,.14));
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.14));
     }
     .downloadSub{
       margin:0;
@@ -719,16 +539,13 @@
     </div>
   </header>
 
-  <!-- MAIN VIEW -->
   <div id="viewHome" class="view show">
     <main class="wrap">
       <div class="hero">
         <div class="panel heroLeft">
           <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
           <h2 class="title"><span class="grad">Array Dashboard</span></h2>
-          <p class="subtitle">
-            The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.
-          </p>
+          <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
 
           <div class="ctaRow">
             <button class="btn primary" id="scrollPricing" type="button">View Plans</button>
@@ -736,25 +553,9 @@
           </div>
 
           <div class="metaRow">
-            <span class="pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2l3.2 6.6L22 10l-5 4.9L18.3 22 12 18.7 5.7 22 7 14.9 2 10l6.8-1.4L12 2z" stroke="currentColor" opacity=".9"/>
-              </svg>
-              Fast delivery
-            </span>
-            <span class="pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" opacity=".35"/>
-              </svg>
-              Smooth UI
-            </span>
-            <span class="pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 3v18M3 12h18" stroke="currentColor" opacity=".8"/>
-              </svg>
-              Secure checkout
-            </span>
+            <span class="pill">Fast delivery</span>
+            <span class="pill">Smooth UI</span>
+            <span class="pill">Secure checkout</span>
           </div>
         </div>
 
@@ -800,10 +601,7 @@
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
         <div class="pricing">
           <div class="priceCard">
-            <div class="priceTop">
-              <h4>Starter</h4>
-              <span class="badge">Basic</span>
-            </div>
+            <div class="priceTop"><h4>Starter</h4><span class="badge">Basic</span></div>
             <div class="price">$9 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard access</li>
@@ -814,10 +612,7 @@
           </div>
 
           <div class="priceCard pop">
-            <div class="priceTop">
-              <h4>Pro</h4>
-              <span class="badge ok">Most Popular</span>
-            </div>
+            <div class="priceTop"><h4>Pro</h4><span class="badge ok">Most Popular</span></div>
             <div class="price">$19 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority updates</li>
@@ -828,10 +623,7 @@
           </div>
 
           <div class="priceCard">
-            <div class="priceTop">
-              <h4>Elite</h4>
-              <span class="badge">Custom</span>
-            </div>
+            <div class="priceTop"><h4>Elite</h4><span class="badge">Custom</span></div>
             <div class="price">$49 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated support</li>
@@ -848,10 +640,7 @@
         <div class="grid3">
           <div class="feat">
             <h3>Where do I download the loader?</h3>
-            <p>
-              Download the loader by opening the
-              <span class="linkblue" id="faqDownloadLink">Download category</span>.
-            </p>
+            <p>Download the loader by opening the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
           </div>
           <div class="feat">
             <h3>Is this a trusted software?</h3>
@@ -878,15 +667,12 @@
     </main>
   </div>
 
-  <!-- DOWNLOAD VIEW -->
   <div id="viewDownload" class="view">
     <div class="wrap downloadWrap">
       <div class="downloadHero">
         <div class="kicker"><span class="dot"></span> Download category</div>
         <div class="downloadTitle">Download</div>
-        <p class="downloadSub">
-          Temporary layout — add your real download buttons, changelog, and system requirements here.
-        </p>
+        <p class="downloadSub">Temporary layout — add your real download buttons, changelog, and system requirements here.</p>
 
         <div class="ctaRow" style="margin-top:16px;">
           <button class="btn primary" type="button" id="downloadPrimary">Download Latest</button>
@@ -898,18 +684,9 @@
       <section class="reveal" style="margin-top:18px;">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Temporary elements</h3>
         <div class="grid3">
-          <div class="feat">
-            <h3>Latest build</h3>
-            <p>Version: v2.4 • Updated: today • Size: 18.2 MB</p>
-          </div>
-          <div class="feat">
-            <h3>Changelog</h3>
-            <p>UI polish • Faster startup • Improved stability • Minor fixes</p>
-          </div>
-          <div class="feat">
-            <h3>Notes</h3>
-            <p>Add requirements, install steps, and support links here.</p>
-          </div>
+          <div class="feat"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
+          <div class="feat"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
+          <div class="feat"><h3>Notes</h3><p>Add requirements, install steps, and support links here.</p></div>
         </div>
       </section>
 
@@ -924,7 +701,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
       <div class="modalHead">
@@ -948,28 +724,33 @@
           <button class="btn primary" id="submit" type="button">Continue</button>
           <button class="btn" id="demoFill" type="button">Fill Demo</button>
         </div>
-        <div class="hint" id="hint">
-          Demo template: replace this with your purchase / redeem / download flow.
-        </div>
+        <div class="hint" id="hint">Demo template: replace this with your purchase / redeem / download flow.</div>
       </div>
     </div>
   </div>
 
   <script>
-    // Hover hotspot for primary buttons
     window.addEventListener("pointermove", (e) => {
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
     });
 
-    // Reveal on scroll
+    document.querySelectorAll(".feat").forEach(card => {
+      card.addEventListener("pointermove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 100;
+        const y = ((e.clientY - r.top) / r.height) * 100;
+        card.style.setProperty("--fx", x + "%");
+        card.style.setProperty("--fy", y + "%");
+      });
+    });
+
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("on"); });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
-    // ===== View switching =====
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
     const navLinks = [...document.querySelectorAll("nav a")];
@@ -979,38 +760,29 @@
       const match = navLinks.find(a => a.dataset.view === view);
       if (match) match.classList.add("active");
     }
-
     function showHome(){
       viewDownload.classList.remove("show");
       viewHome.classList.add("show");
       setActiveNav("home");
       window.scrollTo(0, 0);
-      targetScroll = 0;
-      currentScroll = 0;
+      targetScroll = 0; currentScroll = 0;
     }
-
     function showDownload(){
       viewHome.classList.remove("show");
       viewDownload.classList.add("show");
       setActiveNav("download");
       window.scrollTo(0, 0);
-      targetScroll = 0;
-      currentScroll = 0;
+      targetScroll = 0; currentScroll = 0;
     }
 
-    document.querySelectorAll('[data-view="home"]').forEach(a => {
-      a.addEventListener("click", (e) => { e.preventDefault(); showHome(); });
-    });
-    document.querySelectorAll('[data-view="download"]').forEach(a => {
-      a.addEventListener("click", (e) => { e.preventDefault(); showDownload(); });
-    });
+    document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
+    document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
 
     document.getElementById("goDownload").addEventListener("click", showDownload);
     document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
     document.getElementById("backHome").addEventListener("click", showHome);
-    document.getElementById("backHome2").addEventListener("click", (e) => { e.preventDefault(); showHome(); });
+    document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // ===== Smooth easing scroll =====
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -1020,7 +792,6 @@
     let rafId = null;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
-
     function animateScroll(){
       rafId = null;
       currentScroll += (targetScroll - currentScroll) * EASE;
@@ -1031,10 +802,7 @@
     function ensureAnim(){ if (rafId == null) rafId = requestAnimationFrame(animateScroll); }
 
     window.addEventListener("scroll", () => {
-      if (rafId == null) {
-        targetScroll = window.scrollY;
-        currentScroll = window.scrollY;
-      }
+      if (rafId == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
     }, { passive: true });
 
     window.addEventListener("wheel", (e) => {
@@ -1061,13 +829,11 @@
         smoothJumpTo(a.getAttribute("href"));
       });
     });
-
     document.getElementById("scrollPricing").addEventListener("click", () => {
       if (!viewHome.classList.contains("show")) showHome();
       smoothJumpTo("#pricing");
     });
 
-    // ===== Modal =====
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -1078,73 +844,49 @@
     const demoFill = document.getElementById("demoFill");
     const hint = document.getElementById("hint");
 
-    function openModal(){
-      modalBack.classList.add("show");
-      setTimeout(() => key.focus(), 50);
-    }
+    function openModal(){ modalBack.classList.add("show"); setTimeout(() => key.focus(), 50); }
     function closeModal(){
       modalBack.classList.remove("show");
       hint.textContent = "Demo template: replace this with your purchase / redeem / download flow.";
       key.value = ""; user.value = "";
     }
+
     openModalBtn.addEventListener("click", openModal);
     openBtns.forEach(b => b.addEventListener("click", openModal));
     closeModalBtn.addEventListener("click", closeModal);
     modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
     window.addEventListener("keydown", (e) => { if (e.key === "Escape" && modalBack.classList.contains("show")) closeModal(); });
 
-    demoFill.addEventListener("click", () => {
-      key.value = "ARRAY-4X7Q-9K2P";
-      user.value = "demo_user";
-      hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption.";
-    });
-
+    demoFill.addEventListener("click", () => { key.value = "ARRAY-4X7Q-9K2P"; user.value = "demo_user"; hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption."; });
     submit.addEventListener("click", () => {
-      const k = key.value.trim();
-      const u = user.value.trim();
-      if(!k || !u){
-        hint.textContent = "Please enter both an access key and username.";
-        return;
-      }
+      const k = key.value.trim(), u = user.value.trim();
+      if(!k || !u){ hint.textContent = "Please enter both an access key and username."; return; }
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
 
-    // placeholders
-    document.getElementById("openDiscord").addEventListener("click", () => {
-      alert("Support link placeholder. Replace this with your support URL.");
-    });
-    document.getElementById("downloadPrimary").addEventListener("click", () => {
-      alert("Download placeholder. Replace this with your real download URL.");
-    });
-    document.getElementById("downloadAlt").addEventListener("click", () => {
-      alert("Mirror placeholder. Replace this with your mirror URL.");
-    });
+    document.getElementById("openDiscord").addEventListener("click", () => alert("Support link placeholder. Replace this with your support URL."));
+    document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
+    document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
 
-    // Footer year
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // ===== Stars generator (cyan/green) =====
     const stars = document.getElementById("stars");
-    const STAR_COUNT = 50;
-
+    const STAR_COUNT = 42;
     function rand(min, max){ return Math.random() * (max - min) + min; }
-
     for(let i=0;i<STAR_COUNT;i++){
       const s = document.createElement("span");
       s.className = "star";
       s.style.left = rand(0, 100) + "vw";
-      s.style.bottom = rand(-10, 12) + "vh";
-      s.style.setProperty("--s", rand(0.8, 1.7));
-      s.style.setProperty("--dur", rand(8, 14) + "s");
+      s.style.bottom = rand(-10, 10) + "vh";
+      s.style.setProperty("--s", rand(0.8, 1.6));
+      s.style.setProperty("--dur", rand(7, 13) + "s");
       s.style.setProperty("--delay", rand(0, 10) + "s");
-      s.style.setProperty("--o", rand(0.20, 0.55));
-      s.style.setProperty("--dx", rand(-18, 18) + "px");
+      s.style.setProperty("--o", rand(0.18, 0.55));
       stars.appendChild(s);
     }
 
-    // Initial sync
     targetScroll = window.scrollY;
     currentScroll = window.scrollY;
   </script>
