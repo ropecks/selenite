@@ -85,6 +85,7 @@
       pointer-events:none;
       animation: scan 9s linear infinite;
       z-index:-4;
+      will-change: transform;
     }
     body.fx::after{
       content:"";
@@ -101,10 +102,10 @@
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
-    /* Idle mode: stop background animations */
+    /* Idle mode: pause scanline + stop stars */
     body.idle::before{ animation-play-state: paused !important; }
 
-    /* CANVAS stars layer (much cheaper than DOM anims) */
+    /* CANVAS stars layer (optimized) */
     #starCanvas{
       position:fixed;
       inset:0;
@@ -118,54 +119,71 @@
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
     /* ============================================================
-       Hover border (Chromium-safe)
-       - NO mask/xor
-       - NO infinite animation
-       - Excludes .brand (so logo/title never gets hover border)
+       REVERTED Hover Animated Gradient Ring (original look)
+       - Thin gradient ring, animated
+       - Excludes .brand so logo/title never outlines
        ============================================================ */
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge){
+    :is(
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.badge
+    ){
       position: relative;
       z-index: 0;
       border: none !important;
       outline: none !important;
     }
 
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge)::after{
+    :is(
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.badge
+    )::after{
       content:"";
       position:absolute;
       inset:0;
       border-radius: inherit;
-      pointer-events:none;
+      padding: 1px;
       opacity:0;
+      pointer-events:none;
       transition: opacity .12s ease;
-      z-index: 5;
+      z-index: 50;
 
-      background:
-        linear-gradient(90deg,
-          rgba(0,229,255,.0),
-          rgba(0,229,255,.55),
-          rgba(0,255,149,.55),
-          rgba(125,255,204,.50),
-          rgba(0,229,255,.0)
-        );
-      background-size: 220% 220%;
+      background: linear-gradient(90deg,
+        rgba(0,229,255,.95),
+        rgba(0,255,149,.95),
+        rgba(125,255,204,.95),
+        rgba(0,229,255,.95)
+      );
+      background-size: 260% 260%;
       background-position: 0% 50%;
 
-      box-shadow:
-        inset 0 0 0 1px rgba(0,229,255,.30),
-        inset 0 0 0 2px rgba(0,255,149,.08);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
     }
 
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge):hover::after{
+    :is(
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.badge
+    ):hover::after{
       opacity:1;
-      animation: sheenSweep .7s linear 1;
+      animation: borderFlow 1.2s linear infinite;
     }
-    @keyframes sheenSweep{
+
+    @keyframes borderFlow{
       0%   { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
-    body.idle :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge):hover::after{
-      animation: none !important;
+
+    body.idle :is(
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.badge
+    ):hover::after{
+      animation-play-state: paused !important;
     }
 
     /* ===== Header / Nav ===== */
@@ -175,14 +193,14 @@
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
 
-    /* Brand: explicitly NOT part of hover border system */
+    /* Brand is NOT included in hover ring selectors */
     .brand{
       display:flex; align-items:center; gap:12px;
       letter-spacing:.3px;
       padding: 6px 8px;
       border-radius: 14px;
     }
-    .brand:hover{ background: rgba(255,255,255,.03); } /* optional subtle only */
+    .brand:hover{ background: rgba(255,255,255,.03); }
 
     .logo{
       width:38px; height:38px; border-radius:12px;
@@ -236,6 +254,7 @@
       cursor:pointer;
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
+      position:relative;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
@@ -963,7 +982,7 @@
 
     let dpr = 1, cw = 0, ch = 0;
     function resizeCanvas(){
-      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap DPR for stability
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap DPR
       cw = Math.floor(window.innerWidth);
       ch = Math.floor(window.innerHeight);
       canvas.width = Math.floor(cw * dpr);
@@ -975,8 +994,7 @@
     window.addEventListener("resize", () => { resizeCanvas(); markActive(); }, { passive:true });
     resizeCanvas();
 
-    // Particle pool (no allocations each frame)
-    const STAR_COUNT = 60; // still light for canvas
+    const STAR_COUNT = 60;
     const stars = new Array(STAR_COUNT);
     function rand(min,max){ return Math.random()*(max-min)+min; }
 
@@ -985,20 +1003,17 @@
       s.x = rand(0, cw);
       s.y = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
       s.r = rand(0.8, 1.8);
-      s.vy = rand(18, 45); // px/sec upward speed
-      s.a = rand(0.18, 0.55); // max alpha
-      s.fadeTop = rand(0.18, 0.28); // top fade zone (fraction of height)
-      s.tw = rand(0.85, 1.15);
+      s.vy = rand(18, 45);
+      s.a = rand(0.18, 0.55);
+      s.fadeTop = rand(0.18, 0.28);
       return s;
     }
     for(let i=0;i<STAR_COUNT;i++) resetStar(i, false);
 
-    // precomputed colors
     const c1 = [0,229,255];
     const c2 = [0,255,149];
     function lerp(a,b,t){ return a + (b-a)*t; }
     function mixColor(t){
-      // t 0..1
       return [
         Math.floor(lerp(c1[0], c2[0], t)),
         Math.floor(lerp(c1[1], c2[1], t)),
@@ -1010,38 +1025,29 @@
     let lastT = 0;
 
     function drawStars(t){
-      const dt = Math.min(0.05, (t - lastT) / 1000 || 0); // clamp dt
+      const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
       lastT = t;
 
       ctx.clearRect(0,0,cw,ch);
 
-      // draw
       for(let i=0;i<STAR_COUNT;i++){
         const s = stars[i];
         s.y -= s.vy * dt;
 
-        // fade in/out based on y
         let alpha = s.a;
         const topZone = ch * s.fadeTop;
-        if (s.y < topZone){
-          alpha *= Math.max(0, s.y / topZone);
-        }
-        if (s.y > ch - 30){
-          alpha *= Math.min(1, (ch - s.y) / 30);
-        }
+        if (s.y < topZone) alpha *= Math.max(0, s.y / topZone);
+        if (s.y > ch - 30) alpha *= Math.min(1, (ch - s.y) / 30);
 
-        // recycle
         if (s.y < -50){
           resetStar(i, true);
           continue;
         }
 
-        // color blend based on x
         const tx = s.x / Math.max(1, cw);
         const rgb = mixColor(tx);
-        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
 
-        // tiny “glow” with 2 passes (still cheap)
+        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
         ctx.fill();
@@ -1069,11 +1075,14 @@
 
     // ===== Idle / visibility optimization =====
     let idleTimer = null;
-    const IDLE_MS = 3500; // slightly faster
+    const IDLE_MS = 3500;
+
     function setIdle(isIdle){
       document.body.classList.toggle("idle", isIdle);
-      if (isIdle) stopStars(); else startStars();
+      if (isIdle) stopStars();
+      else startStars();
     }
+
     function markActive(){
       setIdle(false);
       if (idleTimer) clearTimeout(idleTimer);
