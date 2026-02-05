@@ -4,32 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Array Cheats</title>
-  <meta name="theme-color" content="#070b10" />
-
-  <!-- Tab icon (favicon). Put icon.png next to this HTML file (same folder). -->
+  <meta name="theme-color" content="#070b14" />
   <link rel="icon" type="image/png" href="icon.png">
-
   <style>
     :root{
-      --bg:#05080d;
-      --bg2:#071520;
-
+      --bg:#070b14;
+      --bg2:#050812;
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
-
       --shadow: 0 26px 70px rgba(0,0,0,.50);
       --radius:18px;
-
-      --glowA:#00e5ff;
-      --glowB:#00ff95;
-      --glowC:#7dffcc;
+      --glowA: rgba(0,229,255,.95);
+      --glowB: rgba(0,255,149,.95);
+      --glowC: rgba(125,255,204,.90);
     }
-
     *{ box-sizing:border-box; }
-
     *::selection{ background: transparent; }
     *::-moz-selection{ background: transparent; }
-
     body, body *{
       -webkit-user-select:none;
       user-select:none;
@@ -40,9 +31,7 @@
       user-select:text !important;
       -webkit-tap-highlight-color: initial;
     }
-
     html{ height:100%; background: var(--bg); }
-
     body{
       min-height:100%;
       margin:0;
@@ -54,26 +43,18 @@
       isolation: isolate;
     }
 
-    /* ===== Background layers (NO negative z-index) ===== */
     .bg{
       position:fixed;
       inset:0;
       z-index:0;
       pointer-events:none;
-      background: linear-gradient(180deg, #05080d, #071520);
+      background:
+        radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
+        radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
+        radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
       transform: translateZ(0);
     }
-
-    @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
-      .bg{
-        background:
-          radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
-          radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
-          radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
-          linear-gradient(180deg, var(--bg), var(--bg2));
-      }
-    }
-
     .gridlines{
       position:fixed; inset:0;
       z-index:0;
@@ -86,7 +67,6 @@
       background-position: 0 0;
       transform: translateZ(0);
     }
-
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -112,14 +92,13 @@
       transform: translateZ(0);
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
-
     body.frozen.fx::before{ animation-play-state: paused !important; }
     body.frozen.fx::before,
     body.frozen.fx::after{ opacity:0 !important; }
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
 
-    #starCanvas{
+    canvas#starCanvas{
       position:fixed;
       inset:0;
       z-index:0;
@@ -129,24 +108,17 @@
     }
 
     header, main, .view, .modalBack{ position: relative; z-index: 1; }
-
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    /* ============================================================
-       Hover Animated Gradient Ring (apply via .ring class)
-       ============================================================ */
     .ring{
       position: relative;
-      z-index: 0;
       border: none !important;
       outline: none !important;
     }
-
     @media (hover:hover) and (pointer:fine){
       .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
     }
-
     @supports (-webkit-mask-composite: xor) {
       @media (hover:hover) and (pointer:fine){
         .ring:hover{ box-shadow: none; }
@@ -172,6 +144,7 @@
             linear-gradient(#000 0 0) content-box,
             linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
+                  mask-composite: exclude;
         }
         .ring:hover::after{
           opacity:1;
@@ -179,35 +152,34 @@
         }
       }
     }
-
     @keyframes borderFlow{
-      0%   { background-position: 0% 50%; }
+      0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
     body.frozen .ring:hover::after{ animation-play-state: paused !important; }
 
-    /* ===== Header / Nav ===== */
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
       backdrop-filter: blur(14px) saturate(120%);
       -webkit-backdrop-filter: blur(14px) saturate(120%);
     }
-    .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:12px; }
 
     .brand{
       display:flex; align-items:center; gap:12px;
       letter-spacing:.3px;
-      padding: 6px 8px;
+      padding: 8px 10px;
       border-radius: 14px;
+      cursor:pointer;
     }
     .brand:hover{ background: rgba(255,255,255,.03); }
-    .brand h1{ font-size:14px; margin:0; font-weight:700; line-height:1.1; }
-    .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
+    .brand h1{ font-size:15px; margin:0; font-weight:800; line-height:1.1; }
+    .brand small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; }
 
-    nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
+    nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:14px; }
     nav a{
-      padding:10px 10px;
+      padding:10px 12px;
       border-radius:12px;
       transition: background .2s ease, color .2s ease, transform .2s ease;
       display:inline-flex;
@@ -219,23 +191,24 @@
     }
 
     .actions{ display:flex; align-items:center; gap:10px; }
+
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
       gap:10px;
-      padding:11px 14px;
+      padding:14px 18px;
       border-radius: 14px;
       background: rgba(255,255,255,.05);
       color:rgba(255,255,255,.9);
-      font-weight:600;
-      font-size:13px;
+      font-weight:800;
+      font-size:16px;
       cursor:pointer;
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
       position:relative;
+      border:none;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
-
     .btn.primary{
       background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
       box-shadow: 0 0 34px rgba(0,255,149,.10);
@@ -253,8 +226,8 @@
 
     .view{ display:none; }
     .view.show{ display:block; }
+    main{ padding: 56px 0 80px; }
 
-    main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
       grid-template-columns: 1.2fr .8fr;
@@ -262,7 +235,10 @@
       align-items:stretch;
       margin-top: 18px;
     }
-    @media (max-width: 920px){ .hero{ grid-template-columns:1fr; } nav{ display:none; } }
+    @media (max-width: 920px){
+      .hero{ grid-template-columns:1fr; }
+      nav{ display:none; }
+    }
 
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
@@ -290,29 +266,33 @@
     }
     .panel > *{ position:relative; z-index:2; }
 
-    .heroLeft{ padding: 26px 26px 22px; }
+    .heroLeft{ padding: 32px 32px 30px; }
     .kicker{
       display:inline-flex; align-items:center; gap:10px;
-      padding: 7px 10px;
+      padding: 9px 13px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      font-size:12px;
-      color: rgba(255,255,255,.78);
+      font-size:14px;
+      color: rgba(255,255,255,.82);
     }
     .dot{
-      width:8px; height:8px; border-radius:999px;
+      width:9px; height:9px; border-radius:999px;
       background: var(--glowA);
       box-shadow: 0 0 14px rgba(0,229,255,.55);
       animation: pulse 1.6s ease-in-out infinite;
+    }
+    .dot.ok{
+      background: var(--glowB);
+      box-shadow: 0 0 14px rgba(0,255,149,.55);
     }
     body.frozen .dot{ animation-play-state: paused !important; }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
 
     .title{
-      margin: 14px 0 10px;
-      font-size: clamp(30px, 4.2vw, 46px);
+      margin: 16px 0 12px;
+      font-size: clamp(36px, 4.8vw, 56px);
       line-height: 1.05;
-      letter-spacing: -0.6px;
+      letter-spacing: -0.9px;
     }
     .title .grad{
       background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.90));
@@ -321,27 +301,18 @@
       color:transparent;
     }
     .subtitle{
-      color: rgba(255,255,255,.70);
-      max-width: 62ch;
-      line-height:1.55;
-      font-size: 14px;
-      margin: 0 0 18px;
+      color: rgba(255,255,255,.74);
+      max-width: 68ch;
+      line-height:1.65;
+      font-size: 17px;
+      margin: 0 0 22px;
     }
-
-    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-    .metaRow{ display:flex; gap:14px; flex-wrap:wrap; margin-top: 18px; color: rgba(255,255,255,.65); font-size: 12px; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-    }
+    .ctaRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 14px; }
 
     .heroRight{ padding: 18px; }
     .stack{ display:flex; flex-direction:column; gap:12px; }
-
     .miniCard{
-      padding: 14px;
+      padding: 16px;
       border-radius: 16px;
       background: rgba(0,0,0,.18);
       transition: transform .18s ease, background .18s ease;
@@ -351,23 +322,21 @@
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
-
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .miniTitle{ font-weight:700; font-size:13px; margin:0; }
+    .miniTitle{ font-weight:850; font-size:14px; margin:0; }
     .badge{
-      font-size:11px;
-      padding: 6px 10px;
+      font-size:12px;
+      padding: 7px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.78);
+      color: rgba(255,255,255,.80);
       white-space:nowrap;
     }
     .badge.ok{
-      background: rgba(0,255,149,.08);
-      box-shadow: 0 0 22px rgba(0,255,149,.10);
+      background: rgba(0,255,149,.10);
+      box-shadow: 0 0 22px rgba(0,255,149,.12);
     }
-
-    .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
+    .miniBody{ margin-top:10px; color: rgba(255,255,255,.70); font-size:13.5px; line-height:1.55; }
     .bar{
       height: 10px;
       border-radius: 999px;
@@ -375,7 +344,7 @@
       overflow:hidden;
       margin-top:12px;
     }
-    .bar > i{
+    .bar > span{
       display:block;
       height:100%;
       width: var(--w, 72%);
@@ -388,12 +357,12 @@
     }
     @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
 
-    section{ margin-top: 22px; }
+    section{ margin-top: 28px; }
     .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
 
     .feat{
-      padding: 16px;
+      padding: 18px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
       overflow:hidden;
@@ -401,12 +370,11 @@
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
-    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
-    .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
+    .feat h3{ margin:0 0 8px; font-size:15px; letter-spacing:.2px; }
+    .feat p{ margin:0; color: rgba(255,255,255,.70); font-size:14px; line-height:1.6; }
 
     .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
-
     .priceCard{
       padding: 18px;
       border-radius: 18px;
@@ -419,23 +387,21 @@
     }
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
-
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .priceCard h4{ margin:0; font-size:14px; }
-    .price{ font-size: 30px; letter-spacing:-.5px; margin: 10px 0 4px; }
-    .price small{ font-size:12px; color: rgba(255,255,255,.65); }
-    .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.72); font-size: 12.5px; line-height:1.8; }
+    .priceCard h4{ margin:0; font-size:15px; }
+    .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; }
+    .price small{ font-size:13px; color: rgba(255,255,255,.65); }
+    .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; }
     .list li{ display:flex; gap:8px; align-items:flex-start; }
     .check{ margin-top:4px; width:14px; height:14px; flex:0 0 14px; opacity:.9; }
 
     footer{
-      margin-top: 34px;
+      margin-top: 36px;
       padding: 18px 0 34px;
       color: rgba(255,255,255,.60);
-      font-size: 12px;
+      font-size: 12.5px;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-
     footer a{
       display:inline-flex;
       align-items:center;
@@ -449,9 +415,7 @@
       color: rgba(255,255,255,.86);
       transform: translateY(-1px);
     }
-    footer a:focus, footer a:focus-visible{ outline:none !important; }
 
-    /* ===== Modals ===== */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -482,18 +446,29 @@
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
     }
-    .modalHead strong{ font-size:13px; }
-    .x{
-      width:36px; height:36px; border-radius: 12px;
+    .modalHead strong{ font-size:14px; }
+
+    .iconBtn{
+      width:42px; height:42px;
+      border-radius: 12px;
       border:none;
       background: rgba(255,255,255,.06);
       cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+      color: rgba(255,255,255,.92);
     }
+    .iconBtn:hover{ background: rgba(255,255,255,.08); }
+    .iconBtn svg{ display:block; }
+    .xPath{ stroke: rgba(255,255,255,.95); stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
-    label{ font-size:12px; color: rgba(255,255,255,.70); }
+    label{ font-size:13px; color: rgba(255,255,255,.72); }
     input{
-      height: 42px;
+      height: 46px;
       padding: 0 12px;
       border-radius: 14px;
       border:none;
@@ -501,10 +476,11 @@
       color: rgba(255,255,255,.92);
       outline:none;
       transition: box-shadow .2s ease;
+      font-size:14px;
     }
     input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .hint{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.58); line-height:1.45; }
+    .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; }
 
     .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.on{ opacity:1; transform: translateY(0); }
@@ -517,10 +493,9 @@
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
-    /* ===== Download view + enter animation ===== */
-    .downloadWrap{ padding: 52px 0 72px; }
+    .downloadWrap{ padding: 56px 0 80px; }
     .downloadHero{
-      padding: 26px;
+      padding: 32px;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       box-shadow: var(--shadow);
@@ -531,8 +506,8 @@
     }
     .downloadTitle{
       margin: 10px 0 8px;
-      font-size: clamp(38px, 5vw, 58px);
-      letter-spacing: -0.8px;
+      font-size: clamp(46px, 5.6vw, 68px);
+      letter-spacing: -1px;
       line-height: 1.02;
       background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.9));
       -webkit-background-clip:text;
@@ -541,12 +516,11 @@
     }
     .downloadSub{
       margin:0;
-      color: rgba(255,255,255,.70);
-      line-height:1.6;
+      color: rgba(255,255,255,.72);
+      line-height:1.65;
       max-width: 70ch;
-      font-size:14px;
+      font-size:16.5px;
     }
-
     .downloadEnter .downloadHero,
     .downloadEnter .downloadAnim{
       opacity:0;
@@ -562,13 +536,11 @@
     @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
 
     @media (prefers-reduced-motion: reduce){
-      #starCanvas{ display:none; }
       body.fx::before, body.fx::after{ display:none; }
       *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
-
 <body class="fx">
   <div class="bg" aria-hidden="true"></div>
   <div class="gridlines" aria-hidden="true"></div>
@@ -576,7 +548,7 @@
 
   <header>
     <div class="wrap topbar">
-      <div class="brand" aria-label="Brand">
+      <div class="brand ring" id="brandHome" aria-label="Brand" role="button" tabindex="0">
         <div>
           <h1>Array Cheats</h1>
           <small>The official Array portal</small>
@@ -585,37 +557,25 @@
 
       <nav aria-label="Primary">
         <a class="active ring" href="#" data-view="home">Home</a>
-        <a class="ring" href="#status" data-jump>Status</a>
-        <a class="ring" href="#pricing" data-jump>Plans</a>
-        <a class="ring" href="#faq" data-jump>FAQ</a>
         <a class="ring" href="#" data-view="download">Download</a>
       </nav>
 
       <div class="actions">
-        <button class="btn ring" id="openSupport" type="button">Support</button>
-        <button class="btn primary ring" id="openModal" type="button">Access Panel</button>
+        <button class="btn primary ring" id="openSupport" type="button">Support</button>
       </div>
     </div>
   </header>
 
-  <!-- HOME -->
   <div id="viewHome" class="view show">
     <main class="wrap">
       <div class="hero">
         <div class="panel heroLeft">
-          <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
+          <div class="kicker"><span class="dot ok"></span> All system up and running.</div>
           <h2 class="title"><span class="grad">Array Cheats</span></h2>
           <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
-
           <div class="ctaRow">
             <button class="btn primary ring" id="scrollPricing" type="button">View Plans</button>
             <button class="btn ring" id="goDownload" type="button">Go to Download</button>
-          </div>
-
-          <div class="metaRow">
-            <span class="pill">Fast delivery</span>
-            <span class="pill">Smooth UI</span>
-            <span class="pill">Secure checkout</span>
           </div>
         </div>
 
@@ -628,10 +588,9 @@
               </div>
               <div class="miniBody">
                 Latency stable • CDN healthy • Updates rolling.
-                <div class="bar" aria-label="Status bar"><i style="--w:100%"></i></div>
+                <div class="bar" aria-label="Status bar"><span style="--w:100%"></span></div>
               </div>
             </div>
-
             <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Detectability</p>
@@ -639,10 +598,9 @@
               </div>
               <div class="miniBody">
                 Product is 99.9% undetected as of 5/02/26.
-                <div class="bar"><i style="--w:99%"></i></div>
+                <div class="bar"><span style="--w:99%"></span></div>
               </div>
             </div>
-
             <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Latest Drop</p>
@@ -650,7 +608,7 @@
               </div>
               <div class="miniBody">
                 UI polish + animations + improved panel flow.
-                <div class="bar"><i style="--w:72%"></i></div>
+                <div class="bar"><span style="--w:72%"></span></div>
               </div>
             </div>
           </div>
@@ -658,7 +616,7 @@
       </div>
 
       <section id="pricing" class="reveal">
-        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">Plans</h3>
         <div class="pricing">
           <div class="priceCard">
             <div class="priceTop"><h4>Starter</h4><span class="badge ring">Basic</span></div>
@@ -668,9 +626,8 @@
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard support</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Access modal template</li>
             </ul>
-            <div class="row"><button class="btn ring" type="button" data-open>Choose</button></div>
+            <div class="row"><button class="btn ring" type="button">Choose</button></div>
           </div>
-
           <div class="priceCard pop">
             <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
             <div class="price">$19 <small>/ mo</small></div>
@@ -679,9 +636,8 @@
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Faster downloads</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Premium UI theme</li>
             </ul>
-            <div class="row"><button class="btn primary ring" type="button" data-open>Get Pro</button></div>
+            <div class="row"><button class="btn primary ring" type="button">Get Pro</button></div>
           </div>
-
           <div class="priceCard">
             <div class="priceTop"><h4>Elite</h4><span class="badge ring">Custom</span></div>
             <div class="price">$49 <small>/ mo</small></div>
@@ -690,17 +646,17 @@
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom onboarding</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Branding kit</li>
             </ul>
-            <div class="row"><button class="btn ring" type="button" data-open>Contact</button></div>
+            <div class="row"><button class="btn ring" type="button">Contact</button></div>
           </div>
         </div>
       </section>
 
       <section id="faq" class="reveal">
-        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">FAQ</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">FAQ</h3>
         <div class="grid3">
           <div class="feat">
             <h3>Where do I download the loader?</h3>
-            <p>Download the loader by opening the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
+            <p>Download the loader in the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
           </div>
           <div class="feat">
             <h3>Is this a trusted software?</h3>
@@ -717,9 +673,7 @@
         <div class="wrap foot">
           <div>© <span id="year"></span> Array Cheats. All rights reserved.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-            <a class="ring" href="#status" data-jump>Status</a>
-            <a class="ring" href="#pricing" data-jump>Plans</a>
-            <a class="ring" href="#faq" data-jump>FAQ</a>
+            <a class="ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
           </div>
         </div>
@@ -727,23 +681,20 @@
     </main>
   </div>
 
-  <!-- DOWNLOAD -->
   <div id="viewDownload" class="view downloadEnter">
     <div class="wrap downloadWrap">
       <div class="downloadHero">
-        <div class="kicker"><span class="dot"></span> Download category</div>
+        <div class="kicker"><span class="dot ok"></span> Download category</div>
         <div class="downloadTitle">Download</div>
         <p class="downloadSub">Download & install the official Array Loader.</p>
-
         <div class="ctaRow" style="margin-top:16px;">
           <button class="btn primary ring" type="button" id="downloadPrimary">Download Latest</button>
-          <button class="btn ring" type="button" id="downloadAlt">Mirror</button>
           <button class="btn ring" type="button" id="backHome">Back to Home</button>
         </div>
       </div>
 
       <section class="downloadAnim reveal" style="margin-top:18px;">
-        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Temporary elements</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">Temporary elements</h3>
         <div class="grid3">
           <div class="feat"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
           <div class="feat"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
@@ -755,50 +706,20 @@
         <div class="wrap foot">
           <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-            <a class="ring" href="#" id="backHome2">Back</a>
+            <a class="ring" href="#" data-view="home">Home</a>
           </div>
         </div>
       </footer>
     </div>
   </div>
 
-  <!-- Access Modal -->
-  <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal">
-      <div class="modalHead">
-        <strong id="modalTitle">Access Panel</strong>
-        <button class="x ring" id="closeModal" type="button" aria-label="Close">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:.85">
-            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        <div class="field">
-          <label for="key">Access Key</label>
-          <input id="key" placeholder="XXXX-XXXX-XXXX" autocomplete="off" />
-        </div>
-        <div class="field">
-          <label for="user">Username</label>
-          <input id="user" placeholder="yourname" autocomplete="username" />
-        </div>
-        <div class="row">
-          <button class="btn primary ring" id="submit" type="button">Continue</button>
-          <button class="btn ring" id="demoFill" type="button">Fill Demo</button>
-        </div>
-        <div class="hint" id="hint">Demo template: replace this with your purchase / redeem / download flow.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Support Confirm Modal -->
   <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
     <div class="modal ring">
       <div class="modalHead">
         <strong id="supportTitle">Open Support Link?</strong>
-        <button class="x ring" id="closeSupport" type="button" aria-label="Close">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:.85">
-            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <button class="iconBtn ring" id="closeSupport" type="button" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
           </svg>
         </button>
       </div>
@@ -830,20 +751,6 @@
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
-    // Ensure gradient outline applies to main panels too
-    function applyRings(){
-      const selectors = [
-        "nav a","footer a",".btn",".badge",".kicker",".pill",
-        ".panel",              /* ✅ main page panels */
-        ".miniCard",".priceCard",".feat",".downloadHero",
-        ".modal",".x"
-      ].join(",");
-      document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
-      document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
-    }
-    applyRings();
-
-    // Pointer hotspot (throttled + only when hovering primary buttons)
     let pmRAF = 0;
     let lastX = 0, lastY = 0;
     let hotspotEnabled = false;
@@ -868,7 +775,6 @@
     }
     bindPrimaryHover();
 
-    // Reveal on scroll
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -880,7 +786,6 @@
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
-    // View switching + Download enter animation
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
     const navLinks = [...document.querySelectorAll("nav a")];
@@ -902,26 +807,33 @@
       viewHome.classList.add("show");
       setActiveNav("home");
       window.scrollTo(0, 0);
-      targetScroll = 0; currentScroll = 0;
+      targetScroll = 0;
+      currentScroll = 0;
     }
+
     function showDownload(){
       viewHome.classList.remove("show");
       viewDownload.classList.add("show");
       setActiveNav("download");
       window.scrollTo(0, 0);
-      targetScroll = 0; currentScroll = 0;
+      targetScroll = 0;
+      currentScroll = 0;
       playDownloadEnter();
     }
 
     document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
     document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
 
+    const brandHome = document.getElementById("brandHome");
+    brandHome.addEventListener("click", showHome);
+    brandHome.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showHome(); }
+    });
+
     document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
     document.getElementById("goDownload").addEventListener("click", showDownload);
     document.getElementById("backHome").addEventListener("click", showHome);
-    document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // Smooth easing scroll
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -929,7 +841,8 @@
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let scrollRaf = null;
 
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+    function clamp(v, mn, mx){ return Math.max(mn, Math.min(mx, v)); }
+
     function animateScroll(){
       currentScroll += (targetScroll - currentScroll) * EASE;
       if (Math.abs(targetScroll - currentScroll) < 0.5) {
@@ -941,6 +854,7 @@
       window.scrollTo(0, currentScroll);
       scrollRaf = requestAnimationFrame(animateScroll);
     }
+
     function ensureScrollAnim(){ if (scrollRaf == null) scrollRaf = requestAnimationFrame(animateScroll); }
 
     window.addEventListener("wheel", (e) => {
@@ -955,58 +869,17 @@
     function smoothJumpTo(hash){
       const el = document.querySelector(hash);
       if (!el) return;
-      const y = el.getBoundingClientRect().top + window.scrollY - 88;
+      const buffer = el.getBoundingClientRect().top + window.scrollY - 88;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll = clamp(y, 0, maxScroll);
+      targetScroll = clamp(buffer, 0, maxScroll);
       ensureScrollAnim();
     }
-    document.querySelectorAll("[data-jump]").forEach(a => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (!viewHome.classList.contains("show")) showHome();
-        smoothJumpTo(a.getAttribute("href"));
-      });
-    });
+
     document.getElementById("scrollPricing").addEventListener("click", () => {
       if (!viewHome.classList.contains("show")) showHome();
       smoothJumpTo("#pricing");
     });
 
-    // Access Modal
-    const modalBack = document.getElementById("modalBack");
-    const openModalBtn = document.getElementById("openModal");
-    const closeModalBtn = document.getElementById("closeModal");
-    const openBtns = document.querySelectorAll("[data-open]");
-    const key = document.getElementById("key");
-    const user = document.getElementById("user");
-    const submit = document.getElementById("submit");
-    const demoFill = document.getElementById("demoFill");
-    const hint = document.getElementById("hint");
-
-    function openModal(){ modalBack.classList.add("show"); setTimeout(() => key.focus(), 50); }
-    function closeModal(){
-      modalBack.classList.remove("show");
-      hint.textContent = "Demo template: replace this with your purchase / redeem / download flow.";
-      key.value = ""; user.value = "";
-    }
-
-    openModalBtn.addEventListener("click", openModal);
-    openBtns.forEach(b => b.addEventListener("click", openModal));
-    closeModalBtn.addEventListener("click", closeModal);
-    modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
-
-    demoFill.addEventListener("click", () => {
-      key.value = "ARRAY-4X7Q-9K2P";
-      user.value = "demo_user";
-      hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption.";
-    });
-    submit.addEventListener("click", () => {
-      const k = key.value.trim(), u = user.value.trim();
-      if(!k || !u){ hint.textContent = "Please enter both an access key and username."; return; }
-      hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
-    });
-
-    // Support confirm modal -> Discord
     const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
     const supportBack = document.getElementById("supportBack");
     const openSupport = document.getElementById("openSupport");
@@ -1023,24 +896,18 @@
     supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
 
     confirmSupport.addEventListener("click", () => {
-      // open in new tab safely
       window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
       closeSupportModal();
     });
 
-    // Download placeholders
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
-    document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
 
-    // Footer year
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // Stars (freeze only when tab backgrounded) — GC-free typed-array pooling
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-
     let dpr = 1, cw = 0, ch = 0;
 
     function resizeCanvas(){
@@ -1049,9 +916,8 @@
       const h = Math.floor(window.innerHeight);
       const scale = Math.min(2, Math.max(1, Math.sqrt(maxPixels / Math.max(1, (w * h)))));
       dpr = scale;
-
       cw = w; ch = h;
-      canvas.width  = Math.floor(cw * dpr);
+      canvas.width = Math.floor(cw * dpr);
       canvas.height = Math.floor(ch * dpr);
       canvas.style.width = cw + "px";
       canvas.style.height = ch + "px";
@@ -1076,9 +942,8 @@
     const cg = new Uint8Array(STAR_COUNT);
     const cb = new Uint8Array(STAR_COUNT);
 
-    function rand(min, max){ return Math.random() * (max - min) + min; }
+    function rand(mn, mx){ return Math.random() * (mx - mn) + mn; }
     function lerp(a, b, t){ return a + (b - a) * t; }
-
     const c1 = [0, 229, 255];
     const c2 = [0, 255, 149];
 
@@ -1104,7 +969,6 @@
 
     function drawStars(t){
       if (document.hidden) { stopStars(); return; }
-
       const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
       lastT = t;
 
@@ -1112,8 +976,8 @@
 
       for (let i = 0; i < STAR_COUNT; i++){
         sy[i] -= svy[i] * dt;
-
         let alpha = sa[i];
+
         const topZone = ch * sfadeTop[i];
         if (sy[i] < topZone) alpha *= Math.max(0, sy[i] / topZone);
         if (sy[i] > ch - 30) alpha *= Math.min(1, (ch - sy[i]) / 30);
@@ -1157,6 +1021,7 @@
       hotspotEnabled = false;
       stopStars();
     }
+
     function unfreezeAll(){
       document.body.classList.remove("frozen");
       if (!document.hidden) startStars();
@@ -1167,10 +1032,7 @@
     window.addEventListener("focus", unfreezeAll);
     window.addEventListener("pagehide", freezeAll);
     window.addEventListener("pageshow", unfreezeAll);
-    document.addEventListener("freeze", freezeAll);
-    document.addEventListener("resume", unfreezeAll);
 
-    // init
     startStars();
   </script>
 </body>
