@@ -23,11 +23,9 @@
 
     *{ box-sizing:border-box; }
 
-    /* Hard selection kill */
     *::selection{ background: transparent; }
     *::-moz-selection{ background: transparent; }
 
-    /* Disable selection site-wide */
     body, body *{
       -webkit-user-select:none;
       user-select:none;
@@ -44,7 +42,7 @@
       min-height:100%;
       margin:0;
       color:var(--text);
-      background: transparent;
+      background: var(--bg); /* FALLBACK base color so it’s never “all black” from missing layers */
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       overflow-x:hidden;
     }
@@ -54,28 +52,38 @@
       position:fixed;
       inset:0;
       z-index:-6;
-      background:
-        radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
-        radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
-        radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
+      pointer-events:none;
+      /* FALLBACK: always-supported background first */
+      background: linear-gradient(180deg, #05080d, #071520);
       transform: translateZ(0);
     }
 
-    /* Checker grid */
+    /* If the browser supports radial gradients, upgrade the background */
+    @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
+      .bg{
+        background:
+          radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
+          radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
+          radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
+          linear-gradient(180deg, var(--bg), var(--bg2));
+      }
+    }
+
+    /* Checker grid: use only basic linear-gradients (very compatible) */
     .gridlines{
       position:fixed; inset:0;
       z-index:-5;
       pointer-events:none;
       opacity:.18;
-      background:
+      background-image:
         linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
       background-size: 64px 64px;
+      background-position: 0 0;
       transform: translateZ(0);
     }
 
-    /* Scanline + lightweight noise */
+    /* Scanline + lightweight noise (both safe) */
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -103,13 +111,9 @@
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
     /* Freeze ONLY when tab is backgrounded */
-    body.frozen.fx::before{
-      animation-play-state: paused !important;
-    }
+    body.frozen.fx::before{ animation-play-state: paused !important; }
     body.frozen.fx::before,
-    body.frozen.fx::after{
-      opacity:0 !important;
-    }
+    body.frozen.fx::after{ opacity:0 !important; }
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
 
@@ -128,6 +132,7 @@
 
     /* ============================================================
        Hover Animated Gradient Ring (apply via .ring class)
+       Cross-browser: if mask-composite not supported, fallback to a subtle outline.
        ============================================================ */
     .ring{
       position: relative;
@@ -135,48 +140,57 @@
       border: none !important;
       outline: none !important;
     }
+
+    /* Fallback for browsers without mask-composite: simple outline */
     @media (hover:hover) and (pointer:fine){
-      .ring::after{
-        content:"";
-        position:absolute;
-        inset:0;
-        border-radius: inherit;
-        padding: 1px;
-        opacity:0;
-        pointer-events:none;
-        transition: opacity .12s ease;
-        z-index: 50;
-
-        background: linear-gradient(90deg,
-          rgba(0,229,255,.95),
-          rgba(0,255,149,.95),
-          rgba(125,255,204,.95),
-          rgba(0,229,255,.95)
-        );
-        background-size: 260% 260%;
-        background-position: 0% 50%;
-
-        -webkit-mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        -webkit-mask-composite: xor;
-                mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        mask-composite: exclude;
-      }
-      .ring:hover::after{
-        opacity:1;
-        animation: borderFlow 1.2s linear infinite;
+      .ring:hover{
+        box-shadow: 0 0 0 1px rgba(0,229,255,.35);
       }
     }
+
+    /* Upgrade ring only if mask-composite is supported */
+    @supports (-webkit-mask-composite: xor) {
+      @media (hover:hover) and (pointer:fine){
+        .ring:hover{ box-shadow: none; }
+
+        .ring::after{
+          content:"";
+          position:absolute;
+          inset:0;
+          border-radius: inherit;
+          padding: 1px;
+          opacity:0;
+          pointer-events:none;
+          transition: opacity .12s ease;
+          z-index: 50;
+
+          background: linear-gradient(90deg,
+            rgba(0,229,255,.95),
+            rgba(0,255,149,.95),
+            rgba(125,255,204,.95),
+            rgba(0,229,255,.95)
+          );
+          background-size: 260% 260%;
+          background-position: 0% 50%;
+
+          -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+        }
+
+        .ring:hover::after{
+          opacity:1;
+          animation: borderFlow 1.2s linear infinite;
+        }
+      }
+    }
+
     @keyframes borderFlow{
       0%   { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
-    body.frozen .ring:hover::after{
-      animation-play-state: paused !important;
-    }
+    body.frozen .ring:hover::after{ animation-play-state: paused !important; }
 
     /* ===== Header / Nav ===== */
     header{
@@ -768,10 +782,8 @@
   </div>
 
   <script>
-    // Disable right-click everywhere (superficial)
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
-    // Optional: block common devtools shortcuts (not bulletproof)
     window.addEventListener("keydown", (e) => {
       const k = e.key.toLowerCase();
       const ctrl = e.ctrlKey || e.metaKey;
@@ -780,23 +792,17 @@
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
-    // Auto-apply ring to desired elements (no manual class tagging required)
     function applyRings(){
       const selectors = [
         "nav a","footer a",".btn",".badge",".kicker",".pill",
         ".miniCard",".priceCard",".feat",".downloadHero",".modal",".x"
       ].join(",");
       document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
-      // Never ring the brand text
       document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
     }
     applyRings();
 
-    // ==========================================================
-    // Pointermove optimization:
-    // - throttled via rAF
-    // - only enabled while hovering .btn.primary
-    // ==========================================================
+    // Pointer hotspot (throttled + only when hovering primary buttons)
     let pmRAF = 0;
     let lastX = 0, lastY = 0;
     let hotspotEnabled = false;
@@ -821,7 +827,7 @@
     }
     bindPrimaryHover();
 
-    // Reveal on scroll (unobserve after reveal)
+    // Reveal on scroll
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -968,9 +974,7 @@
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // ===========================
-    // Stars: freeze ONLY when tab is backgrounded
-    // ===========================
+    // Stars (freeze only when tab backgrounded)
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d", { alpha:true, desynchronized:true });
 
@@ -991,11 +995,7 @@
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
 
-    function destroyCanvasBackingStore(){
-      canvas.width = 0;
-      canvas.height = 0;
-    }
-
+    function destroyCanvasBackingStore(){ canvas.width = 0; canvas.height = 0; }
     window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive:true });
 
     const STAR_COUNT = 60;
@@ -1029,7 +1029,6 @@
 
     function drawStars(t){
       if (document.hidden) { stopStars(); return; }
-
       const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
       lastT = t;
 
@@ -1044,23 +1043,16 @@
         if (s.y < topZone) alpha *= Math.max(0, s.y / topZone);
         if (s.y > ch - 30) alpha *= Math.min(1, (ch - s.y) / 30);
 
-        if (s.y < -50){
-          resetStar(i, true);
-          continue;
-        }
+        if (s.y < -50){ resetStar(i, true); continue; }
 
         const tx = s.x / Math.max(1, cw);
         const rgb = mixColor(tx);
 
         ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
 
         ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha*0.25})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r*2.2, 0, Math.PI*2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r*2.2, 0, Math.PI*2); ctx.fill();
       }
 
       starRaf = requestAnimationFrame(drawStars);
@@ -1082,7 +1074,6 @@
       destroyCanvasBackingStore();
     }
 
-    // Freeze ONLY on tab backgrounding
     function freezeAll(){
       document.body.classList.add("frozen");
       hotspotEnabled = false;
