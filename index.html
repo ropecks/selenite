@@ -75,18 +75,16 @@
       transform: translateZ(0);
     }
 
-    /* Scanline + lightweight noise (paused via .idle class) */
+    /* Scanline + lightweight noise */
     body.fx::before{
       content:"";
       position:fixed; inset:0;
       background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
       background-size: 100% 3px;
       opacity:.08;
-      mix-blend-mode: overlay;
       pointer-events:none;
       animation: scan 9s linear infinite;
       z-index:-4;
-      will-change: transform;
     }
     body.fx::after{
       content:"";
@@ -94,7 +92,6 @@
       pointer-events:none;
       z-index:-3;
       opacity:.03;
-      mix-blend-mode: overlay;
       background-image:
         radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
         radial-gradient(rgba(0,0,0,.18) 1px, transparent 1px);
@@ -104,12 +101,10 @@
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
-    /* Idle mode: stop background animations + reduce compositor churn */
-    body.idle::before{
-      animation-play-state: paused !important;
-    }
+    /* Idle mode: stop background animations */
+    body.idle::before{ animation-play-state: paused !important; }
 
-    /* Floating particles (paused via .idle class) */
+    /* Floating particles */
     #stars{
       position:fixed; inset:0;
       z-index:-2;
@@ -125,11 +120,8 @@
       filter: blur(.2px);
       animation: floatUp var(--dur, 8s) linear infinite;
       animation-delay: var(--delay, 0s);
-      will-change: transform, opacity;
     }
-    body.idle .star{
-      animation-play-state: paused !important;
-    }
+    body.idle .star{ animation-play-state: paused !important; }
     @keyframes floatUp{
       0%   { transform: translate3d(0, 0, 0) scale(var(--s,1)); opacity:0; }
       12%  { opacity: var(--o,.55); }
@@ -140,63 +132,69 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    /* =======================================================================
-       Hover animated thin gradient border (AUTO-APPLIES)
-       ======================================================================= */
-    :is(
-      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
-      .btn,nav a,footer a,.brand,.badge
-    ){
+    /* ============================================================
+       NEW Hover border (Chromium-safe)
+       - NO mask/xor
+       - NO infinite animation
+       - Uses inset stroke + quick “sheen sweep”
+       ============================================================ */
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge){
       position: relative;
       z-index: 0;
       border: none !important;
       outline: none !important;
     }
 
-    :is(
-      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
-      .btn,nav a,footer a,.brand,.badge
-    )::after{
+    /* Base subtle stroke */
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge){
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.06),
+        var(--shadow, none);
+    }
+
+    /* The animated “sheen” overlay (quick sweep then stops) */
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge)::after{
       content:"";
       position:absolute;
       inset:0;
       border-radius: inherit;
-      padding: 1px;
-      opacity:0;
       pointer-events:none;
+      opacity:0;
       transition: opacity .12s ease;
-      z-index: 50;
+      z-index: 5;
 
-      background: linear-gradient(90deg,
-        rgba(0,229,255,.95),
-        rgba(0,255,149,.95),
-        rgba(125,255,204,.95),
-        rgba(0,229,255,.95)
-      );
-      background-size: 260% 260%;
+      /* This creates a moving highlight around edges without masks */
+      background:
+        linear-gradient(90deg,
+          rgba(0,229,255,.0),
+          rgba(0,229,255,.55),
+          rgba(0,255,149,.55),
+          rgba(125,255,204,.50),
+          rgba(0,229,255,.0)
+        );
+      background-size: 220% 220%;
       background-position: 0% 50%;
 
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-              mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      mask-composite: exclude;
+      /* Make it feel like a “thin border” */
+      box-shadow:
+        inset 0 0 0 1px rgba(0,229,255,.30),
+        inset 0 0 0 2px rgba(0,255,149,.08);
+      filter: none;
     }
 
-    :is(
-      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
-      .btn,nav a,footer a,.brand,.badge
-    ):hover::after{
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge):hover::after{
       opacity:1;
-      animation: borderFlow 1.2s linear infinite;
+      animation: sheenSweep .7s linear 1; /* IMPORTANT: NOT infinite */
     }
 
-    @keyframes borderFlow{
+    @keyframes sheenSweep{
       0%   { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
+    }
+
+    /* Optional: also pause hover sweep while idle */
+    body.idle :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge):hover::after{
+      animation: none !important;
     }
 
     /* ===== Header / Nav ===== */
@@ -232,15 +230,13 @@
       z-index:-1;
       animation: spin 10s linear infinite;
     }
-    body.idle .logo::after{
-      animation-play-state: paused !important;
-    }
+    body.idle .logo::after{ animation-play-state: paused !important; }
     @keyframes spin{ to{ transform:rotate(360deg); } }
     .brand h1{ font-size:14px; margin:0; font-weight:700; }
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
 
     nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
-    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; display:inline-flex; }
+    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; display:inline-flex; box-shadow:none; }
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
@@ -260,6 +256,7 @@
       cursor:pointer;
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
+      box-shadow:none;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
@@ -295,11 +292,11 @@
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
       overflow:hidden;
       transform: translateY(10px);
       opacity:0;
       animation: rise .7s ease forwards;
+      box-shadow: var(--shadow);
     }
     @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
     .panel::before{
@@ -323,6 +320,7 @@
       background: rgba(255,255,255,.06);
       font-size:12px;
       color: rgba(255,255,255,.78);
+      box-shadow:none;
     }
     .dot{
       width:8px; height:8px; border-radius:999px;
@@ -330,9 +328,7 @@
       box-shadow: 0 0 14px rgba(0,229,255,.55);
       animation: pulse 1.6s ease-in-out infinite;
     }
-    body.idle .dot{
-      animation-play-state: paused !important;
-    }
+    body.idle .dot{ animation-play-state: paused !important; }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
 
     .title{
@@ -362,6 +358,7 @@
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.05);
+      box-shadow:none;
     }
 
     .heroRight{ padding: 18px; }
@@ -373,6 +370,7 @@
       background: rgba(0,0,0,.18);
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
+      box-shadow:none;
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
 
@@ -385,6 +383,7 @@
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.78);
       white-space:nowrap;
+      box-shadow:none;
     }
     .badge.ok{
       background: rgba(0,255,149,.08);
@@ -421,18 +420,8 @@
       border-radius: 18px;
       background: rgba(255,255,255,.04);
       overflow:hidden;
+      box-shadow:none;
     }
-    .feat::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(520px 160px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.12), transparent 60%);
-      opacity:0;
-      transition: opacity .25s ease;
-      pointer-events:none;
-      z-index: 1;
-    }
-    .feat:hover::before{ opacity:1; }
-    .feat h3, .feat p{ position:relative; z-index:2; }
     .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
 
@@ -445,6 +434,7 @@
       background: rgba(255,255,255,.04);
       overflow:hidden;
       transition: transform .2s ease;
+      box-shadow:none;
     }
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
@@ -466,15 +456,15 @@
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-    /* Footer links must not be inline (so hover ring draws) */
+    /* Footer links must not be inline (so hover effect has a box) */
     footer a{
       display:inline-flex;
       align-items:center;
       padding: 6px 10px;
       border-radius: 12px;
-      background: transparent;
       color: rgba(255,255,255,.60);
       transition: background .2s ease, color .2s ease, transform .2s ease;
+      box-shadow:none;
     }
     footer a:hover{
       background: rgba(255,255,255,.05);
@@ -483,7 +473,7 @@
     }
     footer a:focus, footer a:focus-visible{ outline:none !important; }
 
-    /* ===== Modal ===== */
+    /* Modal */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -508,7 +498,6 @@
     .modalHead{
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
-      border-bottom:none;
     }
     .modalHead strong{ font-size:13px; }
     .x{
@@ -516,6 +505,7 @@
       border:none;
       background: rgba(255,255,255,.06);
       cursor:pointer;
+      box-shadow:none;
     }
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
@@ -545,7 +535,7 @@
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
-    /* ===== Download view + enter animation ===== */
+    /* Download view */
     .downloadWrap{ padding: 52px 0 72px; }
     .downloadHero{
       padding: 26px;
@@ -554,18 +544,6 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .downloadHero::before{
-      content:"";
-      position:absolute; inset:-1px;
-      background:
-        radial-gradient(700px 240px at 25% 0%, rgba(0,229,255,.16), transparent 62%),
-        radial-gradient(680px 260px at 80% 10%, rgba(0,255,149,.12), transparent 64%);
-      pointer-events:none;
-      opacity:.95;
-      z-index: 1;
-    }
-    .downloadHero > *{ position:relative; z-index:2; }
-
     .downloadTitle{
       margin: 10px 0 8px;
       font-size: clamp(38px, 5vw, 58px);
@@ -585,17 +563,9 @@
     }
 
     .downloadEnter .downloadHero,
-    .downloadEnter .downloadAnim{
-      opacity:0;
-      transform: translateY(10px);
-    }
-    .downloadEnter.play .downloadHero{
-      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
-    }
-    .downloadEnter.play .downloadAnim{
-      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
-      animation-delay: .08s;
-    }
+    .downloadEnter .downloadAnim{ opacity:0; transform: translateY(10px); }
+    .downloadEnter.play .downloadHero{ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards; }
+    .downloadEnter.play .downloadAnim{ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards; animation-delay: .08s; }
     @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
 
     @media (prefers-reduced-motion: reduce){
@@ -830,7 +800,7 @@
   </div>
 
   <script>
-    // Disable right-click everywhere
+    // Disable right-click (superficial)
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
     // Optional: block common devtools shortcuts (not bulletproof)
@@ -847,19 +817,7 @@
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
       markActive();
-    });
-
-    // Feature card hover hotspot
-    document.querySelectorAll(".feat").forEach(card => {
-      card.addEventListener("pointermove", (e) => {
-        const r = card.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width) * 100;
-        const y = ((e.clientY - r.top) / r.height) * 100;
-        card.style.setProperty("--fx", x + "%");
-        card.style.setProperty("--fy", y + "%");
-        markActive();
-      });
-    });
+    }, { passive:true });
 
     // Reveal on scroll (unobserve after revealing)
     const reveals = [...document.querySelectorAll(".reveal")];
@@ -916,7 +874,7 @@
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // Smooth easing scroll (stops RAF fully when done)
+    // Smooth easing scroll (stops RAF when done)
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -936,9 +894,7 @@
       window.scrollTo(0, currentScroll);
       rafId = requestAnimationFrame(animateScroll);
     }
-    function ensureAnim(){
-      if (rafId == null) rafId = requestAnimationFrame(animateScroll);
-    }
+    function ensureAnim(){ if (rafId == null) rafId = requestAnimationFrame(animateScroll); }
 
     window.addEventListener("scroll", () => {
       if (rafId == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
@@ -1024,7 +980,7 @@
 
     // Stars generator (light)
     const stars = document.getElementById("stars");
-    const STAR_COUNT = 36;
+    const STAR_COUNT = 32;
     function rand(min, max){ return Math.random() * (max - min) + min; }
     for(let i=0;i<STAR_COUNT;i++){
       const s = document.createElement("span");
@@ -1032,40 +988,32 @@
       s.style.left = rand(0, 100) + "vw";
       s.style.bottom = rand(-10, 10) + "vh";
       s.style.setProperty("--s", rand(0.8, 1.5));
-      s.style.setProperty("--dur", rand(8, 14) + "s");
+      s.style.setProperty("--dur", rand(9, 16) + "s");
       s.style.setProperty("--delay", rand(0, 10) + "s");
       s.style.setProperty("--o", rand(0.16, 0.50));
       stars.appendChild(s);
     }
 
-    // ===== Idle / visibility optimization =====
+    // Idle / visibility optimization
     let idleTimer = null;
-    const IDLE_MS = 4000; // after 4s of no input => pause background anims
+    const IDLE_MS = 4000;
 
     function setIdle(isIdle){
       document.body.classList.toggle("idle", isIdle);
     }
-
     function markActive(){
       setIdle(false);
       if (idleTimer) clearTimeout(idleTimer);
       idleTimer = setTimeout(() => setIdle(true), IDLE_MS);
     }
-
-    // Start idle timer soon after load
     markActive();
 
-    // Pause everything when tab is not visible; resume on focus
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        setIdle(true);
-      } else {
-        markActive();
-      }
+      if (document.hidden) setIdle(true);
+      else markActive();
     });
 
-    // Inputs that count as "activity"
-    ["mousemove","pointerdown","keydown","touchstart","wheel","scroll"].forEach(evt => {
+    ["pointerdown","keydown","touchstart","wheel","scroll"].forEach(evt => {
       window.addEventListener(evt, markActive, { passive: true });
     });
   </script>
