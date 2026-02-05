@@ -160,6 +160,11 @@
     }
     body.frozen .ring:hover::after{ animation-play-state: paused !important; }
 
+    @media (hover:hover) and (pointer:fine){
+      .bar:hover{ box-shadow: none !important; }
+      .bar:hover::after{ opacity:0 !important; animation:none !important; }
+    }
+
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
@@ -619,7 +624,7 @@
               </div>
               <div class="miniBody">
                 Latency stable • CDN healthy • Updates rolling.
-                <div class="bar ring" aria-label="Status bar"><span style="--w:100%"></span></div>
+                <div class="bar" aria-label="Status bar"><span style="--w:100%"></span></div>
               </div>
             </div>
             <div class="miniCard ring">
@@ -629,7 +634,7 @@
               </div>
               <div class="miniBody">
                 Product is 99.9% undetected as of 5/02/26.
-                <div class="bar ring"><span style="--w:99%"></span></div>
+                <div class="bar"><span style="--w:99%"></span></div>
               </div>
             </div>
             <div class="miniCard ring">
@@ -639,7 +644,7 @@
               </div>
               <div class="miniBody">
                 UI polish + animations + improved panel flow.
-                <div class="bar ring"><span style="--w:72%"></span></div>
+                <div class="bar"><span style="--w:72%"></span></div>
               </div>
             </div>
           </div>
@@ -775,7 +780,7 @@
 
     function applyRings(){
       const selectors = [
-        "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn",".bar"
+        "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn"
       ].join(",");
       document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
       document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
