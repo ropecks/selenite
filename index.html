@@ -400,8 +400,15 @@
     .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; font-weight:700; }
     .price small{ font-size:13px; color: rgba(255,255,255,.65); font-weight:500; }
     .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; font-weight:400; }
-    .list li{ display:flex; gap:8px; align-items:flex-start; }
-    .check{ margin-top:4px; width:14px; height:14px; flex:0 0 14px; opacity:.9; }
+    .list li{ display:flex; gap:10px; align-items:flex-start; }
+    .bullet{
+      width:14px;
+      flex:0 0 14px;
+      text-align:center;
+      opacity:.95;
+      line-height:1.2;
+      margin-top:2px;
+    }
 
     footer{
       margin-top: 36px;
@@ -477,6 +484,7 @@
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
     label{ font-size:13px; color: rgba(255,255,255,.72); font-weight:500; }
+
     input{
       height: 46px;
       padding: 0 12px;
@@ -490,6 +498,15 @@
       font-weight:500;
     }
     input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
+
+    .inputLocked{
+      -webkit-user-select:none !important;
+      user-select:none !important;
+      pointer-events:none !important;
+      caret-color: transparent !important;
+    }
+    .inputLocked:focus{ box-shadow:none !important; }
+
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; font-weight:400; }
 
@@ -636,9 +653,9 @@
             <div class="priceTop"><h4>Starter</h4><span class="badge ring">Basic</span></div>
             <div class="price">$9.99 <small>/ lt</small></div>
             <ul class="list">
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard Support</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Minor Updates</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Full access to loader and menu injection</li>
+              <li><span class="bullet">•</span><span>Standard Support</span></li>
+              <li><span class="bullet">•</span><span>Minor Updates</span></li>
+              <li><span class="bullet">•</span><span>Full access to loader and menu injection</span></li>
             </ul>
             <div class="row"><button class="btn ring" type="button">Choose</button></div>
           </div>
@@ -647,9 +664,9 @@
             <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
             <div class="price">$19.99 <small>/ lt</small></div>
             <ul class="list">
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Everything from Starter + Priority support</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Frequent updates</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Exclusive premium features</li>
+              <li><span class="bullet">•</span><span>Everything from Starter + Priority support</span></li>
+              <li><span class="bullet">•</span><span>Frequent updates</span></li>
+              <li><span class="bullet">•</span><span>Exclusive premium features</span></li>
             </ul>
             <div class="row"><button class="btn primary ring" type="button">Get Pro</button></div>
           </div>
@@ -734,7 +751,7 @@
         </div>
         <div class="field" style="margin-top:10px;">
           <label>Destination</label>
-          <input value="https://discord.gg/4UuCqrDgnF" readonly />
+          <input class="inputLocked" value="https://discord.gg/4UuCqrDgnF" readonly tabindex="-1" aria-readonly="true" />
         </div>
         <div class="row">
           <button class="btn primary ring" id="confirmSupport" type="button">Open Discord</button>
