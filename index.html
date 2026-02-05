@@ -29,6 +29,7 @@
       user-select:none;
       -webkit-tap-highlight-color: transparent;
     }
+    /* Still allow selection/cursor inside inputs */
     input, textarea{
       -webkit-user-select:text !important;
       user-select:text !important;
@@ -45,6 +46,7 @@
       overflow-x:hidden;
     }
 
+    /* ===== Background layers ===== */
     .bg{
       position:fixed;
       inset:0;
@@ -57,6 +59,7 @@
       transform: translateZ(0);
     }
 
+    /* Checker grid (no fade) */
     .gridlines{
       position:fixed; inset:0;
       z-index:-5;
@@ -69,6 +72,7 @@
       transform: translateZ(0);
     }
 
+    /* Subtle scanline + noise */
     .fx::before{
       content:"";
       position:fixed; inset:0;
@@ -93,6 +97,7 @@
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
     @keyframes drift{ 0%{transform:translate3d(-2%, -2%,0)} 50%{transform:translate3d(2%,1%,0)} 100%{transform:translate3d(-2%,-2%,0)} }
 
+    /* Floating particles */
     #stars{
       position:fixed; inset:0;
       z-index:-2;
@@ -119,14 +124,47 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    /* ===== Hover animated thin gradient BORDER (stays aligned, no "spinning around") =====
-       We animate the gradient INSIDE the border via background-position, not rotation. */
-    .hoverline{
-      position:relative;
-      border:none !important;
-      outline:none !important;
+    /* =======================================================================
+       Hover animated thin gradient border (AUTO-APPLIES)
+       - no thick outlines
+       - stays aligned (background-position anim, not rotation)
+       ======================================================================= */
+
+    :is(
+      .panel,
+      .miniCard,
+      .priceCard,
+      .feat,
+      .pill,
+      .kicker,
+      .downloadHero,
+      .modal,
+      .btn,
+      nav a,
+      footer a,
+      .brand,
+      .badge
+    ){
+      position: relative;
+      border: none !important;
+      outline: none !important;
     }
-    .hoverline::after{
+
+    :is(
+      .panel,
+      .miniCard,
+      .priceCard,
+      .feat,
+      .pill,
+      .kicker,
+      .downloadHero,
+      .modal,
+      .btn,
+      nav a,
+      footer a,
+      .brand,
+      .badge
+    )::after{
       content:"";
       position:absolute;
       inset:-1px;
@@ -135,6 +173,7 @@
       opacity:0;
       pointer-events:none;
       transition: opacity .12s ease;
+
       background: linear-gradient(90deg,
         rgba(0,229,255,.95),
         rgba(0,255,149,.95),
@@ -154,20 +193,37 @@
         linear-gradient(#000 0 0);
       mask-composite: exclude;
     }
-    .hoverline:hover::after{
+
+    :is(
+      .panel,
+      .miniCard,
+      .priceCard,
+      .feat,
+      .pill,
+      .kicker,
+      .downloadHero,
+      .modal,
+      .btn,
+      nav a,
+      footer a,
+      .brand,
+      .badge
+    ):hover::after{
       opacity:1;
       animation: borderFlow 1.2s linear infinite;
     }
+
     @keyframes borderFlow{
       0%   { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
 
+    /* ===== Header / Nav ===== */
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
       background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
-      border-bottom:none;
+      border-bottom:none; /* remove outline */
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
 
@@ -224,7 +280,6 @@
       font-size:13px;
       cursor:pointer;
       transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-      position:relative;
       overflow:hidden;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
@@ -247,6 +302,7 @@
     .view{ display:none; }
     .view.show{ display:block; }
 
+    /* ===== Main layout ===== */
     main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
@@ -262,14 +318,13 @@
       border:none;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      position:relative;
       overflow:hidden;
       transform: translateY(10px);
       opacity:0;
       animation: rise .7s ease forwards;
     }
     @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
-    .panel::after{
+    .panel::before{
       content:"";
       position:absolute; inset:-1px;
       background:
@@ -287,9 +342,8 @@
       padding: 7px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      border:none;
-      color: rgba(255,255,255,.78);
       font-size:12px;
+      color: rgba(255,255,255,.78);
     }
     .dot{
       width:8px; height:8px; border-radius:999px;
@@ -327,7 +381,6 @@
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.05);
-      border:none;
     }
 
     .heroRight{ padding: 18px; }
@@ -337,7 +390,6 @@
       padding: 14px;
       border-radius: 16px;
       background: rgba(0,0,0,.18);
-      border:none;
       transition: transform .18s ease, background .18s ease;
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
@@ -348,7 +400,6 @@
       font-size:11px;
       padding: 6px 10px;
       border-radius: 999px;
-      border:none;
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.78);
       white-space:nowrap;
@@ -363,10 +414,8 @@
       height: 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.07);
-      border:none;
       overflow:hidden;
       margin-top:12px;
-      position:relative;
     }
     .bar > i{
       display:block;
@@ -390,8 +439,6 @@
       padding: 16px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border:none;
-      position:relative;
       overflow:hidden;
     }
     .feat::before{
@@ -403,8 +450,8 @@
       pointer-events:none;
     }
     .feat:hover::before{ opacity:1; }
-    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
-    .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
+    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; position:relative; z-index:1; }
+    .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; position:relative; z-index:1; }
 
     .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
@@ -413,8 +460,6 @@
       padding: 18px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border:none;
-      position:relative;
       overflow:hidden;
       transition: transform .2s ease;
     }
@@ -438,6 +483,7 @@
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
+    /* ===== Modal ===== */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -450,7 +496,6 @@
       width: min(520px, 96vw);
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border:none;
       box-shadow: 0 30px 90px rgba(0,0,0,.6);
       overflow:hidden;
       transform: translateY(10px) scale(.98);
@@ -500,17 +545,16 @@
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
+    /* ===== Download view + enter animation ===== */
     .downloadWrap{ padding: 52px 0 72px; }
     .downloadHero{
       padding: 26px;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:none;
       box-shadow: var(--shadow);
-      position:relative;
       overflow:hidden;
     }
-    .downloadHero::after{
+    .downloadHero::before{
       content:"";
       position:absolute; inset:-1px;
       background:
@@ -569,7 +613,7 @@
 
   <header>
     <div class="wrap topbar">
-      <div class="brand hoverline">
+      <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Array Dashboard</h1>
@@ -578,57 +622,58 @@
       </div>
 
       <nav aria-label="Primary">
-        <a class="hoverline active" href="#" data-view="home">Home</a>
-        <a class="hoverline" href="#status" data-jump>Status</a>
-        <a class="hoverline" href="#pricing" data-jump>Plans</a>
-        <a class="hoverline" href="#faq" data-jump>FAQ</a>
-        <a class="hoverline" href="#" data-view="download">Download</a>
+        <a class="active" href="#" data-view="home">Home</a>
+        <a href="#status" data-jump>Status</a>
+        <a href="#pricing" data-jump>Plans</a>
+        <a href="#faq" data-jump>FAQ</a>
+        <a href="#" data-view="download">Download</a>
       </nav>
 
       <div class="actions">
-        <button class="btn hoverline" id="openDiscord" type="button">Support</button>
-        <button class="btn primary hoverline" id="openModal" type="button">Access Panel</button>
+        <button class="btn" id="openDiscord" type="button">Support</button>
+        <button class="btn primary" id="openModal" type="button">Access Panel</button>
       </div>
     </div>
   </header>
 
+  <!-- HOME -->
   <div id="viewHome" class="view show">
     <main class="wrap">
       <div class="hero">
-        <div class="panel heroLeft hoverline">
-          <div class="kicker hoverline"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
+        <div class="panel heroLeft">
+          <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
           <h2 class="title"><span class="grad">Array Dashboard</span></h2>
           <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
 
           <div class="ctaRow">
-            <button class="btn primary hoverline" id="scrollPricing" type="button">View Plans</button>
-            <button class="btn hoverline" id="goDownload" type="button">Go to Download</button>
+            <button class="btn primary" id="scrollPricing" type="button">View Plans</button>
+            <button class="btn" id="goDownload" type="button">Go to Download</button>
           </div>
 
           <div class="metaRow">
-            <span class="pill hoverline">Fast delivery</span>
-            <span class="pill hoverline">Smooth UI</span>
-            <span class="pill hoverline">Secure checkout</span>
+            <span class="pill">Fast delivery</span>
+            <span class="pill">Smooth UI</span>
+            <span class="pill">Secure checkout</span>
           </div>
         </div>
 
-        <aside class="panel heroRight hoverline" id="status">
+        <aside class="panel heroRight" id="status">
           <div class="stack">
-            <div class="miniCard hoverline">
+            <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">System Status</p>
-                <span class="badge ok hoverline">Operational</span>
+                <span class="badge ok">Operational</span>
               </div>
               <div class="miniBody">
                 Latency stable • CDN healthy • Updates rolling.
-                <div class="bar"><i style="--w:100%"></i></div>
+                <div class="bar" aria-label="Status bar"><i style="--w:100%"></i></div>
               </div>
             </div>
 
-            <div class="miniCard hoverline">
+            <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Detectability</p>
-                <span class="badge ok hoverline">Undetected</span>
+                <span class="badge ok">Undetected</span>
               </div>
               <div class="miniBody">
                 Product is 99.9% undetected as of 5/02/26.
@@ -636,10 +681,10 @@
               </div>
             </div>
 
-            <div class="miniCard hoverline">
+            <div class="miniCard">
               <div class="miniTop">
                 <p class="miniTitle">Latest Drop</p>
-                <span class="badge hoverline">Patch Notes</span>
+                <span class="badge">Patch Notes</span>
               </div>
               <div class="miniBody">
                 UI polish + animations + improved panel flow.
@@ -653,37 +698,37 @@
       <section id="pricing" class="reveal">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
         <div class="pricing">
-          <div class="priceCard hoverline">
-            <div class="priceTop"><h4>Starter</h4><span class="badge hoverline">Basic</span></div>
+          <div class="priceCard">
+            <div class="priceTop"><h4>Starter</h4><span class="badge">Basic</span></div>
             <div class="price">$9 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard access</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard support</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Access modal template</li>
             </ul>
-            <div class="row"><button class="btn hoverline" type="button" data-open>Choose</button></div>
+            <div class="row"><button class="btn" type="button" data-open>Choose</button></div>
           </div>
 
-          <div class="priceCard pop hoverline">
-            <div class="priceTop"><h4>Pro</h4><span class="badge ok hoverline">Most Popular</span></div>
+          <div class="priceCard pop">
+            <div class="priceTop"><h4>Pro</h4><span class="badge ok">Most Popular</span></div>
             <div class="price">$19 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority updates</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Faster downloads</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Premium UI theme</li>
             </ul>
-            <div class="row"><button class="btn primary hoverline" type="button" data-open>Get Pro</button></div>
+            <div class="row"><button class="btn primary" type="button" data-open>Get Pro</button></div>
           </div>
 
-          <div class="priceCard hoverline">
-            <div class="priceTop"><h4>Elite</h4><span class="badge hoverline">Custom</span></div>
+          <div class="priceCard">
+            <div class="priceTop"><h4>Elite</h4><span class="badge">Custom</span></div>
             <div class="price">$49 <small>/ mo</small></div>
             <ul class="list">
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated support</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom onboarding</li>
               <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Branding kit</li>
             </ul>
-            <div class="row"><button class="btn hoverline" type="button" data-open>Contact</button></div>
+            <div class="row"><button class="btn" type="button" data-open>Contact</button></div>
           </div>
         </div>
       </section>
@@ -691,15 +736,15 @@
       <section id="faq" class="reveal">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">FAQ</h3>
         <div class="grid3">
-          <div class="feat hoverline">
+          <div class="feat">
             <h3>Where do I download the loader?</h3>
             <p>Download the loader by opening the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
           </div>
-          <div class="feat hoverline">
+          <div class="feat">
             <h3>Is this a trusted software?</h3>
             <p>Array is trusted by many customers and even many other trusted/popular mod menu creators.</p>
           </div>
-          <div class="feat hoverline">
+          <div class="feat">
             <h3>Can I get a refund?</h3>
             <p>No, refunds are not accepted and all purchases are final.</p>
           </div>
@@ -710,36 +755,37 @@
         <div class="wrap foot">
           <div>© <span id="year"></span> Array Dashboard. All rights reserved.</div>
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <a class="hoverline" href="#status" data-jump>Status</a>
-            <a class="hoverline" href="#pricing" data-jump>Plans</a>
-            <a class="hoverline" href="#faq" data-jump>FAQ</a>
-            <a class="hoverline" href="#" data-view="download">Download</a>
+            <a href="#status" data-jump>Status</a>
+            <a href="#pricing" data-jump>Plans</a>
+            <a href="#faq" data-jump>FAQ</a>
+            <a href="#" data-view="download">Download</a>
           </div>
         </div>
       </footer>
     </main>
   </div>
 
+  <!-- DOWNLOAD -->
   <div id="viewDownload" class="view downloadEnter">
     <div class="wrap downloadWrap">
-      <div class="downloadHero hoverline">
-        <div class="kicker hoverline"><span class="dot"></span> Download category</div>
+      <div class="downloadHero">
+        <div class="kicker"><span class="dot"></span> Download category</div>
         <div class="downloadTitle">Download</div>
         <p class="downloadSub">Temporary layout — add your real download buttons, changelog, and system requirements here.</p>
 
         <div class="ctaRow" style="margin-top:16px;">
-          <button class="btn primary hoverline" type="button" id="downloadPrimary">Download Latest</button>
-          <button class="btn hoverline" type="button" id="downloadAlt">Mirror</button>
-          <button class="btn hoverline" type="button" id="backHome">Back to Home</button>
+          <button class="btn primary" type="button" id="downloadPrimary">Download Latest</button>
+          <button class="btn" type="button" id="downloadAlt">Mirror</button>
+          <button class="btn" type="button" id="backHome">Back to Home</button>
         </div>
       </div>
 
       <section class="downloadAnim reveal" style="margin-top:18px;">
         <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Temporary elements</h3>
         <div class="grid3">
-          <div class="feat hoverline"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
-          <div class="feat hoverline"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
-          <div class="feat hoverline"><h3>Notes</h3><p>Add requirements, install steps, and support links here.</p></div>
+          <div class="feat"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
+          <div class="feat"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
+          <div class="feat"><h3>Notes</h3><p>Add requirements, install steps, and support links here.</p></div>
         </div>
       </section>
 
@@ -747,18 +793,19 @@
         <div class="wrap foot">
           <div>© <span class="year2"></span> Array Dashboard. All rights reserved.</div>
           <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <a class="hoverline" href="#" id="backHome2">Back</a>
+            <a href="#" id="backHome2">Back</a>
           </div>
         </div>
       </footer>
     </div>
   </div>
 
+  <!-- Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal hoverline">
+    <div class="modal">
       <div class="modalHead">
         <strong id="modalTitle">Access Panel</strong>
-        <button class="x hoverline" id="closeModal" type="button" aria-label="Close">
+        <button class="x" id="closeModal" type="button" aria-label="Close">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:.85">
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
@@ -774,8 +821,8 @@
           <input id="user" placeholder="yourname" autocomplete="username" />
         </div>
         <div class="row">
-          <button class="btn primary hoverline" id="submit" type="button">Continue</button>
-          <button class="btn hoverline" id="demoFill" type="button">Fill Demo</button>
+          <button class="btn primary" id="submit" type="button">Continue</button>
+          <button class="btn" id="demoFill" type="button">Fill Demo</button>
         </div>
         <div class="hint" id="hint">Demo template: replace this with your purchase / redeem / download flow.</div>
       </div>
@@ -783,8 +830,10 @@
   </div>
 
   <script>
-    // Right-click disabled (can be bypassed; kept because you asked)
+    // Disable right-click everywhere (including buttons)
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
+
+    // Optional: block common devtools shortcuts (not bulletproof)
     window.addEventListener("keydown", (e) => {
       const k = e.key.toLowerCase();
       const ctrl = e.ctrlKey || e.metaKey;
@@ -793,11 +842,13 @@
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
+    // Hover hotspot for primary buttons
     window.addEventListener("pointermove", (e) => {
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
     });
 
+    // Feature card hover hotspot
     document.querySelectorAll(".feat").forEach(card => {
       card.addEventListener("pointermove", (e) => {
         const r = card.getBoundingClientRect();
@@ -808,12 +859,14 @@
       });
     });
 
+    // Reveal on scroll
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("on"); });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
+    // View switching + Download enter animation
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
     const navLinks = [...document.querySelectorAll("nav a")];
@@ -823,11 +876,13 @@
       const match = navLinks.find(a => a.dataset.view === view);
       if (match) match.classList.add("active");
     }
+
     function playDownloadEnter(){
       viewDownload.classList.remove("play");
-      void viewDownload.offsetWidth;
+      void viewDownload.offsetWidth; // reflow
       viewDownload.classList.add("play");
     }
+
     function showHome(){
       viewDownload.classList.remove("show");
       viewHome.classList.add("show");
@@ -852,11 +907,11 @@
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
+    // Smooth easing scroll
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
     const SCROLL_SPEED = 1.0;
-
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let rafId = null;
 
@@ -903,6 +958,7 @@
       smoothJumpTo("#pricing");
     });
 
+    // Modal
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -936,14 +992,17 @@
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
 
+    // placeholders
     document.getElementById("openDiscord").addEventListener("click", () => alert("Support link placeholder. Replace this with your support URL."));
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
     document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
 
+    // Footer year
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
+    // Stars generator
     const stars = document.getElementById("stars");
     const STAR_COUNT = 42;
     function rand(min, max){ return Math.random() * (max - min) + min; }
