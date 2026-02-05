@@ -62,6 +62,7 @@
       transform: translateZ(0);
     }
 
+    /* If the browser supports radial gradients, upgrade the background */
     @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
       .bg{
         background:
@@ -72,6 +73,7 @@
       }
     }
 
+    /* Checker grid: use only basic linear-gradients (very compatible) */
     .gridlines{
       position:fixed; inset:0;
       z-index:0;
@@ -85,7 +87,7 @@
       transform: translateZ(0);
     }
 
-    /* Scanline + lightweight noise */
+    /* Scanline + lightweight noise (both safe) */
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -94,14 +96,14 @@
       opacity:.08;
       pointer-events:none;
       animation: scan 9s linear infinite;
-      z-index:0; /* ✅ was negative */
+      z-index:0;
       will-change: transform;
     }
     body.fx::after{
       content:"";
       position:fixed; inset:0;
       pointer-events:none;
-      z-index:0; /* ✅ was negative */
+      z-index:0;
       opacity:.03;
       background-image:
         radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
@@ -119,6 +121,7 @@
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
 
+    /* CANVAS stars layer */
     #starCanvas{
       position:fixed;
       inset:0;
@@ -148,12 +151,14 @@
       outline: none !important;
     }
 
+    /* Fallback for browsers without mask-composite: simple outline */
     @media (hover:hover) and (pointer:fine){
       .ring:hover{
         box-shadow: 0 0 0 1px rgba(0,229,255,.35);
       }
     }
 
+    /* Upgrade ring only if mask-composite is supported */
     @supports (-webkit-mask-composite: xor) {
       @media (hover:hover) and (pointer:fine){
         .ring:hover{ box-shadow: none; }
@@ -979,9 +984,9 @@
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // Stars (freeze only when tab backgrounded)
+    // Stars (freeze only when tab backgrounded) — GC-free typed-array pooling
     const canvas = document.getElementById("starCanvas");
-    const ctx = canvas.getContext("2d", { alpha:true, desynchronized:true });
+    const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
 
     let dpr = 1, cw = 0, ch = 0;
 
@@ -997,36 +1002,53 @@
       canvas.height = Math.floor(ch * dpr);
       canvas.style.width = cw + "px";
       canvas.style.height = ch + "px";
-      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function destroyCanvasBackingStore(){ canvas.width = 0; canvas.height = 0; }
-    window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive:true });
+    function destroyCanvasBackingStore(){
+      canvas.width = 0;
+      canvas.height = 0;
+    }
 
+    window.addEventListener("resize", () => {
+      if (!document.hidden) resizeCanvas();
+    }, { passive: true });
+
+    // --- Pool (typed arrays) ---
     const STAR_COUNT = 60;
-    const stars = new Array(STAR_COUNT);
-    function rand(min,max){ return Math.random()*(max-min)+min; }
 
-    function resetStar(i, startFromBottom=true){
-      const s = stars[i] || (stars[i] = {});
-      s.x = rand(0, cw);
-      s.y = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
-      s.r = rand(0.8, 1.8);
-      s.vy = rand(18, 45);
-      s.a = rand(0.18, 0.55);
-      s.fadeTop = rand(0.18, 0.28);
-      return s;
+    const sx = new Float32Array(STAR_COUNT);
+    const sy = new Float32Array(STAR_COUNT);
+    const sr = new Float32Array(STAR_COUNT);
+    const svy = new Float32Array(STAR_COUNT);
+    const sa = new Float32Array(STAR_COUNT);
+    const sfadeTop = new Float32Array(STAR_COUNT);
+
+    const cr = new Uint8Array(STAR_COUNT);
+    const cg = new Uint8Array(STAR_COUNT);
+    const cb = new Uint8Array(STAR_COUNT);
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+    function lerp(a, b, t){ return a + (b - a) * t; }
+
+    const c1 = [0, 229, 255];
+    const c2 = [0, 255, 149];
+
+    function assignStarColor(i){
+      const t = cw > 1 ? (sx[i] / cw) : 0.5;
+      cr[i] = (lerp(c1[0], c2[0], t) + 0.5) | 0;
+      cg[i] = (lerp(c1[1], c2[1], t) + 0.5) | 0;
+      cb[i] = (lerp(c1[2], c2[2], t) + 0.5) | 0;
     }
 
-    const c1 = [0,229,255];
-    const c2 = [0,255,149];
-    function lerp(a,b,t){ return a + (b-a)*t; }
-    function mixColor(t){
-      return [
-        Math.floor(lerp(c1[0], c2[0], t)),
-        Math.floor(lerp(c1[1], c2[1], t)),
-        Math.floor(lerp(c1[2], c2[2], t))
-      ];
+    function resetStar(i, startFromBottom = true){
+      sx[i] = rand(0, cw);
+      sy[i] = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
+      sr[i] = rand(0.8, 1.8);
+      svy[i] = rand(18, 45);
+      sa[i] = rand(0.18, 0.55);
+      sfadeTop[i] = rand(0.18, 0.28);
+      assignStarColor(i);
     }
 
     let starRaf = null;
@@ -1034,30 +1056,37 @@
 
     function drawStars(t){
       if (document.hidden) { stopStars(); return; }
+
       const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
       lastT = t;
 
-      ctx.clearRect(0,0,cw,ch);
+      ctx.clearRect(0, 0, cw, ch);
 
-      for(let i=0;i<STAR_COUNT;i++){
-        const s = stars[i];
-        s.y -= s.vy * dt;
+      for (let i = 0; i < STAR_COUNT; i++){
+        sy[i] -= svy[i] * dt;
 
-        let alpha = s.a;
-        const topZone = ch * s.fadeTop;
-        if (s.y < topZone) alpha *= Math.max(0, s.y / topZone);
-        if (s.y > ch - 30) alpha *= Math.min(1, (ch - s.y) / 30);
+        let alpha = sa[i];
+        const topZone = ch * sfadeTop[i];
+        if (sy[i] < topZone) alpha *= Math.max(0, sy[i] / topZone);
+        if (sy[i] > ch - 30) alpha *= Math.min(1, (ch - sy[i]) / 30);
 
-        if (s.y < -50){ resetStar(i, true); continue; }
+        if (sy[i] < -50){
+          resetStar(i, true);
+          continue;
+        }
 
-        const tx = s.x / Math.max(1, cw);
-        const rgb = mixColor(tx);
+        const r = sr[i];
+        const rr = cr[i], gg = cg[i], bb = cb[i];
 
-        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
+        ctx.beginPath();
+        ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2);
+        ctx.fill();
 
-        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha*0.25})`;
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.r*2.2, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha * 0.25})`;
+        ctx.beginPath();
+        ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       starRaf = requestAnimationFrame(drawStars);
@@ -1065,17 +1094,21 @@
 
     function startStars(){
       if (starRaf != null) return;
+
       resizeCanvas();
-      for(let i=0;i<STAR_COUNT;i++) resetStar(i, false);
+      for (let i = 0; i < STAR_COUNT; i++) resetStar(i, false);
+
       lastT = performance.now();
       starRaf = requestAnimationFrame(drawStars);
     }
 
     function stopStars(){
       if (starRaf == null) return;
+
       cancelAnimationFrame(starRaf);
       starRaf = null;
-      ctx.clearRect(0,0,cw,ch);
+
+      ctx.clearRect(0, 0, cw, ch);
       destroyCanvasBackingStore();
     }
 
