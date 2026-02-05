@@ -125,9 +125,10 @@
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
     /* =======================================================================
-       Hover animated thin gradient border (AUTO-APPLIES)
-       - no thick outlines
-       - stays aligned (background-position anim, not rotation)
+       FIXED Hover animated thin gradient border (AUTO-APPLIES)
+       - Works even with overflow:hidden
+       - Draws INSIDE (inset:0) so it can't be clipped
+       - Proper z-index so it appears over content
        ======================================================================= */
 
     :is(
@@ -146,6 +147,7 @@
       .badge
     ){
       position: relative;
+      z-index: 0;               /* stacking context */
       border: none !important;
       outline: none !important;
     }
@@ -167,12 +169,13 @@
     )::after{
       content:"";
       position:absolute;
-      inset:-1px;
+      inset:0;                  /* inside (prevents clipping) */
       border-radius: inherit;
-      padding: 1px;               /* border thickness */
+      padding: 1px;             /* thickness */
       opacity:0;
       pointer-events:none;
       transition: opacity .12s ease;
+      z-index: 50;              /* above element content */
 
       background: linear-gradient(90deg,
         rgba(0,229,255,.95),
@@ -192,6 +195,8 @@
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
       mask-composite: exclude;
+
+      filter: drop-shadow(0 0 10px rgba(0,229,255,.14));
     }
 
     :is(
@@ -223,7 +228,7 @@
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
       background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
-      border-bottom:none; /* remove outline */
+      border-bottom:none;
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
 
@@ -296,6 +301,7 @@
       opacity:0;
       transition: opacity .2s ease;
       pointer-events:none;
+      z-index: 0;
     }
     .btn.primary:hover::before{ opacity:1; }
 
@@ -333,8 +339,9 @@
         radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.08), transparent 65%);
       pointer-events:none;
       opacity:.9;
+      z-index: 1;
     }
-    .panel > *{ position:relative; z-index:1; }
+    .panel > *{ position:relative; z-index:2; }
 
     .heroLeft{ padding: 26px 26px 22px; }
     .kicker{
@@ -391,6 +398,7 @@
       border-radius: 16px;
       background: rgba(0,0,0,.18);
       transition: transform .18s ease, background .18s ease;
+      overflow:hidden;
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
 
@@ -448,10 +456,12 @@
       opacity:0;
       transition: opacity .25s ease;
       pointer-events:none;
+      z-index: 1;
     }
     .feat:hover::before{ opacity:1; }
-    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; position:relative; z-index:1; }
-    .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; position:relative; z-index:1; }
+    .feat h3, .feat p{ position:relative; z-index:2; }
+    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
+    .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
 
     .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
@@ -562,8 +572,9 @@
         radial-gradient(680px 260px at 80% 10%, rgba(0,255,149,.12), transparent 64%);
       pointer-events:none;
       opacity:.95;
+      z-index: 1;
     }
-    .downloadHero > *{ position:relative; z-index:1; }
+    .downloadHero > *{ position:relative; z-index:2; }
 
     .downloadTitle{
       margin: 10px 0 8px;
