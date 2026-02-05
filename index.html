@@ -3,48 +3,61 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Neon Panel</title>
-  <meta name="theme-color" content="#080a12" />
+  <title>Array Dashboard</title>
+  <meta name="theme-color" content="#070b10" />
   <style>
     :root{
-      --bg:#070913;
-      --bg2:#0b1026;
-      --card:rgba(255,255,255,.06);
-      --stroke:rgba(255,255,255,.10);
+      /* Cyan -> Green theme */
+      --bg:#05080d;
+      --bg2:#071520;
+
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
+
       --shadow: 0 30px 80px rgba(0,0,0,.55);
-      --glowA:#6d5cff;
-      --glowB:#00e5ff;
-      --glowC:#00ff95;
       --radius:18px;
+
+      /* Primary glow colors */
+      --glowA:#00e5ff; /* cyan */
+      --glowB:#00ff95; /* green */
+      --glowC:#7dffcc; /* mint */
     }
 
     *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    html{ height:100%; background: var(--bg); }
     body{
+      min-height:100%;
       margin:0;
       color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 20% -10%, rgba(109,92,255,.18), transparent 60%),
-        radial-gradient(900px 700px at 90% 10%, rgba(0,229,255,.16), transparent 55%),
-        radial-gradient(900px 700px at 60% 120%, rgba(0,255,149,.12), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
+      background: transparent;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       overflow-x:hidden;
     }
 
-    /* Subtle animated noise + scanline */
+    /* Fixed background layer (prevents scroll seams) */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      background:
+        radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
+        radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
+        radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      transform: translateZ(0);
+    }
+
+    /* Subtle animated noise + scanline (fixed to avoid scroll seams) */
     .fx::before{
       content:"";
       position:fixed; inset:0;
-      background:
-        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+      background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
       background-size: 100% 3px;
       opacity:.08;
       mix-blend-mode: overlay;
       pointer-events:none;
       animation: scan 8s linear infinite;
+      z-index:-2;
     }
     .fx::after{
       content:"";
@@ -54,6 +67,7 @@
       pointer-events:none;
       transform: translateZ(0);
       animation: drift 14s linear infinite;
+      z-index:-1;
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
     @keyframes drift{ 0%{transform:translate3d(-2%, -2%,0)} 50%{transform:translate3d(2%,1%,0)} 100%{transform:translate3d(-2%,-2%,0)} }
@@ -65,7 +79,7 @@
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
-      background: linear-gradient(180deg, rgba(10,12,24,.65), rgba(10,12,24,.25));
+      background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
     .topbar{
@@ -80,18 +94,24 @@
     .logo{
       width:38px; height:38px; border-radius:12px;
       background:
-        radial-gradient(circle at 30% 30%, rgba(0,229,255,.9), transparent 45%),
-        radial-gradient(circle at 70% 70%, rgba(109,92,255,.9), transparent 45%),
+        radial-gradient(circle at 30% 30%, rgba(0,229,255,.95), transparent 45%),
+        radial-gradient(circle at 70% 70%, rgba(0,255,149,.92), transparent 45%),
         rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.07), 0 0 28px rgba(109,92,255,.25);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 30px rgba(0,255,149,.18);
       position:relative;
     }
     .logo::after{
       content:"";
       position:absolute; inset:-8px;
       border-radius:16px;
-      background: conic-gradient(from 120deg, rgba(0,229,255,.0), rgba(0,229,255,.35), rgba(109,92,255,.35), rgba(0,255,149,.22), rgba(0,229,255,.0));
+      background: conic-gradient(from 120deg,
+        rgba(0,229,255,.0),
+        rgba(0,229,255,.32),
+        rgba(0,255,149,.28),
+        rgba(125,255,204,.22),
+        rgba(0,229,255,.0)
+      );
       filter: blur(14px);
       opacity:.6;
       z-index:-1;
@@ -102,7 +122,7 @@
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
 
     nav{
-      display:flex; align-items:center; gap:18px;
+      display:flex; align-items:center; gap:8px;
       color:rgba(255,255,255,.72);
       font-size:13px;
     }
@@ -115,6 +135,12 @@
       background:rgba(255,255,255,.06);
       color:rgba(255,255,255,.92);
       transform: translateY(-1px);
+    }
+    nav a.active{
+      background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
+      border: 1px solid rgba(0,229,255,.22);
+      padding:9px 9px; /* compensate border */
+      color:rgba(255,255,255,.92);
     }
 
     .actions{ display:flex; align-items:center; gap:10px; }
@@ -135,22 +161,27 @@
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18); }
     .btn:active{ transform: translateY(0); }
+
     .btn.primary{
       border-color: rgba(0,229,255,.35);
-      background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(109,92,255,.12));
-      box-shadow: 0 0 0 6px rgba(0,229,255,.08), 0 0 40px rgba(0,229,255,.18);
+      background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
+      box-shadow: 0 0 0 6px rgba(0,229,255,.07), 0 0 46px rgba(0,255,149,.14);
     }
     .btn.primary::before{
       content:"";
       position:absolute; inset:-2px;
-      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.35), transparent 55%);
+      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.30), transparent 55%);
       opacity:0;
       transition: opacity .2s ease;
       pointer-events:none;
     }
     .btn.primary:hover::before{ opacity:1; }
 
-    /* Hero */
+    /* Views */
+    .view{ display:none; }
+    .view.show{ display:block; }
+
+    /* Main view */
     main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
@@ -172,18 +203,16 @@
       opacity:0;
       animation: rise .7s ease forwards;
     }
-    @keyframes rise{
-      to{ transform:translateY(0); opacity:1; }
-    }
+    @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
     .panel::after{
       content:"";
       position:absolute; inset:-1px;
       background:
-        radial-gradient(600px 220px at 20% 0%, rgba(0,229,255,.15), transparent 60%),
-        radial-gradient(520px 220px at 80% 0%, rgba(109,92,255,.16), transparent 60%),
-        radial-gradient(520px 260px at 50% 120%, rgba(0,255,149,.10), transparent 65%);
+        radial-gradient(600px 220px at 20% 0%, rgba(0,229,255,.14), transparent 60%),
+        radial-gradient(520px 220px at 80% 0%, rgba(0,255,149,.12), transparent 60%),
+        radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.08), transparent 65%);
       pointer-events:none;
-      opacity:.85;
+      opacity:.9;
     }
     .panel > *{ position:relative; z-index:1; }
 
@@ -199,8 +228,8 @@
     }
     .dot{
       width:8px; height:8px; border-radius:999px;
-      background: var(--glowB);
-      box-shadow: 0 0 16px rgba(0,229,255,.8);
+      background: var(--glowA);
+      box-shadow: 0 0 16px rgba(0,229,255,.75);
       animation: pulse 1.6s ease-in-out infinite;
     }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
@@ -212,12 +241,13 @@
       letter-spacing: -0.6px;
     }
     .title .grad{
-      background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(109,92,255,.95), rgba(0,255,149,.9));
+      background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.90));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      filter: drop-shadow(0 0 22px rgba(0,229,255,.18));
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.16));
     }
+
     .subtitle{
       color: rgba(255,255,255,.70);
       max-width: 62ch;
@@ -259,7 +289,20 @@
       background: rgba(0,0,0,.22);
     }
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .miniTitle{ font-weight:700; font-size:13px; margin:0; }
+    .miniTitle{ font-weight:700; font-size:13px; margin:0; display:flex; align-items:center; gap:8px; }
+    .infoDot{
+      width:18px; height:18px;
+      border-radius: 999px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.75);
+      font-size: 12px;
+      line-height: 1;
+      cursor: help;
+      user-select:none;
+    }
+
     .badge{
       font-size:11px;
       padding: 6px 10px;
@@ -269,10 +312,12 @@
       color: rgba(255,255,255,.78);
       white-space:nowrap;
     }
+    /* green shiny effect like Operational */
     .badge.ok{
       border-color: rgba(0,255,149,.30);
       box-shadow: 0 0 0 6px rgba(0,255,149,.06);
     }
+
     .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
 
     .bar{
@@ -288,9 +333,9 @@
       display:block;
       height:100%;
       width: var(--w, 72%);
-      background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(109,92,255,.85), rgba(0,255,149,.8));
+      background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(0,255,149,.82), rgba(125,255,204,.78));
       border-radius: 999px;
-      filter: drop-shadow(0 0 14px rgba(0,229,255,.35));
+      filter: drop-shadow(0 0 14px rgba(0,229,255,.28));
       animation: load 1.2s ease forwards;
       transform-origin:left;
       transform: scaleX(.65);
@@ -319,20 +364,21 @@
     .feat::before{
       content:"";
       position:absolute; inset:-2px;
-      background: radial-gradient(520px 160px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.14), transparent 60%);
+      background: radial-gradient(520px 160px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.12), transparent 60%);
       opacity:.0;
       transition: opacity .25s ease;
       pointer-events:none;
     }
     .feat:hover::before{ opacity:1; }
-    .feat h3{ margin:10px 0 6px; font-size:14px; letter-spacing:.2px; }
+    .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
     .icon{
       width:38px; height:38px; border-radius: 14px;
       display:grid; place-items:center;
       background: rgba(0,0,0,.2);
       border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.06);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.05);
+      margin-bottom:10px;
     }
 
     /* Pricing */
@@ -355,9 +401,10 @@
     }
     .priceCard:hover{ transform: translateY(-3px); border-color: rgba(0,229,255,.22); }
     .priceCard.pop{
-      border-color: rgba(0,229,255,.35);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.07), 0 0 55px rgba(0,229,255,.13);
+      border-color: rgba(0,229,255,.30);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 55px rgba(0,255,149,.10);
     }
+
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .priceCard h4{ margin:0; font-size:14px; }
     .price{
@@ -434,8 +481,8 @@
       transition: border-color .2s ease, box-shadow .2s ease;
     }
     input:focus{
-      border-color: rgba(0,229,255,.30);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.08);
+      border-color: rgba(0,229,255,.28);
+      box-shadow: 0 0 0 6px rgba(0,229,255,.07);
     }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .hint{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.58); line-height:1.45; }
@@ -447,253 +494,356 @@
     }
     .reveal.on{ opacity:1; transform: translateY(0); }
 
-    /* Cursor glow orb */
-    .orb{
-      position:fixed;
-      width: 420px; height: 420px;
-      left: calc(var(--cx, 50vw) - 210px);
-      top:  calc(var(--cy, 50vh) - 210px);
-      background: radial-gradient(circle at 30% 30%, rgba(0,229,255,.14), transparent 55%),
-                  radial-gradient(circle at 70% 70%, rgba(109,92,255,.14), transparent 55%),
-                  radial-gradient(circle at 50% 50%, rgba(0,255,149,.08), transparent 60%);
-      filter: blur(28px);
-      pointer-events:none;
-      opacity:.9;
-      transform: translateZ(0);
-      transition: opacity .25s ease;
+    /* Blue "Download category" link in FAQ */
+    .linkblue{
+      color: rgba(0,229,255,.95);
+      cursor:pointer;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,229,255,.35);
+      transition: opacity .15s ease, border-color .15s ease;
     }
+    .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
+
+    /* Download view */
+    .downloadWrap{
+      padding: 52px 0 72px;
+    }
+    .downloadHero{
+      padding: 26px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .downloadHero::after{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(0,229,255,.16), transparent 62%),
+        radial-gradient(680px 260px at 80% 10%, rgba(0,255,149,.12), transparent 64%);
+      pointer-events:none;
+      opacity:.95;
+    }
+    .downloadHero > *{ position:relative; z-index:1; }
+    .downloadTitle{
+      margin: 10px 0 8px;
+      font-size: clamp(38px, 5vw, 58px);
+      letter-spacing: -0.8px;
+      line-height: 1.02;
+      background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.9));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      filter: drop-shadow(0 0 22px rgba(0,229,255,.14));
+    }
+    .downloadSub{
+      margin:0;
+      color: rgba(255,255,255,.70);
+      line-height:1.6;
+      max-width: 70ch;
+      font-size:14px;
+    }
+
     @media (prefers-reduced-motion: reduce){
-      .orb, .fx::before, .fx::after, .logo::after{ display:none; }
-      *{ scroll-behavior:auto !important; animation:none !important; transition:none !important; }
+      .fx::before, .fx::after, .logo::after{ display:none; }
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body class="fx">
-  <div class="orb" aria-hidden="true"></div>
+  <div class="bg" aria-hidden="true"></div>
 
   <header>
     <div class="wrap topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
-          <h1>Neon Panel</h1>
-          <small>Private dashboard • sleek UI</small>
+          <h1>Array Dashboard</h1>
+          <small>The official Array portal</small>
         </div>
       </div>
 
       <nav aria-label="Primary">
-        <a href="#features">Features</a>
-        <a href="#status">Status</a>
-        <a href="#pricing">Plans</a>
-        <a href="#faq">FAQ</a>
+        <a href="#" data-view="home" class="active">Home</a>
+        <a href="#features" data-jump>Features</a>
+        <a href="#status" data-jump>Status</a>
+        <a href="#pricing" data-jump>Plans</a>
+        <a href="#faq" data-jump>FAQ</a>
+        <a href="#" data-view="download">Download</a>
       </nav>
 
       <div class="actions">
-        <button class="btn" id="openDiscord" type="button" title="Dummy button">Community</button>
+        <button class="btn" id="openDiscord" type="button" title="Dummy button">Support</button>
         <button class="btn primary" id="openModal" type="button">Access Panel</button>
       </div>
     </div>
   </header>
 
-  <main class="wrap">
-    <div class="hero">
-      <div class="panel heroLeft">
-        <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
-        <h2 class="title">
-          A <span class="grad">glowing</span>, modern landing page
-          <br/>for a sleek dashboard vibe.
-        </h2>
-        <p class="subtitle">
-          Clean glass panels, subtle scanlines, hover glows, smooth reveal animations, and a premium “panel access” modal.
-          Swap the text to match your product in minutes.
+  <!-- MAIN VIEW -->
+  <div id="viewHome" class="view show">
+    <main class="wrap">
+      <div class="hero">
+        <div class="panel heroLeft">
+          <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
+          <h2 class="title"><span class="grad">Array Dashboard</span></h2>
+          <p class="subtitle">
+            The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.
+          </p>
+
+          <div class="ctaRow">
+            <button class="btn primary" id="scrollPricing" type="button">View Plans</button>
+            <button class="btn" id="goDownload" type="button">Go to Download</button>
+          </div>
+
+          <div class="metaRow">
+            <span class="pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2l3.2 6.6L22 10l-5 4.9L18.3 22 12 18.7 5.7 22 7 14.9 2 10l6.8-1.4L12 2z" stroke="currentColor" opacity=".9"/>
+              </svg>
+              Fast delivery
+            </span>
+            <span class="pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" opacity=".35"/>
+              </svg>
+              Smooth UI
+            </span>
+            <span class="pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3v18M3 12h18" stroke="currentColor" opacity=".8"/>
+              </svg>
+              Secure checkout
+            </span>
+          </div>
+        </div>
+
+        <aside class="panel heroRight" id="status">
+          <div class="stack">
+            <!-- System Status (unchanged) -->
+            <div class="miniCard">
+              <div class="miniTop">
+                <p class="miniTitle">System Status</p>
+                <span class="badge ok">Operational</span>
+              </div>
+              <div class="miniBody">
+                Latency stable • CDN healthy • Updates rolling.
+                <div class="bar" aria-label="Status bar"><i style="--w:86%"></i></div>
+              </div>
+            </div>
+
+            <!-- Detectability (NEW, placed above Latest Drop) -->
+            <div class="miniCard">
+              <div class="miniTop">
+                <p class="miniTitle">
+                  Detectability
+                  <span class="infoDot" title="Product is 99.9% undetected as of 5/02/26.">i</span>
+                </p>
+                <span class="badge ok">Undetected</span>
+              </div>
+              <div class="miniBody">
+                Hover the (i) for the current detection note.
+                <div class="bar"><i style="--w:99%"></i></div>
+              </div>
+            </div>
+
+            <!-- Latest Drop (kept, now below Detectability) -->
+            <div class="miniCard">
+              <div class="miniTop">
+                <p class="miniTitle">Latest Drop</p>
+                <span class="badge">Patch Notes</span>
+              </div>
+              <div class="miniBody">
+                UI polish + animations + improved panel flow.
+                <div class="bar"><i style="--w:72%"></i></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section id="features" class="reveal">
+        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Features</h3>
+        <div class="grid3">
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l4 8 8 2-6 6 2 8-8-4-8 4 2-8-6-6 8-2 4-8z" stroke="currentColor"/>
+              </svg>
+            </div>
+            <h3>Buy</h3>
+            <p>Purchase instantly through a clean, responsive checkout flow.</p>
+          </div>
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16M4 12h10M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Redeem</h3>
+            <p>Enter a key and redeem in seconds — minimal steps, smooth feedback.</p>
+          </div>
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 1l3 5 5 1-3.5 4 1 6-5.5-3-5.5 3 1-6L4 7l5-1 3-5z" stroke="currentColor" opacity=".9"/>
+                <path d="M12 22v-6" stroke="currentColor" opacity=".55"/>
+              </svg>
+            </div>
+            <h3>Download</h3>
+            <p>Grab the latest build straight from the dashboard.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="reveal">
+        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
+        <div class="pricing">
+          <div class="priceCard">
+            <div class="priceTop">
+              <h4>Starter</h4>
+              <span class="badge">Basic</span>
+            </div>
+            <div class="price">$9 <small>/ mo</small></div>
+            <ul class="list">
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard access</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard support</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Access modal template</li>
+            </ul>
+            <div class="row"><button class="btn" type="button" data-open>Choose</button></div>
+          </div>
+
+          <div class="priceCard pop">
+            <div class="priceTop">
+              <h4>Pro</h4>
+              <span class="badge ok">Most Popular</span>
+            </div>
+            <div class="price">$19 <small>/ mo</small></div>
+            <ul class="list">
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority updates</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Faster downloads</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Premium UI theme</li>
+            </ul>
+            <div class="row"><button class="btn primary" type="button" data-open>Get Pro</button></div>
+          </div>
+
+          <div class="priceCard">
+            <div class="priceTop">
+              <h4>Elite</h4>
+              <span class="badge">Custom</span>
+            </div>
+            <div class="price">$49 <small>/ mo</small></div>
+            <ul class="list">
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated support</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom onboarding</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Branding kit</li>
+            </ul>
+            <div class="row"><button class="btn" type="button" data-open>Contact</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" class="reveal">
+        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">FAQ</h3>
+        <div class="grid3">
+          <div class="feat">
+            <h3>Where do I download the loader?</h3>
+            <p>
+              Download the loader by opening the
+              <span class="linkblue" id="faqDownloadLink">Download category</span>.
+            </p>
+          </div>
+          <div class="feat">
+            <h3>Is this a trusted software?</h3>
+            <p>Array is trusted by many customers and even many other trusted/popular mod menu creators.</p>
+          </div>
+          <div class="feat">
+            <h3>Can I get a refund?</h3>
+            <p>No, refunds are not accepted and all purchases are final.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="wrap foot">
+          <div>© <span id="year"></span> Array Dashboard. All rights reserved.</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="#features" data-jump>Features</a>
+            <a href="#pricing" data-jump>Plans</a>
+            <a href="#faq" data-jump>FAQ</a>
+            <a href="#" data-view="download">Download</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- DOWNLOAD VIEW (full-page swap, not a scroll-to section) -->
+  <div id="viewDownload" class="view">
+    <div class="wrap downloadWrap">
+      <div class="downloadHero">
+        <div class="kicker"><span class="dot"></span> Download category</div>
+        <div class="downloadTitle">Download</div>
+        <p class="downloadSub">
+          Temporary layout — add your real download buttons, changelog, and system requirements here.
         </p>
 
-        <div class="ctaRow">
-          <button class="btn primary" id="scrollPricing" type="button">View Plans</button>
-          <a class="btn" href="#features">Explore Features</a>
-        </div>
-
-        <div class="metaRow">
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2l3.2 6.6L22 10l-5 4.9L18.3 22 12 18.7 5.7 22 7 14.9 2 10l6.8-1.4L12 2z" stroke="currentColor" opacity=".9"/>
-            </svg>
-            Premium visuals
-          </span>
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" opacity=".35"/>
-            </svg>
-            Responsive layout
-          </span>
-          <span class="pill">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 3v18M3 12h18" stroke="currentColor" opacity=".8"/>
-            </svg>
-            Single-file HTML
-          </span>
+        <div class="ctaRow" style="margin-top:16px;">
+          <button class="btn primary" type="button" id="downloadPrimary">Download Latest</button>
+          <button class="btn" type="button" id="downloadAlt">Mirror</button>
+          <button class="btn" type="button" id="backHome">Back to Home</button>
         </div>
       </div>
 
-      <aside class="panel heroRight" id="status">
-        <div class="stack">
-          <div class="miniCard">
-            <div class="miniTop">
-              <p class="miniTitle">System Status</p>
-              <span class="badge ok">Operational</span>
+      <section class="reveal" style="margin-top:18px;">
+        <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Temporary elements</h3>
+        <div class="grid3">
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 3v10m0 0l4-4m-4 4l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 21h14" stroke="currentColor" opacity=".7"/>
+              </svg>
             </div>
-            <div class="miniBody">
-              Latency stable • CDN healthy • Updates rolling.
-              <div class="bar" aria-label="Status bar"><i style="--w:86%"></i></div>
-            </div>
+            <h3>Latest build</h3>
+            <p>Version: v2.4 • Updated: today • Size: 18.2 MB</p>
           </div>
-
-          <div class="miniCard">
-            <div class="miniTop">
-              <p class="miniTitle">Latest Drop</p>
-              <span class="badge">Patch Notes</span>
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 8v4l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" opacity=".6"/>
+              </svg>
             </div>
-            <div class="miniBody">
-              UI polish + animations + improved panel security copy.
-              <div class="bar"><i style="--w:72%"></i></div>
-            </div>
+            <h3>Changelog</h3>
+            <p>UI polish • Faster startup • Improved stability • Minor fixes</p>
           </div>
-
-          <div class="miniCard">
-            <div class="miniTop">
-              <p class="miniTitle">Access</p>
-              <span class="badge">Keyed</span>
+          <div class="feat">
+            <div class="icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M6 11h12v10H6V11z" stroke="currentColor" opacity=".8"/>
+              </svg>
             </div>
-            <div class="miniBody">
-              Demo modal included. Hook this up to your backend later.
-              <div class="bar"><i style="--w:63%"></i></div>
-            </div>
+            <h3>Notes</h3>
+            <p>Add requirements, install steps, and support links here.</p>
           </div>
         </div>
-      </aside>
+      </section>
+
+      <footer>
+        <div class="wrap foot">
+          <div>© <span class="year2"></span> Array Dashboard. All rights reserved.</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="#" id="backHome2">Back</a>
+          </div>
+        </div>
+      </footer>
     </div>
-
-    <section id="features" class="reveal">
-      <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Features</h3>
-      <div class="grid3">
-        <div class="feat">
-          <div class="icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2l4 8 8 2-6 6 2 8-8-4-8 4 2-8-6-6 8-2 4-8z" stroke="currentColor"/>
-            </svg>
-          </div>
-          <h3>Glass + Glow</h3>
-          <p>Soft gradients, neon bloom, and “premium panel” depth without heavy frameworks.</p>
-        </div>
-        <div class="feat">
-          <div class="icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M4 7h16M4 12h10M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h3>Smooth Animations</h3>
-          <p>Reveal-on-scroll, hover lift, and subtle scanlines for that “clean UI” vibe.</p>
-        </div>
-        <div class="feat">
-          <div class="icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 1l3 5 5 1-3.5 4 1 6-5.5-3-5.5 3 1-6L4 7l5-1 3-5z" stroke="currentColor" opacity=".9"/>
-              <path d="M12 22v-6" stroke="currentColor" opacity=".55"/>
-            </svg>
-          </div>
-          <h3>Single File</h3>
-          <p>Drop into any hosting, customize text/colors, and you’re done.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="pricing" class="reveal">
-      <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">Plans</h3>
-      <div class="pricing">
-        <div class="priceCard">
-          <div class="priceTop">
-            <h4>Starter</h4>
-            <span class="badge">Basic</span>
-          </div>
-          <div class="price">$9 <small>/ mo</small></div>
-          <ul class="list">
-            <li>
-              <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Clean access page
-            </li>
-            <li>
-              <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Community button
-            </li>
-            <li>
-              <svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Modal template
-            </li>
-          </ul>
-          <div class="row"><button class="btn" type="button" data-open>Choose</button></div>
-        </div>
-
-        <div class="priceCard pop">
-          <div class="priceTop">
-            <h4>Pro</h4>
-            <span class="badge ok">Most Popular</span>
-          </div>
-          <div class="price">$19 <small>/ mo</small></div>
-          <ul class="list">
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Extra glow + animations</li>
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Status + patch notes blocks</li>
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Better hover effects</li>
-          </ul>
-          <div class="row"><button class="btn primary" type="button" data-open>Get Pro</button></div>
-        </div>
-
-        <div class="priceCard">
-          <div class="priceTop">
-            <h4>Elite</h4>
-            <span class="badge">Custom</span>
-          </div>
-          <div class="price">$49 <small>/ mo</small></div>
-          <ul class="list">
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated styling pass</li>
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom sections</li>
-            <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Branding kit</li>
-          </ul>
-          <div class="row"><button class="btn" type="button" data-open>Contact</button></div>
-        </div>
-      </div>
-    </section>
-
-    <section id="faq" class="reveal">
-      <h3 style="margin:0; font-size:14px; color:rgba(255,255,255,.78); letter-spacing:.25px;">FAQ</h3>
-      <div class="grid3">
-        <div class="feat">
-          <h3>How do I change colors?</h3>
-          <p>Edit the <code>:root</code> variables at the top (glowA/glowB/glowC). Everything updates.</p>
-        </div>
-        <div class="feat">
-          <h3>Can I add more sections?</h3>
-          <p>Yep — duplicate any card grid and swap text/icons. It’s all plain HTML/CSS.</p>
-        </div>
-        <div class="feat">
-          <h3>Is the modal real auth?</h3>
-          <p>No. It’s a front-end template. Connect it to your backend later if needed.</p>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="wrap foot">
-        <div>© <span id="year"></span> Neon Panel. All rights reserved.</div>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <a href="#features">Features</a>
-          <a href="#pricing">Plans</a>
-          <a href="#faq">FAQ</a>
-        </div>
-      </div>
-    </footer>
-  </main>
+  </div>
 
   <!-- Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -720,19 +870,15 @@
           <button class="btn" id="demoFill" type="button">Fill Demo</button>
         </div>
         <div class="hint" id="hint">
-          This is a front-end modal template (no real authentication). Hook it up to your API if you want.
+          Demo template: replace this with your purchase / redeem / download flow.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Cursor-follow glow
-    const orb = document.querySelector(".orb");
+    // Button hover hotspot
     window.addEventListener("pointermove", (e) => {
-      document.documentElement.style.setProperty("--cx", e.clientX + "px");
-      document.documentElement.style.setProperty("--cy", e.clientY + "px");
-      // button hover hotspot
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
     });
@@ -748,14 +894,125 @@
       });
     });
 
-    // Reveal on scroll
+    // Reveal on scroll (works in both views)
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("on"); });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
-    // Modal logic
+    // ===== View switching (Home <-> Download) =====
+    const viewHome = document.getElementById("viewHome");
+    const viewDownload = document.getElementById("viewDownload");
+    const navLinks = [...document.querySelectorAll("nav a")];
+
+    function setActiveNav(view){
+      navLinks.forEach(a => a.classList.remove("active"));
+      const match = navLinks.find(a => a.dataset.view === view);
+      if (match) match.classList.add("active");
+    }
+
+    function showHome(){
+      viewDownload.classList.remove("show");
+      viewHome.classList.add("show");
+      setActiveNav("home");
+      window.scrollTo(0, 0);
+      targetScroll = 0;
+      currentScroll = 0;
+    }
+
+    function showDownload(){
+      viewHome.classList.remove("show");
+      viewDownload.classList.add("show");
+      setActiveNav("download");
+      window.scrollTo(0, 0);
+      targetScroll = 0;
+      currentScroll = 0;
+    }
+
+    document.querySelectorAll('[data-view="home"]').forEach(a => {
+      a.addEventListener("click", (e) => { e.preventDefault(); showHome(); });
+    });
+    document.querySelectorAll('[data-view="download"]').forEach(a => {
+      a.addEventListener("click", (e) => { e.preventDefault(); showDownload(); });
+    });
+
+    document.getElementById("goDownload").addEventListener("click", showDownload);
+    document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
+
+    document.getElementById("backHome").addEventListener("click", showHome);
+    document.getElementById("backHome2").addEventListener("click", (e) => { e.preventDefault(); showHome(); });
+
+    // ===== Smooth easing scroll (wheel + programmatic jumps) =====
+    let targetScroll = window.scrollY;
+    let currentScroll = window.scrollY;
+    const EASE = 0.09;        // lower = smoother/slower, higher = snappier
+    const SCROLL_SPEED = 1.0; // multiply wheel delta
+
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let rafId = null;
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+    function animateScroll(){
+      rafId = null;
+      currentScroll += (targetScroll - currentScroll) * EASE;
+      if (Math.abs(targetScroll - currentScroll) < 0.5) currentScroll = targetScroll;
+
+      window.scrollTo(0, currentScroll);
+
+      if (currentScroll !== targetScroll) {
+        rafId = requestAnimationFrame(animateScroll);
+      }
+    }
+
+    function ensureAnim(){
+      if (rafId == null) rafId = requestAnimationFrame(animateScroll);
+    }
+
+    // keep targets in sync when user drags scrollbar / uses keyboard
+    window.addEventListener("scroll", () => {
+      if (rafId == null) {
+        targetScroll = window.scrollY;
+        currentScroll = window.scrollY;
+      }
+    }, { passive: true });
+
+    window.addEventListener("wheel", (e) => {
+      if (reduceMotion) return;
+      if (e.ctrlKey) return; // allow pinch-zoom
+      e.preventDefault();
+
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
+      ensureAnim();
+    }, { passive: false });
+
+    // Nav + footer jumps (FIXED: now starts the easing animation so it actually scrolls)
+    function smoothJumpTo(hash){
+      const el = document.querySelector(hash);
+      if (!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 88; // sticky header offset
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetScroll = clamp(y, 0, maxScroll);
+      ensureAnim(); // <-- this was the missing piece
+    }
+
+    document.querySelectorAll("[data-jump]").forEach(a => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        // ensure home view
+        if (!viewHome.classList.contains("show")) showHome();
+        smoothJumpTo(a.getAttribute("href"));
+      });
+    });
+
+    document.getElementById("scrollPricing").addEventListener("click", () => {
+      if (!viewHome.classList.contains("show")) showHome();
+      smoothJumpTo("#pricing");
+    });
+
+    // ===== Modal logic =====
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -772,7 +1029,7 @@
     }
     function closeModal(){
       modalBack.classList.remove("show");
-      hint.textContent = "This is a front-end modal template (no real authentication). Hook it up to your API if you want.";
+      hint.textContent = "Demo template: replace this with your purchase / redeem / download flow.";
       key.value = ""; user.value = "";
     }
 
@@ -783,9 +1040,9 @@
     window.addEventListener("keydown", (e) => { if (e.key === "Escape" && modalBack.classList.contains("show")) closeModal(); });
 
     demoFill.addEventListener("click", () => {
-      key.value = "NEON-4X7Q-9K2P";
+      key.value = "ARRAY-4X7Q-9K2P";
       user.value = "demo_user";
-      hint.textContent = "Demo values inserted. Replace this flow with real auth when you’re ready.";
+      hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption.";
     });
 
     submit.addEventListener("click", () => {
@@ -795,21 +1052,28 @@
         hint.textContent = "Please enter both an access key and username.";
         return;
       }
-      hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,4)}••••`;
+      hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
 
-    // Buttons
-    document.getElementById("scrollPricing").addEventListener("click", () => {
-      document.getElementById("pricing").scrollIntoView({behavior:"smooth", block:"start"});
-    });
-
+    // Support + download placeholders
     document.getElementById("openDiscord").addEventListener("click", () => {
-      // Replace with your real invite link
-      alert("Community link placeholder. Replace this with your Discord/Telegram URL.");
+      alert("Support link placeholder. Replace this with your support URL.");
+    });
+    document.getElementById("downloadPrimary").addEventListener("click", () => {
+      alert("Download placeholder. Replace this with your real download URL.");
+    });
+    document.getElementById("downloadAlt").addEventListener("click", () => {
+      alert("Mirror placeholder. Replace this with your mirror URL.");
     });
 
     // Footer year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    const yr = new Date().getFullYear();
+    document.getElementById("year").textContent = yr;
+    document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
+
+    // Initial sync
+    targetScroll = window.scrollY;
+    currentScroll = window.scrollY;
   </script>
 </body>
 </html>
