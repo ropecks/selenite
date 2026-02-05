@@ -104,56 +104,33 @@
     /* Idle mode: stop background animations */
     body.idle::before{ animation-play-state: paused !important; }
 
-    /* Floating particles */
-    #stars{
-      position:fixed; inset:0;
+    /* CANVAS stars layer (much cheaper than DOM anims) */
+    #starCanvas{
+      position:fixed;
+      inset:0;
       z-index:-2;
       pointer-events:none;
-      overflow:hidden;
-    }
-    .star{
-      position:absolute;
-      width:2px; height:2px;
-      border-radius:999px;
-      background: rgba(255,255,255,.8);
-      opacity:0;
-      filter: blur(.2px);
-      animation: floatUp var(--dur, 8s) linear infinite;
-      animation-delay: var(--delay, 0s);
-    }
-    body.idle .star{ animation-play-state: paused !important; }
-    @keyframes floatUp{
-      0%   { transform: translate3d(0, 0, 0) scale(var(--s,1)); opacity:0; }
-      12%  { opacity: var(--o,.55); }
-      75%  { opacity: calc(var(--o,.55) * .7); }
-      100% { transform: translate3d(0, -110vh, 0) scale(calc(var(--s,1) * 1.15)); opacity:0; }
+      width:100%;
+      height:100%;
     }
 
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
     /* ============================================================
-       NEW Hover border (Chromium-safe)
+       Hover border (Chromium-safe)
        - NO mask/xor
        - NO infinite animation
-       - Uses inset stroke + quick “sheen sweep”
+       - Excludes .brand (so logo/title never gets hover border)
        ============================================================ */
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge){
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge){
       position: relative;
       z-index: 0;
       border: none !important;
       outline: none !important;
     }
 
-    /* Base subtle stroke */
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge){
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.06),
-        var(--shadow, none);
-    }
-
-    /* The animated “sheen” overlay (quick sweep then stops) */
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge)::after{
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge)::after{
       content:"";
       position:absolute;
       inset:0;
@@ -163,7 +140,6 @@
       transition: opacity .12s ease;
       z-index: 5;
 
-      /* This creates a moving highlight around edges without masks */
       background:
         linear-gradient(90deg,
           rgba(0,229,255,.0),
@@ -175,25 +151,20 @@
       background-size: 220% 220%;
       background-position: 0% 50%;
 
-      /* Make it feel like a “thin border” */
       box-shadow:
         inset 0 0 0 1px rgba(0,229,255,.30),
         inset 0 0 0 2px rgba(0,255,149,.08);
-      filter: none;
     }
 
-    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge):hover::after{
+    :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge):hover::after{
       opacity:1;
-      animation: sheenSweep .7s linear 1; /* IMPORTANT: NOT infinite */
+      animation: sheenSweep .7s linear 1;
     }
-
     @keyframes sheenSweep{
       0%   { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
-
-    /* Optional: also pause hover sweep while idle */
-    body.idle :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.brand,.badge):hover::after{
+    body.idle :is(.panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,.btn,nav a,footer a,.badge):hover::after{
       animation: none !important;
     }
 
@@ -201,11 +172,18 @@
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
-      border-bottom:none;
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
 
-    .brand{ display:flex; align-items:center; gap:12px; letter-spacing:.3px; }
+    /* Brand: explicitly NOT part of hover border system */
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      letter-spacing:.3px;
+      padding: 6px 8px;
+      border-radius: 14px;
+    }
+    .brand:hover{ background: rgba(255,255,255,.03); } /* optional subtle only */
+
     .logo{
       width:38px; height:38px; border-radius:12px;
       background:
@@ -214,6 +192,7 @@
         rgba(255,255,255,.06);
       box-shadow: 0 0 22px rgba(0,255,149,.16);
       position:relative;
+      flex: 0 0 38px;
     }
     .logo::after{
       content:"";
@@ -232,11 +211,12 @@
     }
     body.idle .logo::after{ animation-play-state: paused !important; }
     @keyframes spin{ to{ transform:rotate(360deg); } }
-    .brand h1{ font-size:14px; margin:0; font-weight:700; }
+
+    .brand h1{ font-size:14px; margin:0; font-weight:700; line-height:1.1; }
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
 
     nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
-    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; display:inline-flex; box-shadow:none; }
+    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; display:inline-flex; }
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
@@ -256,7 +236,6 @@
       cursor:pointer;
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
-      box-shadow:none;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
@@ -292,11 +271,11 @@
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border-radius: var(--radius);
+      box-shadow: var(--shadow);
       overflow:hidden;
       transform: translateY(10px);
       opacity:0;
       animation: rise .7s ease forwards;
-      box-shadow: var(--shadow);
     }
     @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
     .panel::before{
@@ -320,7 +299,6 @@
       background: rgba(255,255,255,.06);
       font-size:12px;
       color: rgba(255,255,255,.78);
-      box-shadow:none;
     }
     .dot{
       width:8px; height:8px; border-radius:999px;
@@ -358,7 +336,6 @@
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.05);
-      box-shadow:none;
     }
 
     .heroRight{ padding: 18px; }
@@ -370,7 +347,6 @@
       background: rgba(0,0,0,.18);
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
-      box-shadow:none;
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
 
@@ -383,7 +359,6 @@
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.78);
       white-space:nowrap;
-      box-shadow:none;
     }
     .badge.ok{
       background: rgba(0,255,149,.08);
@@ -420,7 +395,6 @@
       border-radius: 18px;
       background: rgba(255,255,255,.04);
       overflow:hidden;
-      box-shadow:none;
     }
     .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
@@ -434,7 +408,6 @@
       background: rgba(255,255,255,.04);
       overflow:hidden;
       transition: transform .2s ease;
-      box-shadow:none;
     }
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
@@ -452,11 +425,9 @@
       padding: 18px 0 34px;
       color: rgba(255,255,255,.60);
       font-size: 12px;
-      border-top:none;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-    /* Footer links must not be inline (so hover effect has a box) */
     footer a{
       display:inline-flex;
       align-items:center;
@@ -464,7 +435,6 @@
       border-radius: 12px;
       color: rgba(255,255,255,.60);
       transition: background .2s ease, color .2s ease, transform .2s ease;
-      box-shadow:none;
     }
     footer a:hover{
       background: rgba(255,255,255,.05);
@@ -473,7 +443,7 @@
     }
     footer a:focus, footer a:focus-visible{ outline:none !important; }
 
-    /* Modal */
+    /* ===== Modal ===== */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -505,7 +475,6 @@
       border:none;
       background: rgba(255,255,255,.06);
       cursor:pointer;
-      box-shadow:none;
     }
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
@@ -535,7 +504,7 @@
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
-    /* Download view */
+    /* ===== Download view + enter animation ===== */
     .downloadWrap{ padding: 52px 0 72px; }
     .downloadHero{
       padding: 26px;
@@ -563,13 +532,21 @@
     }
 
     .downloadEnter .downloadHero,
-    .downloadEnter .downloadAnim{ opacity:0; transform: translateY(10px); }
-    .downloadEnter.play .downloadHero{ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards; }
-    .downloadEnter.play .downloadAnim{ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards; animation-delay: .08s; }
+    .downloadEnter .downloadAnim{
+      opacity:0;
+      transform: translateY(10px);
+    }
+    .downloadEnter.play .downloadHero{
+      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    .downloadEnter.play .downloadAnim{
+      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
+      animation-delay: .08s;
+    }
     @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
 
     @media (prefers-reduced-motion: reduce){
-      #stars{ display:none; }
+      #starCanvas{ display:none; }
       body.fx::before, body.fx::after, .logo::after{ display:none; }
       *{ animation:none !important; transition:none !important; }
     }
@@ -579,11 +556,11 @@
 <body class="fx">
   <div class="bg" aria-hidden="true"></div>
   <div class="gridlines" aria-hidden="true"></div>
-  <div id="stars" aria-hidden="true"></div>
+  <canvas id="starCanvas" aria-hidden="true"></canvas>
 
   <header>
     <div class="wrap topbar">
-      <div class="brand">
+      <div class="brand" aria-label="Brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Array Dashboard</h1>
@@ -800,7 +777,7 @@
   </div>
 
   <script>
-    // Disable right-click (superficial)
+    // Disable right-click everywhere (superficial)
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
     // Optional: block common devtools shortcuts (not bulletproof)
@@ -812,14 +789,14 @@
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
-    // Hover hotspot for primary buttons
+    // Hover hotspot for primary buttons (cheap)
     window.addEventListener("pointermove", (e) => {
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
       markActive();
     }, { passive:true });
 
-    // Reveal on scroll (unobserve after revealing)
+    // Reveal on scroll (unobserve after reveal)
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -874,13 +851,13 @@
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // Smooth easing scroll (stops RAF when done)
+    // Smooth easing scroll (stops RAF fully)
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
     const SCROLL_SPEED = 1.0;
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let rafId = null;
+    let scrollRaf = null;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
     function animateScroll(){
@@ -888,16 +865,16 @@
       if (Math.abs(targetScroll - currentScroll) < 0.5) {
         currentScroll = targetScroll;
         window.scrollTo(0, currentScroll);
-        rafId = null;
+        scrollRaf = null;
         return;
       }
       window.scrollTo(0, currentScroll);
-      rafId = requestAnimationFrame(animateScroll);
+      scrollRaf = requestAnimationFrame(animateScroll);
     }
-    function ensureAnim(){ if (rafId == null) rafId = requestAnimationFrame(animateScroll); }
+    function ensureScrollAnim(){ if (scrollRaf == null) scrollRaf = requestAnimationFrame(animateScroll); }
 
     window.addEventListener("scroll", () => {
-      if (rafId == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
+      if (scrollRaf == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
       markActive();
     }, { passive: true });
 
@@ -907,7 +884,7 @@
       e.preventDefault();
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
-      ensureAnim();
+      ensureScrollAnim();
       markActive();
     }, { passive: false });
 
@@ -917,7 +894,7 @@
       const y = el.getBoundingClientRect().top + window.scrollY - 88;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       targetScroll = clamp(y, 0, maxScroll);
-      ensureAnim();
+      ensureScrollAnim();
       markActive();
     }
     document.querySelectorAll("[data-jump]").forEach(a => {
@@ -978,34 +955,133 @@
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // Stars generator (light)
-    const stars = document.getElementById("stars");
-    const STAR_COUNT = 32;
-    function rand(min, max){ return Math.random() * (max - min) + min; }
-    for(let i=0;i<STAR_COUNT;i++){
-      const s = document.createElement("span");
-      s.className = "star";
-      s.style.left = rand(0, 100) + "vw";
-      s.style.bottom = rand(-10, 10) + "vh";
-      s.style.setProperty("--s", rand(0.8, 1.5));
-      s.style.setProperty("--dur", rand(9, 16) + "s");
-      s.style.setProperty("--delay", rand(0, 10) + "s");
-      s.style.setProperty("--o", rand(0.16, 0.50));
-      stars.appendChild(s);
+    // ===========================
+    // Canvas stars (optimized)
+    // ===========================
+    const canvas = document.getElementById("starCanvas");
+    const ctx = canvas.getContext("2d", { alpha:true, desynchronized:true });
+
+    let dpr = 1, cw = 0, ch = 0;
+    function resizeCanvas(){
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap DPR for stability
+      cw = Math.floor(window.innerWidth);
+      ch = Math.floor(window.innerHeight);
+      canvas.width = Math.floor(cw * dpr);
+      canvas.height = Math.floor(ch * dpr);
+      canvas.style.width = cw + "px";
+      canvas.style.height = ch + "px";
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    window.addEventListener("resize", () => { resizeCanvas(); markActive(); }, { passive:true });
+    resizeCanvas();
+
+    // Particle pool (no allocations each frame)
+    const STAR_COUNT = 60; // still light for canvas
+    const stars = new Array(STAR_COUNT);
+    function rand(min,max){ return Math.random()*(max-min)+min; }
+
+    function resetStar(i, startFromBottom=true){
+      const s = stars[i] || (stars[i] = {});
+      s.x = rand(0, cw);
+      s.y = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
+      s.r = rand(0.8, 1.8);
+      s.vy = rand(18, 45); // px/sec upward speed
+      s.a = rand(0.18, 0.55); // max alpha
+      s.fadeTop = rand(0.18, 0.28); // top fade zone (fraction of height)
+      s.tw = rand(0.85, 1.15);
+      return s;
+    }
+    for(let i=0;i<STAR_COUNT;i++) resetStar(i, false);
+
+    // precomputed colors
+    const c1 = [0,229,255];
+    const c2 = [0,255,149];
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function mixColor(t){
+      // t 0..1
+      return [
+        Math.floor(lerp(c1[0], c2[0], t)),
+        Math.floor(lerp(c1[1], c2[1], t)),
+        Math.floor(lerp(c1[2], c2[2], t))
+      ];
     }
 
-    // Idle / visibility optimization
-    let idleTimer = null;
-    const IDLE_MS = 4000;
+    let starRaf = null;
+    let lastT = 0;
 
+    function drawStars(t){
+      const dt = Math.min(0.05, (t - lastT) / 1000 || 0); // clamp dt
+      lastT = t;
+
+      ctx.clearRect(0,0,cw,ch);
+
+      // draw
+      for(let i=0;i<STAR_COUNT;i++){
+        const s = stars[i];
+        s.y -= s.vy * dt;
+
+        // fade in/out based on y
+        let alpha = s.a;
+        const topZone = ch * s.fadeTop;
+        if (s.y < topZone){
+          alpha *= Math.max(0, s.y / topZone);
+        }
+        if (s.y > ch - 30){
+          alpha *= Math.min(1, (ch - s.y) / 30);
+        }
+
+        // recycle
+        if (s.y < -50){
+          resetStar(i, true);
+          continue;
+        }
+
+        // color blend based on x
+        const tx = s.x / Math.max(1, cw);
+        const rgb = mixColor(tx);
+        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+
+        // tiny “glow” with 2 passes (still cheap)
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha*0.25})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r*2.2, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      starRaf = requestAnimationFrame(drawStars);
+    }
+
+    function startStars(){
+      if (starRaf != null) return;
+      lastT = performance.now();
+      starRaf = requestAnimationFrame(drawStars);
+    }
+    function stopStars(){
+      if (starRaf == null) return;
+      cancelAnimationFrame(starRaf);
+      starRaf = null;
+      ctx.clearRect(0,0,cw,ch);
+    }
+
+    // ===== Idle / visibility optimization =====
+    let idleTimer = null;
+    const IDLE_MS = 3500; // slightly faster
     function setIdle(isIdle){
       document.body.classList.toggle("idle", isIdle);
+      if (isIdle) stopStars(); else startStars();
     }
     function markActive(){
       setIdle(false);
       if (idleTimer) clearTimeout(idleTimer);
       idleTimer = setTimeout(() => setIdle(true), IDLE_MS);
     }
+
+    // init
+    startStars();
     markActive();
 
     document.addEventListener("visibilitychange", () => {
