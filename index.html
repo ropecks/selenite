@@ -41,6 +41,7 @@
       overflow-x:hidden;
       position: relative;
       isolation: isolate;
+      font-weight: 400;
     }
 
     .bg{
@@ -115,6 +116,7 @@
       position: relative;
       border: none !important;
       outline: none !important;
+      isolation: isolate;
     }
     @media (hover:hover) and (pointer:fine){
       .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
@@ -131,7 +133,7 @@
           opacity:0;
           pointer-events:none;
           transition: opacity .12s ease;
-          z-index: 50;
+          z-index: 999;
           background: linear-gradient(90deg,
             rgba(0,229,255,.95),
             rgba(0,255,149,.95),
@@ -174,8 +176,8 @@
       cursor:pointer;
     }
     .brand:hover{ background: rgba(255,255,255,.03); }
-    .brand h1{ font-size:15px; margin:0; font-weight:800; line-height:1.1; }
-    .brand small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; }
+    .brand h1{ font-size:15px; margin:0; font-weight:700; line-height:1.1; }
+    .brand small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; font-weight:400; }
 
     nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:14px; }
     nav a{
@@ -183,11 +185,13 @@
       border-radius:12px;
       transition: background .2s ease, color .2s ease, transform .2s ease;
       display:inline-flex;
+      font-weight:500;
     }
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
       color:rgba(255,255,255,.92);
+      font-weight:600;
     }
 
     .actions{ display:flex; align-items:center; gap:10px; }
@@ -199,7 +203,7 @@
       border-radius: 14px;
       background: rgba(255,255,255,.05);
       color:rgba(255,255,255,.9);
-      font-weight:800;
+      font-weight:600;
       font-size:16px;
       cursor:pointer;
       transition: transform .18s ease, background .18s ease;
@@ -274,6 +278,7 @@
       background: rgba(255,255,255,.06);
       font-size:14px;
       color: rgba(255,255,255,.82);
+      font-weight:500;
     }
     .dot{
       width:9px; height:9px; border-radius:999px;
@@ -293,6 +298,7 @@
       font-size: clamp(36px, 4.8vw, 56px);
       line-height: 1.05;
       letter-spacing: -0.9px;
+      font-weight:700;
     }
     .title .grad{
       background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.90));
@@ -306,6 +312,7 @@
       line-height:1.65;
       font-size: 17px;
       margin: 0 0 22px;
+      font-weight:400;
     }
     .ctaRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 14px; }
 
@@ -323,7 +330,7 @@
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .miniTitle{ font-weight:850; font-size:14px; margin:0; }
+    .miniTitle{ font-weight:700; font-size:14px; margin:0; }
     .badge{
       font-size:12px;
       padding: 7px 12px;
@@ -331,12 +338,13 @@
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.80);
       white-space:nowrap;
+      font-weight:600;
     }
     .badge.ok{
       background: rgba(0,255,149,.10);
       box-shadow: 0 0 22px rgba(0,255,149,.12);
     }
-    .miniBody{ margin-top:10px; color: rgba(255,255,255,.70); font-size:13.5px; line-height:1.55; }
+    .miniBody{ margin-top:10px; color: rgba(255,255,255,.70); font-size:13.5px; line-height:1.55; font-weight:400; }
     .bar{
       height: 10px;
       border-radius: 999px;
@@ -370,10 +378,10 @@
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
-    .feat h3{ margin:0 0 8px; font-size:15px; letter-spacing:.2px; }
-    .feat p{ margin:0; color: rgba(255,255,255,.70); font-size:14px; line-height:1.6; }
+    .feat h3{ margin:0 0 8px; font-size:15px; letter-spacing:.2px; font-weight:700; }
+    .feat p{ margin:0; color: rgba(255,255,255,.70); font-size:14px; line-height:1.6; font-weight:400; }
 
-    .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+    .pricing{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 14px; }
     @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
     .priceCard{
       padding: 18px;
@@ -388,10 +396,10 @@
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .priceCard h4{ margin:0; font-size:15px; }
-    .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; }
-    .price small{ font-size:13px; color: rgba(255,255,255,.65); }
-    .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; }
+    .priceCard h4{ margin:0; font-size:15px; font-weight:700; }
+    .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; font-weight:700; }
+    .price small{ font-size:13px; color: rgba(255,255,255,.65); font-weight:500; }
+    .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; font-weight:400; }
     .list li{ display:flex; gap:8px; align-items:flex-start; }
     .check{ margin-top:4px; width:14px; height:14px; flex:0 0 14px; opacity:.9; }
 
@@ -400,6 +408,7 @@
       padding: 18px 0 34px;
       color: rgba(255,255,255,.60);
       font-size: 12.5px;
+      font-weight:400;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
     footer a{
@@ -409,6 +418,7 @@
       border-radius: 12px;
       color: rgba(255,255,255,.60);
       transition: background .2s ease, color .2s ease, transform .2s ease;
+      font-weight:500;
     }
     footer a:hover{
       background: rgba(255,255,255,.05);
@@ -446,7 +456,7 @@
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
     }
-    .modalHead strong{ font-size:14px; }
+    .modalHead strong{ font-size:14px; font-weight:700; }
 
     .iconBtn{
       width:42px; height:42px;
@@ -466,7 +476,7 @@
 
     .modalBody{ padding: 16px; }
     .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
-    label{ font-size:13px; color: rgba(255,255,255,.72); }
+    label{ font-size:13px; color: rgba(255,255,255,.72); font-weight:500; }
     input{
       height: 46px;
       padding: 0 12px;
@@ -477,10 +487,11 @@
       outline:none;
       transition: box-shadow .2s ease;
       font-size:14px;
+      font-weight:500;
     }
     input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; }
+    .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; font-weight:400; }
 
     .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.on{ opacity:1; transform: translateY(0); }
@@ -490,6 +501,7 @@
       cursor:pointer;
       border-bottom: 1px solid rgba(0,229,255,.35);
       transition: opacity .15s ease, border-color .15s ease;
+      font-weight:500;
     }
     .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
@@ -513,6 +525,7 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
+      font-weight:700;
     }
     .downloadSub{
       margin:0;
@@ -520,6 +533,7 @@
       line-height:1.65;
       max-width: 70ch;
       font-size:16.5px;
+      font-weight:400;
     }
     .downloadEnter .downloadHero,
     .downloadEnter .downloadAnim{
@@ -569,8 +583,8 @@
   <div id="viewHome" class="view show">
     <main class="wrap">
       <div class="hero">
-        <div class="panel heroLeft">
-          <div class="kicker"><span class="dot ok"></span> All system up and running.</div>
+        <div class="panel ring heroLeft">
+          <div class="kicker ring"><span class="dot ok"></span> All system up and running.</div>
           <h2 class="title"><span class="grad">Array Cheats</span></h2>
           <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
           <div class="ctaRow">
@@ -579,36 +593,36 @@
           </div>
         </div>
 
-        <aside class="panel heroRight" id="status">
+        <aside class="panel ring heroRight" id="status">
           <div class="stack">
-            <div class="miniCard">
+            <div class="miniCard ring">
               <div class="miniTop">
                 <p class="miniTitle">System Status</p>
                 <span class="badge ok ring">Operational</span>
               </div>
               <div class="miniBody">
                 Latency stable • CDN healthy • Updates rolling.
-                <div class="bar" aria-label="Status bar"><span style="--w:100%"></span></div>
+                <div class="bar ring" aria-label="Status bar"><span style="--w:100%"></span></div>
               </div>
             </div>
-            <div class="miniCard">
+            <div class="miniCard ring">
               <div class="miniTop">
                 <p class="miniTitle">Detectability</p>
                 <span class="badge ok ring">Undetected</span>
               </div>
               <div class="miniBody">
                 Product is 99.9% undetected as of 5/02/26.
-                <div class="bar"><span style="--w:99%"></span></div>
+                <div class="bar ring"><span style="--w:99%"></span></div>
               </div>
             </div>
-            <div class="miniCard">
+            <div class="miniCard ring">
               <div class="miniTop">
                 <p class="miniTitle">Latest Drop</p>
                 <span class="badge ring">Patch Notes</span>
               </div>
               <div class="miniBody">
                 UI polish + animations + improved panel flow.
-                <div class="bar"><span style="--w:72%"></span></div>
+                <div class="bar ring"><span style="--w:72%"></span></div>
               </div>
             </div>
           </div>
@@ -616,53 +630,44 @@
       </div>
 
       <section id="pricing" class="reveal">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">Plans</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Plans</h3>
         <div class="pricing">
-          <div class="priceCard">
+          <div class="priceCard ring">
             <div class="priceTop"><h4>Starter</h4><span class="badge ring">Basic</span></div>
-            <div class="price">$9 <small>/ mo</small></div>
+            <div class="price">$9.99 <small>/ lt</small></div>
             <ul class="list">
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard access</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard support</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Access modal template</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Standard Support</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Minor Updates</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Full access to loader and menu injection</li>
             </ul>
             <div class="row"><button class="btn ring" type="button">Choose</button></div>
           </div>
-          <div class="priceCard pop">
+
+          <div class="priceCard pop ring">
             <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
-            <div class="price">$19 <small>/ mo</small></div>
+            <div class="price">$19.99 <small>/ lt</small></div>
             <ul class="list">
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Priority updates</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Faster downloads</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Premium UI theme</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Everything from Starter + Priority support</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Frequent updates</li>
+              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Exclusive premium features</li>
             </ul>
             <div class="row"><button class="btn primary ring" type="button">Get Pro</button></div>
-          </div>
-          <div class="priceCard">
-            <div class="priceTop"><h4>Elite</h4><span class="badge ring">Custom</span></div>
-            <div class="price">$49 <small>/ mo</small></div>
-            <ul class="list">
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dedicated support</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Custom onboarding</li>
-              <li><svg class="check" viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Branding kit</li>
-            </ul>
-            <div class="row"><button class="btn ring" type="button">Contact</button></div>
           </div>
         </div>
       </section>
 
       <section id="faq" class="reveal">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">FAQ</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">FAQ</h3>
         <div class="grid3">
-          <div class="feat">
+          <div class="feat ring">
             <h3>Where do I download the loader?</h3>
             <p>Download the loader in the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
           </div>
-          <div class="feat">
+          <div class="feat ring">
             <h3>Is this a trusted software?</h3>
             <p>Array is trusted by many customers and even many other trusted/popular mod menu creators.</p>
           </div>
-          <div class="feat">
+          <div class="feat ring">
             <h3>Can I get a refund?</h3>
             <p>No, refunds are not accepted and all purchases are final.</p>
           </div>
@@ -683,8 +688,8 @@
 
   <div id="viewDownload" class="view downloadEnter">
     <div class="wrap downloadWrap">
-      <div class="downloadHero">
-        <div class="kicker"><span class="dot ok"></span> Download category</div>
+      <div class="downloadHero ring">
+        <div class="kicker ring"><span class="dot ok"></span> Download category</div>
         <div class="downloadTitle">Download</div>
         <p class="downloadSub">Download & install the official Array Loader.</p>
         <div class="ctaRow" style="margin-top:16px;">
@@ -694,11 +699,11 @@
       </div>
 
       <section class="downloadAnim reveal" style="margin-top:18px;">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px;">Temporary elements</h3>
+        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Temporary elements</h3>
         <div class="grid3">
-          <div class="feat"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
-          <div class="feat"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
-          <div class="feat"><h3>Notes</h3><p>This is the first release, expect the unexpected.</p></div>
+          <div class="feat ring"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
+          <div class="feat ring"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
+          <div class="feat ring"><h3>Notes</h3><p>This is the first release, expect the unexpected.</p></div>
         </div>
       </section>
 
@@ -750,6 +755,16 @@
       if (ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); e.stopPropagation(); }
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
+
+    function applyRings(){
+      const selectors = [
+        "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn",".bar"
+      ].join(",");
+      document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
+      document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
+      document.getElementById("brandHome").classList.add("ring");
+    }
+    applyRings();
 
     let pmRAF = 0;
     let lastX = 0, lastY = 0;
