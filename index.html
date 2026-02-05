@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Array Dashboard</title>
   <meta name="theme-color" content="#070b10" />
+
+  <!-- ✅ Tab icon (favicon). Put icon.png next to this HTML file (same folder). -->
+  <link rel="icon" type="image/png" href="icon.png">
+
   <style>
     :root{
       --bg:#05080d;
@@ -206,6 +210,10 @@
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(14px) saturate(120%);
+      -webkit-backdrop-filter: blur(14px) saturate(120%);
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
 
@@ -287,6 +295,10 @@
       opacity:0;
       animation: rise .7s ease forwards;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
     .panel::before{
@@ -359,6 +371,10 @@
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
 
@@ -408,6 +424,10 @@
       background: rgba(255,255,255,.04);
       overflow:hidden;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .feat h3{ margin:0 0 8px; font-size:14px; letter-spacing:.2px; }
     .feat p{ margin:0; color: rgba(255,255,255,.68); font-size:12.5px; line-height:1.5; }
@@ -422,6 +442,10 @@
       overflow:hidden;
       transition: transform .2s ease;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .priceCard:hover{ transform: translateY(-3px); }
     .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
@@ -465,6 +489,10 @@
       place-items:center;
       padding: 20px;
       z-index: 99;
+
+      /* ✅ subtle blur */
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
     .modal{
       width: min(520px, 96vw);
@@ -476,6 +504,10 @@
       opacity:0;
       transition: transform .2s ease, opacity .2s ease;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(18px) saturate(125%);
+      -webkit-backdrop-filter: blur(18px) saturate(125%);
     }
     .modalBack.show{ display:grid; }
     .modalBack.show .modal{ transform: translateY(0) scale(1); opacity:1; }
@@ -528,6 +560,10 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
+
+      /* ✅ Glass blur restored */
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
     .downloadTitle{
       margin: 10px 0 8px;
