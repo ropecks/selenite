@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Array Dashboard</title>
+  <title>Array Cheats</title>
   <meta name="theme-color" content="#070b10" />
 
-  <!-- ✅ Tab icon (favicon). Put icon.png next to this HTML file (same folder). -->
+  <!-- Tab icon (favicon). Put icon.png next to this HTML file (same folder). -->
   <link rel="icon" type="image/png" href="icon.png">
 
   <style>
@@ -43,17 +43,15 @@
 
     html{ height:100%; background: var(--bg); }
 
-    /* ✅ Brave-safe stacking context */
     body{
       min-height:100%;
       margin:0;
       color:var(--text);
-      background: linear-gradient(180deg, var(--bg), var(--bg2)); /* always visible base */
+      background: linear-gradient(180deg, var(--bg), var(--bg2));
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       overflow-x:hidden;
-
       position: relative;
-      isolation: isolate; /* IMPORTANT: prevents fixed layers from disappearing in Brave */
+      isolation: isolate;
     }
 
     /* ===== Background layers (NO negative z-index) ===== */
@@ -66,7 +64,6 @@
       transform: translateZ(0);
     }
 
-    /* If the browser supports radial gradients, upgrade the background */
     @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
       .bg{
         background:
@@ -77,7 +74,6 @@
       }
     }
 
-    /* Checker grid: use only basic linear-gradients (very compatible) */
     .gridlines{
       position:fixed; inset:0;
       z-index:0;
@@ -91,7 +87,6 @@
       transform: translateZ(0);
     }
 
-    /* Scanline + lightweight noise (both safe) */
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -118,14 +113,12 @@
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
-    /* Freeze ONLY when tab is backgrounded */
     body.frozen.fx::before{ animation-play-state: paused !important; }
     body.frozen.fx::before,
     body.frozen.fx::after{ opacity:0 !important; }
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
 
-    /* CANVAS stars layer */
     #starCanvas{
       position:fixed;
       inset:0;
@@ -135,18 +128,13 @@
       height:100%;
     }
 
-    /* ✅ All UI above background layers */
-    header, main, .view, .modalBack{
-      position: relative;
-      z-index: 1;
-    }
+    header, main, .view, .modalBack{ position: relative; z-index: 1; }
 
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
     /* ============================================================
        Hover Animated Gradient Ring (apply via .ring class)
-       Cross-browser: if mask-composite not supported, fallback to a subtle outline.
        ============================================================ */
     .ring{
       position: relative;
@@ -155,18 +143,13 @@
       outline: none !important;
     }
 
-    /* Fallback for browsers without mask-composite: simple outline */
     @media (hover:hover) and (pointer:fine){
-      .ring:hover{
-        box-shadow: 0 0 0 1px rgba(0,229,255,.35);
-      }
+      .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
     }
 
-    /* Upgrade ring only if mask-composite is supported */
     @supports (-webkit-mask-composite: xor) {
       @media (hover:hover) and (pointer:fine){
         .ring:hover{ box-shadow: none; }
-
         .ring::after{
           content:"";
           position:absolute;
@@ -177,7 +160,6 @@
           pointer-events:none;
           transition: opacity .12s ease;
           z-index: 50;
-
           background: linear-gradient(90deg,
             rgba(0,229,255,.95),
             rgba(0,255,149,.95),
@@ -186,13 +168,11 @@
           );
           background-size: 260% 260%;
           background-position: 0% 50%;
-
           -webkit-mask:
             linear-gradient(#000 0 0) content-box,
             linear-gradient(#000 0 0);
           -webkit-mask-composite: xor;
         }
-
         .ring:hover::after{
           opacity:1;
           animation: borderFlow 1.2s linear infinite;
@@ -210,8 +190,6 @@
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(14px) saturate(120%);
       -webkit-backdrop-filter: blur(14px) saturate(120%);
     }
@@ -295,8 +273,6 @@
       opacity:0;
       animation: rise .7s ease forwards;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
@@ -371,8 +347,6 @@
       transition: transform .18s ease, background .18s ease;
       overflow:hidden;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
@@ -424,8 +398,6 @@
       background: rgba(255,255,255,.04);
       overflow:hidden;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
@@ -442,8 +414,6 @@
       overflow:hidden;
       transition: transform .2s ease;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
@@ -481,7 +451,7 @@
     }
     footer a:focus, footer a:focus-visible{ outline:none !important; }
 
-    /* ===== Modal ===== */
+    /* ===== Modals ===== */
     .modalBack{
       position:fixed; inset:0;
       background: rgba(0,0,0,.62);
@@ -489,8 +459,6 @@
       place-items:center;
       padding: 20px;
       z-index: 99;
-
-      /* ✅ subtle blur */
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
     }
@@ -504,8 +472,6 @@
       opacity:0;
       transition: transform .2s ease, opacity .2s ease;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(18px) saturate(125%);
       -webkit-backdrop-filter: blur(18px) saturate(125%);
     }
@@ -560,8 +526,6 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
-
-      /* ✅ Glass blur restored */
       backdrop-filter: blur(16px) saturate(125%);
       -webkit-backdrop-filter: blur(16px) saturate(125%);
     }
@@ -614,7 +578,7 @@
     <div class="wrap topbar">
       <div class="brand" aria-label="Brand">
         <div>
-          <h1>Array Dashboard</h1>
+          <h1>Array Cheats</h1>
           <small>The official Array portal</small>
         </div>
       </div>
@@ -628,7 +592,7 @@
       </nav>
 
       <div class="actions">
-        <button class="btn ring" id="openDiscord" type="button">Support</button>
+        <button class="btn ring" id="openSupport" type="button">Support</button>
         <button class="btn primary ring" id="openModal" type="button">Access Panel</button>
       </div>
     </div>
@@ -640,7 +604,7 @@
       <div class="hero">
         <div class="panel heroLeft">
           <div class="kicker"><span class="dot"></span> Live build • v2.4 • ultra-smooth</div>
-          <h2 class="title"><span class="grad">Array Dashboard</span></h2>
+          <h2 class="title"><span class="grad">Array Cheats</span></h2>
           <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
 
           <div class="ctaRow">
@@ -751,7 +715,7 @@
 
       <footer>
         <div class="wrap foot">
-          <div>© <span id="year"></span> Array Dashboard. All rights reserved.</div>
+          <div>© <span id="year"></span> Array Cheats. All rights reserved.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a class="ring" href="#status" data-jump>Status</a>
             <a class="ring" href="#pricing" data-jump>Plans</a>
@@ -789,7 +753,7 @@
 
       <footer>
         <div class="wrap foot">
-          <div>© <span class="year2"></span> Array Dashboard. All rights reserved.</div>
+          <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a class="ring" href="#" id="backHome2">Back</a>
           </div>
@@ -798,7 +762,7 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Access Modal -->
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
       <div class="modalHead">
@@ -827,6 +791,34 @@
     </div>
   </div>
 
+  <!-- Support Confirm Modal -->
+  <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+    <div class="modal ring">
+      <div class="modalHead">
+        <strong id="supportTitle">Open Support Link?</strong>
+        <button class="x ring" id="closeSupport" type="button" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:.85">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modalBody">
+        <div class="hint" style="margin-top:0;">
+          You’re about to open an external link to Discord.
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label>Destination</label>
+          <input value="https://discord.gg/4UuCqrDgnF" readonly />
+        </div>
+        <div class="row">
+          <button class="btn primary ring" id="confirmSupport" type="button">Open Discord</button>
+          <button class="btn ring" id="cancelSupport" type="button">Cancel</button>
+        </div>
+        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
@@ -838,10 +830,13 @@
       if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
+    // Ensure gradient outline applies to main panels too
     function applyRings(){
       const selectors = [
         "nav a","footer a",".btn",".badge",".kicker",".pill",
-        ".miniCard",".priceCard",".feat",".downloadHero",".modal",".x"
+        ".panel",              /* ✅ main page panels */
+        ".miniCard",".priceCard",".feat",".downloadHero",
+        ".modal",".x"
       ].join(",");
       document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
       document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
@@ -977,7 +972,7 @@
       smoothJumpTo("#pricing");
     });
 
-    // Modal
+    // Access Modal
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -1011,7 +1006,29 @@
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
 
-    document.getElementById("openDiscord").addEventListener("click", () => alert("Support link placeholder. Replace this with your support URL."));
+    // Support confirm modal -> Discord
+    const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
+    const supportBack = document.getElementById("supportBack");
+    const openSupport = document.getElementById("openSupport");
+    const closeSupport = document.getElementById("closeSupport");
+    const cancelSupport = document.getElementById("cancelSupport");
+    const confirmSupport = document.getElementById("confirmSupport");
+
+    function openSupportModal(){ supportBack.classList.add("show"); }
+    function closeSupportModal(){ supportBack.classList.remove("show"); }
+
+    openSupport.addEventListener("click", openSupportModal);
+    closeSupport.addEventListener("click", closeSupportModal);
+    cancelSupport.addEventListener("click", closeSupportModal);
+    supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
+
+    confirmSupport.addEventListener("click", () => {
+      // open in new tab safely
+      window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
+      closeSupportModal();
+    });
+
+    // Download placeholders
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
     document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
 
@@ -1046,20 +1063,15 @@
       canvas.height = 0;
     }
 
-    window.addEventListener("resize", () => {
-      if (!document.hidden) resizeCanvas();
-    }, { passive: true });
+    window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive: true });
 
-    // --- Pool (typed arrays) ---
     const STAR_COUNT = 60;
-
     const sx = new Float32Array(STAR_COUNT);
     const sy = new Float32Array(STAR_COUNT);
     const sr = new Float32Array(STAR_COUNT);
     const svy = new Float32Array(STAR_COUNT);
     const sa = new Float32Array(STAR_COUNT);
     const sfadeTop = new Float32Array(STAR_COUNT);
-
     const cr = new Uint8Array(STAR_COUNT);
     const cg = new Uint8Array(STAR_COUNT);
     const cb = new Uint8Array(STAR_COUNT);
@@ -1115,14 +1127,10 @@
         const rr = cr[i], gg = cg[i], bb = cb[i];
 
         ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2); ctx.fill();
 
         ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha * 0.25})`;
-        ctx.beginPath();
-        ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2); ctx.fill();
       }
 
       starRaf = requestAnimationFrame(drawStars);
@@ -1130,20 +1138,16 @@
 
     function startStars(){
       if (starRaf != null) return;
-
       resizeCanvas();
       for (let i = 0; i < STAR_COUNT; i++) resetStar(i, false);
-
       lastT = performance.now();
       starRaf = requestAnimationFrame(drawStars);
     }
 
     function stopStars(){
       if (starRaf == null) return;
-
       cancelAnimationFrame(starRaf);
       starRaf = null;
-
       ctx.clearRect(0, 0, cw, ch);
       destroyCanvasBackingStore();
     }
@@ -1158,10 +1162,7 @@
       if (!document.hidden) startStars();
     }
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) freezeAll();
-      else unfreezeAll();
-    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
     window.addEventListener("blur", freezeAll);
     window.addEventListener("focus", unfreezeAll);
     window.addEventListener("pagehide", freezeAll);
