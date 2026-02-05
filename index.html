@@ -22,6 +22,20 @@
     }
 
     *{ box-sizing:border-box; }
+
+    /* Disable text highlighting/selection site-wide */
+    body, body *{
+      -webkit-user-select:none;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Still allow selection/cursor inside inputs */
+    input, textarea{
+      -webkit-user-select:text !important;
+      user-select:text !important;
+      -webkit-tap-highlight-color: initial;
+    }
+
     html{ height:100%; background: var(--bg); }
     body{
       min-height:100%;
@@ -44,7 +58,7 @@
       transform: translateZ(0);
     }
 
-    /* ✅ Checker grid that does NOT fade out at the bottom */
+    /* Checker grid (no fade) */
     .gridlines{
       position:fixed; inset:0;
       z-index:-5;
@@ -54,12 +68,8 @@
         linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
       background-size: 64px 64px;
-
-      /* Previously this used a radial mask that fades edges.
-         Now: no mask, so it stays consistent top-to-bottom. */
       mask-image: none;
       -webkit-mask-image: none;
-
       transform: translateZ(0);
     }
 
@@ -98,7 +108,7 @@
       width:2px; height:2px;
       border-radius:999px;
       background: rgba(255,255,255,.8);
-      opacity:.0;
+      opacity:0;
       filter: blur(.2px);
       animation: floatUp var(--dur, 8s) linear infinite;
       animation-delay: var(--delay, 0s);
@@ -113,21 +123,23 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
+    /* Remove thick transparent outlines: borders -> none across the UI */
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
       background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      border-bottom: none;
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
-    .brand{ display:flex; align-items:center; gap:12px; letter-spacing:.3px; user-select:none; }
+
+    .brand{ display:flex; align-items:center; gap:12px; letter-spacing:.3px; }
     .logo{
       width:38px; height:38px; border-radius:12px;
       background:
         radial-gradient(circle at 30% 30%, rgba(0,229,255,.95), transparent 45%),
         radial-gradient(circle at 70% 70%, rgba(0,255,149,.92), transparent 45%),
         rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 30px rgba(0,255,149,.18);
       position:relative;
     }
@@ -156,8 +168,8 @@
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
-      border: 1px solid rgba(0,229,255,.22);
-      padding:9px 9px;
+      border:none;
+      padding:10px 10px;
       color:rgba(255,255,255,.92);
     }
 
@@ -167,20 +179,20 @@
       gap:10px;
       padding:11px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       background: rgba(255,255,255,.05);
       color:rgba(255,255,255,.9);
       font-weight:600;
       font-size:13px;
       cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
       position:relative;
       overflow:hidden;
     }
-    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18); }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(0); }
+
     .btn.primary{
-      border-color: rgba(0,229,255,.35);
       background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
       box-shadow: 0 0 0 6px rgba(0,229,255,.07), 0 0 46px rgba(0,255,149,.14);
     }
@@ -209,7 +221,7 @@
 
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.10);
+      border:none;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       position:relative;
@@ -237,7 +249,7 @@
       padding: 7px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
+      border:none;
       color: rgba(255,255,255,.78);
       font-size:12px;
     }
@@ -262,7 +274,6 @@
       color:transparent;
       filter: drop-shadow(0 0 22px rgba(0,229,255,.16));
     }
-
     .subtitle{
       color: rgba(255,255,255,.70);
       max-width: 62ch;
@@ -278,9 +289,8 @@
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.09);
+      border:none;
     }
-    .pill svg{ opacity:.9; }
 
     .heroRight{ padding: 18px; }
     .stack{ display:flex; flex-direction:column; gap:12px; }
@@ -289,29 +299,25 @@
       padding: 14px;
       border-radius: 16px;
       background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.10);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      border:none;
+      transition: transform .18s ease, background .18s ease;
     }
-    .miniCard:hover{
-      transform: translateY(-2px);
-      border-color: rgba(0,229,255,.22);
-      background: rgba(0,0,0,.22);
-    }
+    .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
+
     .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .miniTitle{ font-weight:700; font-size:13px; margin:0; }
-
     .badge{
       font-size:11px;
       padding: 6px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.78);
       white-space:nowrap;
     }
     .badge.ok{
-      border-color: rgba(0,255,149,.30);
       box-shadow: 0 0 0 6px rgba(0,255,149,.06);
+      background: rgba(0,255,149,.08);
     }
 
     .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
@@ -319,7 +325,7 @@
       height: 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.09);
+      border:none;
       overflow:hidden;
       margin-top:12px;
       position:relative;
@@ -346,7 +352,7 @@
       padding: 16px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.10);
+      border:none;
       position:relative;
       overflow:hidden;
     }
@@ -354,7 +360,7 @@
       content:"";
       position:absolute; inset:-2px;
       background: radial-gradient(520px 160px at var(--fx, 50%) var(--fy, 0%), rgba(0,229,255,.12), transparent 60%);
-      opacity:.0;
+      opacity:0;
       transition: opacity .25s ease;
       pointer-events:none;
     }
@@ -369,16 +375,13 @@
       padding: 18px;
       border-radius: 18px;
       background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.10);
+      border:none;
       position:relative;
       overflow:hidden;
-      transition: transform .2s ease, border-color .2s ease;
+      transition: transform .2s ease;
     }
-    .priceCard:hover{ transform: translateY(-3px); border-color: rgba(0,229,255,.22); }
-    .priceCard.pop{
-      border-color: rgba(0,229,255,.30);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 55px rgba(0,255,149,.10);
-    }
+    .priceCard:hover{ transform: translateY(-3px); }
+    .priceCard.pop{ box-shadow: 0 0 0 6px rgba(0,229,255,.06), 0 0 55px rgba(0,255,149,.10); }
 
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .priceCard h4{ margin:0; font-size:14px; }
@@ -393,7 +396,7 @@
       padding: 18px 0 34px;
       color: rgba(255,255,255,.60);
       font-size: 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
+      border-top: none;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
@@ -409,7 +412,7 @@
       width: min(520px, 96vw);
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       box-shadow: 0 30px 90px rgba(0,0,0,.6);
       overflow:hidden;
       transform: translateY(10px) scale(.98);
@@ -422,12 +425,12 @@
     .modalHead{
       padding: 14px 16px;
       display:flex; justify-content:space-between; align-items:center;
-      border-bottom: 1px solid rgba(255,255,255,.10);
+      border-bottom: none;
     }
     .modalHead strong{ font-size:13px; }
     .x{
       width:36px; height:36px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       background: rgba(255,255,255,.06);
       cursor:pointer;
     }
@@ -438,16 +441,13 @@
       height: 42px;
       padding: 0 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
+      border:none;
       background: rgba(0,0,0,.20);
       color: rgba(255,255,255,.92);
       outline:none;
-      transition: border-color .2s ease, box-shadow .2s ease;
+      transition: box-shadow .2s ease;
     }
-    input:focus{
-      border-color: rgba(0,229,255,.28);
-      box-shadow: 0 0 0 6px rgba(0,229,255,.07);
-    }
+    input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .hint{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.58); line-height:1.45; }
 
@@ -467,7 +467,7 @@
       padding: 26px;
       border-radius: var(--radius);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border: 1px solid rgba(255,255,255,.10);
+      border:none;
       box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
@@ -568,7 +568,8 @@
               </div>
               <div class="miniBody">
                 Latency stable • CDN healthy • Updates rolling.
-                <div class="bar" aria-label="Status bar"><i style="--w:86%"></i></div>
+                <!-- ✅ Full bar -->
+                <div class="bar" aria-label="Status bar"><i style="--w:100%"></i></div>
               </div>
             </div>
 
@@ -730,11 +731,25 @@
   </div>
 
   <script>
+    // Disable right-click everywhere (including buttons)
+    window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
+
+    // Optional: block common devtools shortcuts (not bulletproof)
+    window.addEventListener("keydown", (e) => {
+      const k = e.key.toLowerCase();
+      const ctrl = e.ctrlKey || e.metaKey;
+      if (e.key === "F12") { e.preventDefault(); e.stopPropagation(); }
+      if (ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); e.stopPropagation(); }
+      if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    // Hover hotspot for primary buttons
     window.addEventListener("pointermove", (e) => {
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
     });
 
+    // Feature card hover hotspot
     document.querySelectorAll(".feat").forEach(card => {
       card.addEventListener("pointermove", (e) => {
         const r = card.getBoundingClientRect();
@@ -745,12 +760,14 @@
       });
     });
 
+    // Reveal on scroll
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("on"); });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
+    // View switching
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
     const navLinks = [...document.querySelectorAll("nav a")];
@@ -783,6 +800,7 @@
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
+    // Smooth easing scroll
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -834,6 +852,7 @@
       smoothJumpTo("#pricing");
     });
 
+    // Modal
     const modalBack = document.getElementById("modalBack");
     const openModalBtn = document.getElementById("openModal");
     const closeModalBtn = document.getElementById("closeModal");
@@ -855,23 +874,29 @@
     openBtns.forEach(b => b.addEventListener("click", openModal));
     closeModalBtn.addEventListener("click", closeModal);
     modalBack.addEventListener("click", (e) => { if (e.target === modalBack) closeModal(); });
-    window.addEventListener("keydown", (e) => { if (e.key === "Escape" && modalBack.classList.contains("show")) closeModal(); });
 
-    demoFill.addEventListener("click", () => { key.value = "ARRAY-4X7Q-9K2P"; user.value = "demo_user"; hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption."; });
+    demoFill.addEventListener("click", () => {
+      key.value = "ARRAY-4X7Q-9K2P";
+      user.value = "demo_user";
+      hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption.";
+    });
     submit.addEventListener("click", () => {
       const k = key.value.trim(), u = user.value.trim();
       if(!k || !u){ hint.textContent = "Please enter both an access key and username."; return; }
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
     });
 
+    // placeholders
     document.getElementById("openDiscord").addEventListener("click", () => alert("Support link placeholder. Replace this with your support URL."));
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
     document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
 
+    // Footer year
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
+    // Stars generator
     const stars = document.getElementById("stars");
     const STAR_COUNT = 42;
     function rand(min, max){ return Math.random() * (max - min) + min; }
