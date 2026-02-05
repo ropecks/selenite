@@ -13,7 +13,7 @@
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.62);
 
-      --shadow: 0 30px 80px rgba(0,0,0,.55);
+      --shadow: 0 26px 70px rgba(0,0,0,.50);
       --radius:18px;
 
       --glowA:#00e5ff;
@@ -23,13 +23,16 @@
 
     *{ box-sizing:border-box; }
 
+    /* Hard selection kill (works even if browser tries to tint selection) */
+    *::selection{ background: transparent; }
+    *::-moz-selection{ background: transparent; }
+
     /* Disable text highlighting/selection site-wide */
     body, body *{
       -webkit-user-select:none;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
     }
-    /* Still allow selection/cursor inside inputs */
     input, textarea{
       -webkit-user-select:text !important;
       user-select:text !important;
@@ -72,7 +75,7 @@
       transform: translateZ(0);
     }
 
-    /* Subtle scanline + LIGHTWEIGHT noise (no SVG turbulence to avoid huge RAM/GPU usage) */
+    /* Subtle scanline + lightweight noise (no SVG turbulence) */
     .fx::before{
       content:"";
       position:fixed; inset:0;
@@ -81,17 +84,15 @@
       opacity:.08;
       mix-blend-mode: overlay;
       pointer-events:none;
-      animation: scan 8s linear infinite;
+      animation: scan 9s linear infinite;
       z-index:-4;
     }
-
-    /* lightweight noise (static) */
     .fx::after{
       content:"";
       position:fixed; inset:0;
       pointer-events:none;
       z-index:-3;
-      opacity:.035;
+      opacity:.03;
       mix-blend-mode: overlay;
       background-image:
         radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
@@ -100,7 +101,6 @@
       background-position: 0 0, 1px 1px;
       transform: translateZ(0);
     }
-
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
     /* Floating particles */
@@ -130,23 +130,8 @@
     a{ color:inherit; text-decoration:none; }
     .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    /* ===== Footer link highlight prevention (some browsers still show selection/focus tint) ===== */
-    footer a, footer a *{
-      -webkit-user-select:none !important;
-      user-select:none !important;
-      -webkit-tap-highlight-color: transparent !important;
-    }
-    footer a:focus, footer a:focus-visible{
-      outline:none !important;
-    }
-    footer a::selection{ background: transparent; }
-    footer a::-moz-selection{ background: transparent; }
-
     /* =======================================================================
-       FIXED Hover animated thin gradient border (AUTO-APPLIES)
-       - Works even with overflow:hidden
-       - Draws INSIDE (inset:0) so it can't be clipped
-       - Proper z-index so it appears over content
+       Hover animated thin gradient border (AUTO-APPLIES)
        ======================================================================= */
     :is(
       .panel,
@@ -164,7 +149,7 @@
       .badge
     ){
       position: relative;
-      z-index: 0;               /* stacking context */
+      z-index: 0;
       border: none !important;
       outline: none !important;
     }
@@ -186,13 +171,13 @@
     )::after{
       content:"";
       position:absolute;
-      inset:0;                  /* inside (prevents clipping) */
+      inset:0;
       border-radius: inherit;
-      padding: 1px;             /* thickness */
+      padding: 1px;
       opacity:0;
       pointer-events:none;
       transition: opacity .12s ease;
-      z-index: 50;              /* above element content */
+      z-index: 50;
 
       background: linear-gradient(90deg,
         rgba(0,229,255,.95),
@@ -203,7 +188,6 @@
       background-size: 260% 260%;
       background-position: 0% 50%;
 
-      /* show only the 1px ring */
       -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
@@ -212,8 +196,6 @@
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
       mask-composite: exclude;
-
-      filter: drop-shadow(0 0 10px rgba(0,229,255,.14));
     }
 
     :is(
@@ -240,11 +222,10 @@
       100% { background-position: 200% 50%; }
     }
 
-    /* ===== Header / Nav ===== */
+    /* ===== Header / Nav (NO backdrop-filter = better cross-browser + less GPU creep) ===== */
     header{
       position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(14px);
-      background: linear-gradient(180deg, rgba(6,10,18,.65), rgba(6,10,18,.25));
+      background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
       border-bottom:none;
     }
     .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
@@ -257,7 +238,7 @@
         radial-gradient(circle at 70% 70%, rgba(0,255,149,.92), transparent 45%),
         rgba(255,255,255,.06);
       border:none;
-      box-shadow: 0 0 30px rgba(0,255,149,.18);
+      box-shadow: 0 0 22px rgba(0,255,149,.16);
       position:relative;
     }
     .logo::after{
@@ -266,13 +247,12 @@
       border-radius:16px;
       background: conic-gradient(from 120deg,
         rgba(0,229,255,.0),
-        rgba(0,229,255,.32),
-        rgba(0,255,149,.28),
-        rgba(125,255,204,.22),
+        rgba(0,229,255,.26),
+        rgba(0,255,149,.22),
+        rgba(125,255,204,.18),
         rgba(0,229,255,.0)
       );
-      filter: blur(14px);
-      opacity:.6;
+      opacity:.55;
       z-index:-1;
       animation: spin 10s linear infinite;
     }
@@ -281,7 +261,7 @@
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
 
     nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:13px; }
-    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    nav a{ padding:10px 10px; border-radius:12px; transition: background .2s ease, color .2s ease, transform .2s ease; display:inline-flex; }
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
@@ -301,7 +281,7 @@
       font-weight:600;
       font-size:13px;
       cursor:pointer;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      transition: transform .18s ease, background .18s ease;
       overflow:hidden;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
@@ -309,12 +289,12 @@
 
     .btn.primary{
       background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
-      box-shadow: 0 0 46px rgba(0,255,149,.14);
+      box-shadow: 0 0 34px rgba(0,255,149,.10);
     }
     .btn.primary::before{
       content:"";
       position:absolute; inset:-2px;
-      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.30), transparent 55%);
+      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.26), transparent 55%);
       opacity:0;
       transition: opacity .2s ease;
       pointer-events:none;
@@ -372,7 +352,7 @@
     .dot{
       width:8px; height:8px; border-radius:999px;
       background: var(--glowA);
-      box-shadow: 0 0 16px rgba(0,229,255,.75);
+      box-shadow: 0 0 14px rgba(0,229,255,.55);
       animation: pulse 1.6s ease-in-out infinite;
     }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
@@ -388,7 +368,6 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      filter: drop-shadow(0 0 22px rgba(0,229,255,.16));
     }
     .subtitle{
       color: rgba(255,255,255,.70);
@@ -431,7 +410,7 @@
     }
     .badge.ok{
       background: rgba(0,255,149,.08);
-      box-shadow: 0 0 26px rgba(0,255,149,.12);
+      box-shadow: 0 0 22px rgba(0,255,149,.10);
     }
 
     .miniBody{ margin-top:10px; color: rgba(255,255,255,.68); font-size:12px; line-height:1.5; }
@@ -448,11 +427,10 @@
       width: var(--w, 72%);
       background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(0,255,149,.82), rgba(125,255,204,.78));
       border-radius: 999px;
-      filter: drop-shadow(0 0 14px rgba(0,229,255,.28));
       animation: load 1.2s ease forwards;
       transform-origin:left;
       transform: scaleX(.65);
-      opacity:.65;
+      opacity:.75;
     }
     @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
 
@@ -491,7 +469,7 @@
       transition: transform .2s ease;
     }
     .priceCard:hover{ transform: translateY(-3px); }
-    .priceCard.pop{ box-shadow: 0 0 55px rgba(0,255,149,.10); }
+    .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
 
     .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
     .priceCard h4{ margin:0; font-size:14px; }
@@ -509,6 +487,23 @@
       border-top:none;
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+    /* IMPORTANT: footer links must NOT be inline (so the hover ring can draw properly) */
+    footer a{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 12px;
+      background: transparent;
+      color: rgba(255,255,255,.60);
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    footer a:hover{
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.86);
+      transform: translateY(-1px);
+    }
+    footer a:focus, footer a:focus-visible{ outline:none !important; }
 
     /* ===== Modal ===== */
     .modalBack{
@@ -602,7 +597,6 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      filter: drop-shadow(0 0 22px rgba(0,229,255,.14));
     }
     .downloadSub{
       margin:0;
@@ -782,7 +776,7 @@
       <footer>
         <div class="wrap foot">
           <div>© <span id="year"></span> Array Dashboard. All rights reserved.</div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a href="#status" data-jump>Status</a>
             <a href="#pricing" data-jump>Plans</a>
             <a href="#faq" data-jump>FAQ</a>
@@ -820,7 +814,7 @@
       <footer>
         <div class="wrap foot">
           <div>© <span class="year2"></span> Array Dashboard. All rights reserved.</div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a href="#" id="backHome2">Back</a>
           </div>
         </div>
@@ -887,10 +881,15 @@
       });
     });
 
-    // Reveal on scroll
+    // Reveal on scroll (unobserve after revealing = small cleanup)
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("on"); });
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add("on");
+          io.unobserve(en.target);
+        }
+      });
     }, { threshold: 0.12 });
     reveals.forEach(r => io.observe(r));
 
@@ -907,7 +906,7 @@
 
     function playDownloadEnter(){
       viewDownload.classList.remove("play");
-      void viewDownload.offsetWidth; // reflow
+      void viewDownload.offsetWidth;
       viewDownload.classList.add("play");
     }
 
@@ -935,7 +934,7 @@
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // Smooth easing scroll
+    // Smooth easing scroll (Chromium-safe: stops RAF fully when done)
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -945,13 +944,19 @@
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
     function animateScroll(){
-      rafId = null;
       currentScroll += (targetScroll - currentScroll) * EASE;
-      if (Math.abs(targetScroll - currentScroll) < 0.5) currentScroll = targetScroll;
+      if (Math.abs(targetScroll - currentScroll) < 0.5) {
+        currentScroll = targetScroll;
+        window.scrollTo(0, currentScroll);
+        rafId = null;
+        return;
+      }
       window.scrollTo(0, currentScroll);
-      if (currentScroll !== targetScroll) rafId = requestAnimationFrame(animateScroll);
+      rafId = requestAnimationFrame(animateScroll);
     }
-    function ensureAnim(){ if (rafId == null) rafId = requestAnimationFrame(animateScroll); }
+    function ensureAnim(){
+      if (rafId == null) rafId = requestAnimationFrame(animateScroll);
+    }
 
     window.addEventListener("scroll", () => {
       if (rafId == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
@@ -1030,19 +1035,19 @@
     document.getElementById("year").textContent = yr;
     document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
 
-    // Stars generator (kept light)
+    // Stars generator (light)
     const stars = document.getElementById("stars");
-    const STAR_COUNT = 42;
+    const STAR_COUNT = 36; // slightly reduced
     function rand(min, max){ return Math.random() * (max - min) + min; }
     for(let i=0;i<STAR_COUNT;i++){
       const s = document.createElement("span");
       s.className = "star";
       s.style.left = rand(0, 100) + "vw";
       s.style.bottom = rand(-10, 10) + "vh";
-      s.style.setProperty("--s", rand(0.8, 1.6));
-      s.style.setProperty("--dur", rand(7, 13) + "s");
+      s.style.setProperty("--s", rand(0.8, 1.5));
+      s.style.setProperty("--dur", rand(8, 14) + "s");
       s.style.setProperty("--delay", rand(0, 10) + "s");
-      s.style.setProperty("--o", rand(0.18, 0.55));
+      s.style.setProperty("--o", rand(0.16, 0.50));
       stars.appendChild(s);
     }
 
