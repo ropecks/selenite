@@ -23,11 +23,11 @@
 
     *{ box-sizing:border-box; }
 
-    /* Hard selection kill (works even if browser tries to tint selection) */
+    /* Hard selection kill */
     *::selection{ background: transparent; }
     *::-moz-selection{ background: transparent; }
 
-    /* Disable text highlighting/selection site-wide */
+    /* Disable selection site-wide */
     body, body *{
       -webkit-user-select:none;
       user-select:none;
@@ -62,7 +62,7 @@
       transform: translateZ(0);
     }
 
-    /* Checker grid (no fade) */
+    /* Checker grid */
     .gridlines{
       position:fixed; inset:0;
       z-index:-5;
@@ -75,8 +75,8 @@
       transform: translateZ(0);
     }
 
-    /* Subtle scanline + lightweight noise (no SVG turbulence) */
-    .fx::before{
+    /* Scanline + lightweight noise (paused via .idle class) */
+    body.fx::before{
       content:"";
       position:fixed; inset:0;
       background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
@@ -86,8 +86,9 @@
       pointer-events:none;
       animation: scan 9s linear infinite;
       z-index:-4;
+      will-change: transform;
     }
-    .fx::after{
+    body.fx::after{
       content:"";
       position:fixed; inset:0;
       pointer-events:none;
@@ -103,7 +104,12 @@
     }
     @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
 
-    /* Floating particles */
+    /* Idle mode: stop background animations + reduce compositor churn */
+    body.idle::before{
+      animation-play-state: paused !important;
+    }
+
+    /* Floating particles (paused via .idle class) */
     #stars{
       position:fixed; inset:0;
       z-index:-2;
@@ -119,6 +125,10 @@
       filter: blur(.2px);
       animation: floatUp var(--dur, 8s) linear infinite;
       animation-delay: var(--delay, 0s);
+      will-change: transform, opacity;
+    }
+    body.idle .star{
+      animation-play-state: paused !important;
     }
     @keyframes floatUp{
       0%   { transform: translate3d(0, 0, 0) scale(var(--s,1)); opacity:0; }
@@ -134,19 +144,8 @@
        Hover animated thin gradient border (AUTO-APPLIES)
        ======================================================================= */
     :is(
-      .panel,
-      .miniCard,
-      .priceCard,
-      .feat,
-      .pill,
-      .kicker,
-      .downloadHero,
-      .modal,
-      .btn,
-      nav a,
-      footer a,
-      .brand,
-      .badge
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.brand,.badge
     ){
       position: relative;
       z-index: 0;
@@ -155,19 +154,8 @@
     }
 
     :is(
-      .panel,
-      .miniCard,
-      .priceCard,
-      .feat,
-      .pill,
-      .kicker,
-      .downloadHero,
-      .modal,
-      .btn,
-      nav a,
-      footer a,
-      .brand,
-      .badge
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.brand,.badge
     )::after{
       content:"";
       position:absolute;
@@ -199,19 +187,8 @@
     }
 
     :is(
-      .panel,
-      .miniCard,
-      .priceCard,
-      .feat,
-      .pill,
-      .kicker,
-      .downloadHero,
-      .modal,
-      .btn,
-      nav a,
-      footer a,
-      .brand,
-      .badge
+      .panel,.miniCard,.priceCard,.feat,.pill,.kicker,.downloadHero,.modal,
+      .btn,nav a,footer a,.brand,.badge
     ):hover::after{
       opacity:1;
       animation: borderFlow 1.2s linear infinite;
@@ -222,7 +199,7 @@
       100% { background-position: 200% 50%; }
     }
 
-    /* ===== Header / Nav (NO backdrop-filter = better cross-browser + less GPU creep) ===== */
+    /* ===== Header / Nav ===== */
     header{
       position:sticky; top:0; z-index:50;
       background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
@@ -237,7 +214,6 @@
         radial-gradient(circle at 30% 30%, rgba(0,229,255,.95), transparent 45%),
         radial-gradient(circle at 70% 70%, rgba(0,255,149,.92), transparent 45%),
         rgba(255,255,255,.06);
-      border:none;
       box-shadow: 0 0 22px rgba(0,255,149,.16);
       position:relative;
     }
@@ -256,6 +232,9 @@
       z-index:-1;
       animation: spin 10s linear infinite;
     }
+    body.idle .logo::after{
+      animation-play-state: paused !important;
+    }
     @keyframes spin{ to{ transform:rotate(360deg); } }
     .brand h1{ font-size:14px; margin:0; font-weight:700; }
     .brand small{ display:block; color:var(--muted); font-size:12px; margin-top:2px; }
@@ -265,7 +244,6 @@
     nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
     nav a.active{
       background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
-      border:none;
       color:rgba(255,255,255,.92);
     }
 
@@ -275,7 +253,6 @@
       gap:10px;
       padding:11px 14px;
       border-radius: 14px;
-      border:none;
       background: rgba(255,255,255,.05);
       color:rgba(255,255,255,.9);
       font-weight:600;
@@ -305,7 +282,6 @@
     .view{ display:none; }
     .view.show{ display:block; }
 
-    /* ===== Main layout ===== */
     main{ padding: 48px 0 72px; }
     .hero{
       display:grid;
@@ -318,7 +294,6 @@
 
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:none;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
@@ -354,6 +329,9 @@
       background: var(--glowA);
       box-shadow: 0 0 14px rgba(0,229,255,.55);
       animation: pulse 1.6s ease-in-out infinite;
+    }
+    body.idle .dot{
+      animation-play-state: paused !important;
     }
     @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
 
@@ -488,7 +466,7 @@
     }
     .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-    /* IMPORTANT: footer links must NOT be inline (so the hover ring can draw properly) */
+    /* Footer links must not be inline (so hover ring draws) */
     footer a{
       display:inline-flex;
       align-items:center;
@@ -622,7 +600,7 @@
 
     @media (prefers-reduced-motion: reduce){
       #stars{ display:none; }
-      .fx::before, .fx::after, .logo::after{ display:none; }
+      body.fx::before, body.fx::after, .logo::after{ display:none; }
       *{ animation:none !important; transition:none !important; }
     }
   </style>
@@ -852,7 +830,7 @@
   </div>
 
   <script>
-    // Disable right-click everywhere (including buttons)
+    // Disable right-click everywhere
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
     // Optional: block common devtools shortcuts (not bulletproof)
@@ -868,6 +846,7 @@
     window.addEventListener("pointermove", (e) => {
       document.documentElement.style.setProperty("--mx", (e.clientX / innerWidth) * 100 + "%");
       document.documentElement.style.setProperty("--my", (e.clientY / innerHeight) * 100 + "%");
+      markActive();
     });
 
     // Feature card hover hotspot
@@ -878,10 +857,11 @@
         const y = ((e.clientY - r.top) / r.height) * 100;
         card.style.setProperty("--fx", x + "%");
         card.style.setProperty("--fy", y + "%");
+        markActive();
       });
     });
 
-    // Reveal on scroll (unobserve after revealing = small cleanup)
+    // Reveal on scroll (unobserve after revealing)
     const reveals = [...document.querySelectorAll(".reveal")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach(en => {
@@ -916,6 +896,7 @@
       setActiveNav("home");
       window.scrollTo(0, 0);
       targetScroll = 0; currentScroll = 0;
+      markActive();
     }
     function showDownload(){
       viewHome.classList.remove("show");
@@ -924,17 +905,18 @@
       window.scrollTo(0, 0);
       targetScroll = 0; currentScroll = 0;
       playDownloadEnter();
+      markActive();
     }
 
     document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
     document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
 
-    document.getElementById("goDownload").addEventListener("click", showDownload);
     document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
+    document.getElementById("goDownload").addEventListener("click", showDownload);
     document.getElementById("backHome").addEventListener("click", showHome);
     document.getElementById("backHome2").addEventListener("click", (e)=>{ e.preventDefault(); showHome(); });
 
-    // Smooth easing scroll (Chromium-safe: stops RAF fully when done)
+    // Smooth easing scroll (stops RAF fully when done)
     let targetScroll = window.scrollY;
     let currentScroll = window.scrollY;
     const EASE = 0.09;
@@ -960,6 +942,7 @@
 
     window.addEventListener("scroll", () => {
       if (rafId == null) { targetScroll = window.scrollY; currentScroll = window.scrollY; }
+      markActive();
     }, { passive: true });
 
     window.addEventListener("wheel", (e) => {
@@ -969,6 +952,7 @@
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
       ensureAnim();
+      markActive();
     }, { passive: false });
 
     function smoothJumpTo(hash){
@@ -978,6 +962,7 @@
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
       targetScroll = clamp(y, 0, maxScroll);
       ensureAnim();
+      markActive();
     }
     document.querySelectorAll("[data-jump]").forEach(a => {
       a.addEventListener("click", (e) => {
@@ -1002,11 +987,12 @@
     const demoFill = document.getElementById("demoFill");
     const hint = document.getElementById("hint");
 
-    function openModal(){ modalBack.classList.add("show"); setTimeout(() => key.focus(), 50); }
+    function openModal(){ modalBack.classList.add("show"); setTimeout(() => key.focus(), 50); markActive(); }
     function closeModal(){
       modalBack.classList.remove("show");
       hint.textContent = "Demo template: replace this with your purchase / redeem / download flow.";
       key.value = ""; user.value = "";
+      markActive();
     }
 
     openModalBtn.addEventListener("click", openModal);
@@ -1018,14 +1004,15 @@
       key.value = "ARRAY-4X7Q-9K2P";
       user.value = "demo_user";
       hint.textContent = "Demo values inserted. Wire this up to your backend for real key redemption.";
+      markActive();
     });
     submit.addEventListener("click", () => {
       const k = key.value.trim(), u = user.value.trim();
-      if(!k || !u){ hint.textContent = "Please enter both an access key and username."; return; }
+      if(!k || !u){ hint.textContent = "Please enter both an access key and username."; markActive(); return; }
       hint.textContent = `Welcome, ${u}. (Demo) Key accepted: ${k.slice(0,5)}••••`;
+      markActive();
     });
 
-    // placeholders
     document.getElementById("openDiscord").addEventListener("click", () => alert("Support link placeholder. Replace this with your support URL."));
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
     document.getElementById("downloadAlt").addEventListener("click", () => alert("Mirror placeholder. Replace this with your mirror URL."));
@@ -1037,7 +1024,7 @@
 
     // Stars generator (light)
     const stars = document.getElementById("stars");
-    const STAR_COUNT = 36; // slightly reduced
+    const STAR_COUNT = 36;
     function rand(min, max){ return Math.random() * (max - min) + min; }
     for(let i=0;i<STAR_COUNT;i++){
       const s = document.createElement("span");
@@ -1051,8 +1038,36 @@
       stars.appendChild(s);
     }
 
-    targetScroll = window.scrollY;
-    currentScroll = window.scrollY;
+    // ===== Idle / visibility optimization =====
+    let idleTimer = null;
+    const IDLE_MS = 4000; // after 4s of no input => pause background anims
+
+    function setIdle(isIdle){
+      document.body.classList.toggle("idle", isIdle);
+    }
+
+    function markActive(){
+      setIdle(false);
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => setIdle(true), IDLE_MS);
+    }
+
+    // Start idle timer soon after load
+    markActive();
+
+    // Pause everything when tab is not visible; resume on focus
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        setIdle(true);
+      } else {
+        markActive();
+      }
+    });
+
+    // Inputs that count as "activity"
+    ["mousemove","pointerdown","keydown","touchstart","wheel","scroll"].forEach(evt => {
+      window.addEventListener(evt, markActive, { passive: true });
+    });
   </script>
 </body>
 </html>
