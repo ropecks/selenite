@@ -38,27 +38,30 @@
     }
 
     html{ height:100%; background: var(--bg); }
+
+    /* ✅ Brave-safe stacking context */
     body{
       min-height:100%;
       margin:0;
       color:var(--text);
-      background: var(--bg); /* FALLBACK base color so it’s never “all black” from missing layers */
+      background: linear-gradient(180deg, var(--bg), var(--bg2)); /* always visible base */
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       overflow-x:hidden;
+
+      position: relative;
+      isolation: isolate; /* IMPORTANT: prevents fixed layers from disappearing in Brave */
     }
 
-    /* ===== Background layers ===== */
+    /* ===== Background layers (NO negative z-index) ===== */
     .bg{
       position:fixed;
       inset:0;
-      z-index:-6;
+      z-index:0;
       pointer-events:none;
-      /* FALLBACK: always-supported background first */
       background: linear-gradient(180deg, #05080d, #071520);
       transform: translateZ(0);
     }
 
-    /* If the browser supports radial gradients, upgrade the background */
     @supports (background: radial-gradient(circle at 50% 50%, #000, transparent)) {
       .bg{
         background:
@@ -69,10 +72,9 @@
       }
     }
 
-    /* Checker grid: use only basic linear-gradients (very compatible) */
     .gridlines{
       position:fixed; inset:0;
-      z-index:-5;
+      z-index:0;
       pointer-events:none;
       opacity:.18;
       background-image:
@@ -83,7 +85,7 @@
       transform: translateZ(0);
     }
 
-    /* Scanline + lightweight noise (both safe) */
+    /* Scanline + lightweight noise */
     body.fx::before{
       content:"";
       position:fixed; inset:0;
@@ -92,14 +94,14 @@
       opacity:.08;
       pointer-events:none;
       animation: scan 9s linear infinite;
-      z-index:-4;
+      z-index:0; /* ✅ was negative */
       will-change: transform;
     }
     body.fx::after{
       content:"";
       position:fixed; inset:0;
       pointer-events:none;
-      z-index:-3;
+      z-index:0; /* ✅ was negative */
       opacity:.03;
       background-image:
         radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
@@ -117,14 +119,19 @@
     body.frozen .bg{ opacity:.75; }
     body.frozen .gridlines{ opacity:.12; }
 
-    /* CANVAS stars layer */
     #starCanvas{
       position:fixed;
       inset:0;
-      z-index:-2;
+      z-index:0;
       pointer-events:none;
       width:100%;
       height:100%;
+    }
+
+    /* ✅ All UI above background layers */
+    header, main, .view, .modalBack{
+      position: relative;
+      z-index: 1;
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -141,14 +148,12 @@
       outline: none !important;
     }
 
-    /* Fallback for browsers without mask-composite: simple outline */
     @media (hover:hover) and (pointer:fine){
       .ring:hover{
         box-shadow: 0 0 0 1px rgba(0,229,255,.35);
       }
     }
 
-    /* Upgrade ring only if mask-composite is supported */
     @supports (-webkit-mask-composite: xor) {
       @media (hover:hover) and (pointer:fine){
         .ring:hover{ box-shadow: none; }
@@ -1100,4 +1105,3 @@
   </script>
 </body>
 </html>
-
