@@ -177,29 +177,31 @@
       padding: 10px 0; /* breathing room above capsule */
     }
 
-.topbarShell{
-  display: flex;                 /* allows centering + stretching */
-  align-items: center;
-  justify-content: center;
-  width: min(980px, 92vw);       /* stretched, but not full width */
-  margin: 0 auto;                /* centered */
-  padding: 14px 18px;            /* more breathing room */
-  border-radius: 22px;           /* less rounded than pill */
-  background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  box-shadow: 0 18px 55px rgba(0,0,0,.40);
-}
+    .topbarShell{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: min(980px, 92vw);
+      margin: 0 auto;
+      padding: 14px 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
+      backdrop-filter: blur(14px) saturate(120%);
+      -webkit-backdrop-filter: blur(14px) saturate(120%);
+      box-shadow: 0 18px 55px rgba(0,0,0,.40);
+    }
 
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  width: 100%;                   /* fill the stretched capsule */
-  gap: 18px;                     /* more space between sections */
-  padding: 0;                    /* capsule handles padding */
-}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width: 100%;
+      gap: 18px;
+      padding: 0;
+    }
 
+    /* keep brand left, push nav to the right */
+    nav{ margin-left:auto; }
 
     .brand{
       display:flex; align-items:center; gap:12px;
@@ -611,7 +613,6 @@
   <canvas id="starCanvas" aria-hidden="true"></canvas>
 
   <header>
-    <!-- CHANGED: wrap topbar in a shrink-to-fit blurred capsule -->
     <div class="wrap">
       <div class="topbarShell ring" aria-label="Top bar">
         <div class="topbar">
@@ -622,14 +623,14 @@
             </div>
           </div>
 
+          <!-- MOVED: nav to the right side (replaces where Support used to be) -->
           <nav aria-label="Primary">
             <a class="active ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
           </nav>
 
-          <div class="actions">
-            <button class="btn primary ring" id="openSupport" type="button">Support</button>
-          </div>
+          <!-- REMOVED: Support button -->
+          <div class="actions" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -773,6 +774,7 @@
     </div>
   </div>
 
+  <!-- Support modal kept (not removed), but no longer reachable since Support button is removed -->
   <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
     <div class="modal ring">
       <div class="modalHead">
@@ -814,7 +816,7 @@
     function applyRings(){
       const selectors = [
         "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn",
-        ".topbarShell" /* ensure capsule participates in ring system */
+        ".topbarShell"
       ].join(",");
       document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
       document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
@@ -951,9 +953,10 @@
       smoothJumpTo("#pricing");
     });
 
+    // Support wiring kept (modal exists) but openSupport button is removed so these are guarded:
     const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
     const supportBack = document.getElementById("supportBack");
-    const openSupport = document.getElementById("openSupport");
+    const openSupport = document.getElementById("openSupport"); // now null
     const closeSupport = document.getElementById("closeSupport");
     const cancelSupport = document.getElementById("cancelSupport");
     const confirmSupport = document.getElementById("confirmSupport");
@@ -961,7 +964,7 @@
     function openSupportModal(){ supportBack.classList.add("show"); }
     function closeSupportModal(){ supportBack.classList.remove("show"); }
 
-    openSupport.addEventListener("click", openSupportModal);
+    if (openSupport) openSupport.addEventListener("click", openSupportModal);
     closeSupport.addEventListener("click", closeSupportModal);
     cancelSupport.addEventListener("click", closeSupportModal);
     supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
