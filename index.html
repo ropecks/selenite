@@ -167,6 +167,7 @@
 
     /* ===========================
        UPDATED TOP BAR (CAPSULE)
+       + HITBOX ONLY ON CAPSULE
        =========================== */
 
     header{
@@ -175,6 +176,11 @@
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
       padding: 10px 0;
+      pointer-events: none; /* IMPORTANT: stop invisible header area blocking clicks */
+    }
+    .topbarShell,
+    .topbarShell *{
+      pointer-events: auto; /* re-enable interaction only on capsule */
     }
 
     .topbarShell{
@@ -625,8 +631,6 @@
           <nav aria-label="Primary">
             <a class="active ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
-
-            <!-- ADDED BACK: Support as a grey text link (same style as footer links) -->
             <a class="ring" href="#" id="openSupportLink">Support</a>
           </nav>
         </div>
@@ -734,7 +738,6 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a class="ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
-            <!-- ALSO present in footer -->
             <a class="ring" href="#" id="openSupportFooter">Support</a>
           </div>
         </div>
@@ -962,7 +965,6 @@
     function openSupportModal(){ supportBack.classList.add("show"); }
     function closeSupportModal(){ supportBack.classList.remove("show"); }
 
-    // wire all support links (top + footers)
     ["openSupportLink","openSupportFooter","openSupportFooter2"].forEach(id=>{
       const el = document.getElementById(id);
       if (el) el.addEventListener("click", (e)=>{ e.preventDefault(); openSupportModal(); });
