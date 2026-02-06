@@ -171,10 +171,10 @@
 
     header{
       position:sticky; top:0; z-index:50;
-      background: transparent; /* moved blur/bg to capsule */
+      background: transparent;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
-      padding: 10px 0; /* breathing room above capsule */
+      padding: 10px 0;
     }
 
     .topbarShell{
@@ -200,7 +200,6 @@
       padding: 0;
     }
 
-    /* keep brand left, push nav to the right */
     nav{ margin-left:auto; }
 
     .brand{
@@ -623,14 +622,13 @@
             </div>
           </div>
 
-          <!-- MOVED: nav to the right side (replaces where Support used to be) -->
           <nav aria-label="Primary">
             <a class="active ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
-          </nav>
 
-          <!-- REMOVED: Support button -->
-          <div class="actions" style="display:none;"></div>
+            <!-- ADDED BACK: Support as a grey text link (same style as footer links) -->
+            <a class="ring" href="#" id="openSupportLink">Support</a>
+          </nav>
         </div>
       </div>
     </div>
@@ -736,6 +734,8 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a class="ring" href="#" data-view="home">Home</a>
             <a class="ring" href="#" data-view="download">Download</a>
+            <!-- ALSO present in footer -->
+            <a class="ring" href="#" id="openSupportFooter">Support</a>
           </div>
         </div>
       </footer>
@@ -768,13 +768,13 @@
           <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
             <a class="ring" href="#" data-view="home">Home</a>
+            <a class="ring" href="#" id="openSupportFooter2">Support</a>
           </div>
         </div>
       </footer>
     </div>
   </div>
 
-  <!-- Support modal kept (not removed), but no longer reachable since Support button is removed -->
   <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
     <div class="modal ring">
       <div class="modalHead">
@@ -861,7 +861,7 @@
 
     const viewHome = document.getElementById("viewHome");
     const viewDownload = document.getElementById("viewDownload");
-    const navLinks = [...document.querySelectorAll("nav a")];
+    const navLinks = [...document.querySelectorAll("nav a")].filter(a => a.dataset.view);
 
     function setActiveNav(view){
       navLinks.forEach(a => a.classList.remove("active"));
@@ -953,10 +953,8 @@
       smoothJumpTo("#pricing");
     });
 
-    // Support wiring kept (modal exists) but openSupport button is removed so these are guarded:
     const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
     const supportBack = document.getElementById("supportBack");
-    const openSupport = document.getElementById("openSupport"); // now null
     const closeSupport = document.getElementById("closeSupport");
     const cancelSupport = document.getElementById("cancelSupport");
     const confirmSupport = document.getElementById("confirmSupport");
@@ -964,7 +962,12 @@
     function openSupportModal(){ supportBack.classList.add("show"); }
     function closeSupportModal(){ supportBack.classList.remove("show"); }
 
-    if (openSupport) openSupport.addEventListener("click", openSupportModal);
+    // wire all support links (top + footers)
+    ["openSupportLink","openSupportFooter","openSupportFooter2"].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", (e)=>{ e.preventDefault(); openSupportModal(); });
+    });
+
     closeSupport.addEventListener("click", closeSupportModal);
     cancelSupport.addEventListener("click", closeSupportModal);
     supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
