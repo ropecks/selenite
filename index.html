@@ -1,1223 +1,1216 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Array Cheats</title>
-  <meta name="theme-color" content="#070b14" />
-  <link rel="icon" type="image/png" href="icon.png">
-  <style>
-    :root{
-      --bg:#070b14;
-      --bg2:#050812;
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.62);
-      --shadow: 0 26px 70px rgba(0,0,0,.50);
-      --radius:18px;
-      --glowA: rgba(0,229,255,.95);
-      --glowB: rgba(0,255,149,.95);
-      --glowC: rgba(125,255,204,.90);
-    }
-    *{ box-sizing:border-box; }
-    *::selection{ background: transparent; }
-    *::-moz-selection{ background: transparent; }
-    body, body *{
-      -webkit-user-select:none;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-    }
-    input, textarea{
-      -webkit-user-select:text !important;
-      user-select:text !important;
-      -webkit-tap-highlight-color: initial;
-    }
-    html{ height:100%; background: var(--bg); }
-    body{
-      min-height:100%;
-      margin:0;
-      color:var(--text);
-      background: linear-gradient(180deg, var(--bg), var(--bg2));
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      overflow-x:hidden;
-      position: relative;
-      isolation: isolate;
-      font-weight: 400;
-    }
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>Array Cheats</title>
+ <meta name="theme-color" content="#070b14" />
+ <link rel="icon" type="image/png" href="icon.png">
+ <style>
+ :root{
+ --bg:#070b14;
+ --bg2:#050812;
+ --text:rgba(255,255,255,.92);
+ --muted:rgba(255,255,255,.62);
+ --shadow: 0 26px 70px rgba(0,0,0,.50);
+ --radius:18px;
+ --glowA: rgba(0,229,255,.95);
+ --glowB: rgba(0,255,149,.95);
+ --glowC: rgba(125,255,204,.90);
+ }
+ *{ box-sizing:border-box; }
+ *::selection{ background: transparent; }
+ *::-moz-selection{ background: transparent; }
+ body, body *{
+ -webkit-user-select:none;
+ user-select:none;
+ -webkit-tap-highlight-color: transparent;
+ }
+ input, textarea{
+ -webkit-user-select:text !important;
+ user-select:text !important;
+ -webkit-tap-highlight-color: initial;
+ }
+ html{ height:100%; background: var(--bg); }
+ body{
+ min-height:100%;
+ margin:0;
+ color:var(--text);
+ background: linear-gradient(180deg, var(--bg), var(--bg2));
+ font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+ overflow-x:hidden;
+ position: relative;
+ isolation: isolate;
+ font-weight: 400;
+ }
 
-    .bg{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
-        radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
-        radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg), var(--bg2));
-      transform: translateZ(0);
-    }
-    .gridlines{
-      position:fixed; inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:.18;
-      background-image:
-        linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
-      background-size: 64px 64px;
-      background-position: 0 0;
-      transform: translateZ(0);
-    }
-    body.fx::before{
-      content:"";
-      position:fixed; inset:0;
-      background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
-      background-size: 100% 3px;
-      opacity:.08;
-      pointer-events:none;
-      animation: scan 9s linear infinite;
-      z-index:0;
-      will-change: transform;
-    }
-    body.fx::after{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      z-index:0;
-      opacity:.03;
-      background-image:
-        radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
-        radial-gradient(rgba(0,0,0,.18) 1px, transparent 1px);
-      background-size: 3px 3px, 4px 4px;
-      background-position: 0 0, 1px 1px;
-      transform: translateZ(0);
-    }
-    @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
-    body.frozen.fx::before{ animation-play-state: paused !important; }
-    body.frozen.fx::before,
-    body.frozen.fx::after{ opacity:0 !important; }
-    body.frozen .bg{ opacity:.75; }
-    body.frozen .gridlines{ opacity:.12; }
+ .bg{
+ position:fixed;
+ inset:0;
+ z-index:0;
+ pointer-events:none;
+ background:
+ radial-gradient(1200px 700px at 18% -10%, rgba(0,229,255,.16), transparent 60%),
+ radial-gradient(900px 700px at 88% 8%, rgba(0,255,149,.14), transparent 55%),
+ radial-gradient(900px 700px at 60% 120%, rgba(125,255,204,.10), transparent 55%),
+ linear-gradient(180deg, var(--bg), var(--bg2));
+ transform: translateZ(0);
+ }
+ .gridlines{
+ position:fixed; inset:0;
+ z-index:0;
+ pointer-events:none;
+ opacity:.18;
+ background-image:
+ linear-gradient(to right, rgba(255,255,255,.18) 1px, transparent 1px),
+ linear-gradient(to bottom, rgba(255,255,255,.18) 1px, transparent 1px);
+ background-size: 64px 64px;
+ background-position: 0 0;
+ transform: translateZ(0);
+ }
+ body.fx::before{
+ content:"";
+ position:fixed; inset:0;
+ background: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+ background-size: 100% 3px;
+ opacity:.08;
+ pointer-events:none;
+ animation: scan 9s linear infinite;
+ z-index:0;
+ will-change: transform;
+ }
+ body.fx::after{
+ content:"";
+ position:fixed; inset:0;
+ pointer-events:none;
+ z-index:0;
+ opacity:.03;
+ background-image:
+ radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px),
+ radial-gradient(rgba(0,0,0,.18) 1px, transparent 1px);
+ background-size: 3px 3px, 4px 4px;
+ background-position: 0 0, 1px 1px;
+ transform: translateZ(0);
+ }
+ @keyframes scan{ 0%{transform:translateY(0)} 100%{transform:translateY(120px)} }
+ body.frozen.fx::before{ animation-play-state: paused !important; }
+ body.frozen.fx::before,
+ body.frozen.fx::after{ opacity:0 !important; }
+ body.frozen .bg{ opacity:.75; }
+ body.frozen .gridlines{ opacity:.12; }
 
-    canvas#starCanvas{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      width:100%;
-      height:100%;
-    }
+ canvas#starCanvas{
+ position:fixed;
+ inset:0;
+ z-index:0;
+ pointer-events:none;
+ width:100%;
+ height:100%;
+ }
 
-    header, main, .view, .modalBack{ position: relative; z-index: 1; }
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ width:min(1100px, 92vw); margin:0 auto; }
+ header, main, .view, .modalBack{ position: relative; z-index: 1; }
+ a{ color:inherit; text-decoration:none; }
+ .wrap{ width:min(1100px, 92vw); margin:0 auto; }
 
-    .ring{
-      position: relative;
-      border: none !important;
-      outline: none !important;
-      isolation: isolate;
-    }
-    @media (hover:hover) and (pointer:fine){
-      .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
-    }
-    @supports (-webkit-mask-composite: xor) {
-      @media (hover:hover) and (pointer:fine){
-        .ring:hover{ box-shadow: none; }
-        .ring::after{
-          content:"";
-          position:absolute;
-          inset:0;
-          border-radius: inherit;
-          padding: 1px;
-          opacity:0;
-          pointer-events:none;
-          transition: opacity .12s ease;
-          z-index: 999;
-          background: linear-gradient(90deg,
-            rgba(0,229,255,.95),
-            rgba(0,255,149,.95),
-            rgba(125,255,204,.95),
-            rgba(0,229,255,.95)
-          );
-          background-size: 260% 260%;
-          background-position: 0% 50%;
-          -webkit-mask:
-            linear-gradient(#000 0 0) content-box,
-            linear-gradient(#000 0 0);
-          -webkit-mask-composite: xor;
-                  mask-composite: exclude;
-        }
-        .ring:hover::after{
-          opacity:1;
-          animation: borderFlow 1.2s linear infinite;
-        }
-      }
-    }
-    @keyframes borderFlow{
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-    body.frozen .ring:hover::after{ animation-play-state: paused !important; }
+ .ring{
+ position: relative;
+ border: none !important;
+ outline: none !important;
+ isolation: isolate;
+ }
+ @media (hover:hover) and (pointer:fine){
+ .ring:hover{ box-shadow: 0 0 0 1px rgba(0,229,255,.35); }
+ }
+ @supports (-webkit-mask-composite: xor) {
+ @media (hover:hover) and (pointer:fine){
+ .ring:hover{ box-shadow: none; }
+ .ring::after{
+ content:"";
+ position:absolute;
+ inset:0;
+ border-radius: inherit;
+ padding: 1px;
+ opacity:0;
+ pointer-events:none;
+ transition: opacity .12s ease;
+ z-index: 999;
+ background: linear-gradient(90deg,
+ rgba(0,229,255,.95),
+ rgba(0,255,149,.95),
+ rgba(125,255,204,.95),
+ rgba(0,229,255,.95)
+ );
+ background-size: 260% 260%;
+ background-position: 0% 50%;
+ -webkit-mask:
+ linear-gradient(#000 0 0) content-box,
+ linear-gradient(#000 0 0);
+ -webkit-mask-composite: xor;
+ mask-composite: exclude;
+ }
+ .ring:hover::after{
+ opacity:1;
+ animation: borderFlow 1.2s linear infinite;
+ }
+ }
+ }
+ @keyframes borderFlow{
+ 0% { background-position: 0% 50%; }
+ 100% { background-position: 200% 50%; }
+ }
+ body.frozen .ring:hover::after{ animation-play-state: paused !important; }
 
-    @media (hover:hover) and (pointer:fine){
-      .bar:hover{ box-shadow: none !important; }
-      .bar:hover::after{ opacity:0 !important; animation:none !important; }
-    }
+ @media (hover:hover) and (pointer:fine){
+ .bar:hover{ box-shadow: none !important; }
+ .bar:hover::after{ opacity:0 !important; animation:none !important; }
+ }
 
-    header{
-      position:sticky; top:0; z-index:50;
-      background: transparent;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      padding: 10px 0;
-      pointer-events: none;
-    }
-    .topbarShell,
-    .topbarShell *{
-      pointer-events: auto;
-    }
+ header{
+ position:sticky; top:0; z-index:50;
+ background: transparent;
+ backdrop-filter: none;
+ -webkit-backdrop-filter: none;
+ padding: 10px 0;
+ pointer-events: none;
+ }
+ .topbarShell,
+ .topbarShell *{
+ pointer-events: auto;
+ }
 
-    .topbarShell{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: min(980px, 92vw);
-      margin: 0 auto;
-      padding: 14px 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
-      backdrop-filter: blur(14px) saturate(120%);
-      -webkit-backdrop-filter: blur(14px) saturate(120%);
-      box-shadow: 0 18px 55px rgba(0,0,0,.40);
-    }
+ .topbarShell{
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ width: min(980px, 92vw);
+ margin: 0 auto;
+ padding: 14px 18px;
+ border-radius: 22px;
+ background: linear-gradient(180deg, rgba(6,10,18,.80), rgba(6,10,18,.40));
+ backdrop-filter: blur(14px) saturate(120%);
+ -webkit-backdrop-filter: blur(14px) saturate(120%);
+ box-shadow: 0 18px 55px rgba(0,0,0,.40);
+ }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      width: 100%;
-      gap: 18px;
-      padding: 0;
-    }
+ .topbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ width: 100%;
+ gap: 18px;
+ padding: 0;
+ }
 
-    nav{ margin-left:auto; }
+ nav{ margin-left:auto; }
 
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      letter-spacing:.3px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      cursor:pointer;
-    }
-    .brand:hover{ background: rgba(255,255,255,.03); }
-    .brand h1{ font-size:15px; margin:0; font-weight:700; line-height:1.1; }
-    .brand small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; font-weight:400; }
+ .brand{
+ display:flex; align-items:center; gap:12px;
+ letter-spacing:.3px;
+ padding: 8px 10px;
+ border-radius: 14px;
+ cursor:pointer;
+ }
+ .brand:hover{ background: rgba(255,255,255,.03); }
+ .brand h1{ font-size:15px; margin:0; font-weight:700; line-height:1.1; }
+ .brand small{ display:block; color:var(--muted); font-size:13px; margin-top:2px; font-weight:400; }
 
-    nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:14px; }
-    nav a{
-      padding:10px 12px;
-      border-radius:12px;
-      transition: background .2s ease, color .2s ease, transform .2s ease;
-      display:inline-flex;
-      font-weight:500;
-    }
-    nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
-    nav a.active{
-      background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
-      color:rgba(255,255,255,.92);
-      font-weight:600;
-    }
+ nav{ display:flex; align-items:center; gap:8px; color:rgba(255,255,255,.72); font-size:14px; }
+ nav a{
+ padding:10px 12px;
+ border-radius:12px;
+ transition: background .2s ease, color .2s ease, transform .2s ease;
+ display:inline-flex;
+ font-weight:500;
+ }
+ nav a:hover{ background:rgba(255,255,255,.06); color:rgba(255,255,255,.92); transform: translateY(-1px); }
+ nav a.active{
+ background: linear-gradient(180deg, rgba(0,229,255,.16), rgba(0,255,149,.10));
+ color:rgba(255,255,255,.92);
+ font-weight:600;
+ }
 
-    .actions{ display:flex; align-items:center; gap:10px; }
+ .actions{ display:flex; align-items:center; gap:10px; }
 
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding:14px 18px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-      color:rgba(255,255,255,.9);
-      font-weight:600;
-      font-size:16px;
-      cursor:pointer;
-      transition: transform .18s ease, background .18s ease;
-      overflow:hidden;
-      position:relative;
-      border:none;
-    }
-    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
-    .btn:active{ transform: translateY(0); }
-    .btn.primary{
-      background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
-      box-shadow: 0 0 34px rgba(0,255,149,.10);
-    }
-    .btn.primary::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.26), transparent 55%);
-      opacity:0;
-      transition: opacity .2s ease;
-      pointer-events:none;
-      z-index: 0;
-    }
-    .btn.primary:hover::before{ opacity:1; }
+ .btn{
+ display:inline-flex; align-items:center; justify-content:center;
+ gap:10px;
+ padding:14px 18px;
+ border-radius: 14px;
+ background: rgba(255,255,255,.05);
+ color:rgba(255,255,255,.9);
+ font-weight:600;
+ font-size:16px;
+ cursor:pointer;
+ transition: transform .18s ease, background .18s ease;
+ overflow:hidden;
+ position:relative;
+ border:none;
+ }
+ .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
+ .btn:active{ transform: translateY(0); }
+ .btn.primary{
+ background: linear-gradient(180deg, rgba(0,229,255,.18), rgba(0,255,149,.12));
+ box-shadow: 0 0 34px rgba(0,255,149,.10);
+ }
+ .btn.primary::before{
+ content:"";
+ position:absolute; inset:-2px;
+ background: radial-gradient(320px 120px at var(--mx, 50%) var(--my, 50%), rgba(0,229,255,.26), transparent 55%);
+ opacity:0;
+ transition: opacity .2s ease;
+ pointer-events:none;
+ z-index: 0;
+ }
+ .btn.primary:hover::before{ opacity:1; }
 
-    .view{ display:none; }
-    .view.show{ display:block; }
-    main{ padding: 56px 0 80px; }
+ .view{ display:none; }
+ .view.show{ display:block; }
+ main{ padding: 56px 0 80px; }
 
-    .hero{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 22px;
-      align-items:stretch;
-      margin-top: 18px;
-    }
-    @media (max-width: 920px){
-      .hero{ grid-template-columns:1fr; }
-      nav{ display:none; }
-    }
+ .hero{
+ display:grid;
+ grid-template-columns: 1.2fr .8fr;
+ gap: 22px;
+ align-items:stretch;
+ margin-top: 18px;
+ }
+ @media (max-width: 920px){
+ .hero{ grid-template-columns:1fr; }
+ nav{ display:none; }
+ }
 
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      transform: translateY(10px);
-      opacity:0;
-      animation: rise .7s ease forwards;
-      position:relative;
-      backdrop-filter: blur(16px) saturate(125%);
-      -webkit-backdrop-filter: blur(16px) saturate(125%);
-    }
-    @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
-    .panel::before{
-      content:"";
-      position:absolute; inset:-1px;
-      background:
-        radial-gradient(600px 220px at 20% 0%, rgba(0,229,255,.14), transparent 60%),
-        radial-gradient(520px 220px at 80% 0%, rgba(0,255,149,.12), transparent 60%),
-        radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.08), transparent 65%);
-      pointer-events:none;
-      opacity:.9;
-      z-index: 1;
-    }
-    .panel > *{ position:relative; z-index:2; }
+ .panel{
+ background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+ border-radius: var(--radius);
+ box-shadow: var(--shadow);
+ overflow:hidden;
+ transform: translateY(10px);
+ opacity:0;
+ animation: rise .7s ease forwards;
+ position:relative;
+ backdrop-filter: blur(16px) saturate(125%);
+ -webkit-backdrop-filter: blur(16px) saturate(125%);
+ }
+ @keyframes rise{ to{ transform:translateY(0); opacity:1; } }
+ .panel::before{
+ content:"";
+ position:absolute; inset:-1px;
+ background:
+ radial-gradient(600px 220px at 20% 0%, rgba(0,229,255,.14), transparent 60%),
+ radial-gradient(520px 220px at 80% 0%, rgba(0,255,149,.12), transparent 60%),
+ radial-gradient(520px 260px at 50% 120%, rgba(125,255,204,.08), transparent 65%);
+ pointer-events:none;
+ opacity:.9;
+ z-index: 1;
+ }
+ .panel > *{ position:relative; z-index:2; }
 
-    .heroLeft{ padding: 32px 32px 30px; }
-    .kicker{
-      display:inline-flex; align-items:center; gap:10px;
-      padding: 9px 13px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      font-size:14px;
-      color: rgba(255,255,255,.82);
-      font-weight:500;
-    }
-    .dot{
-      width:9px; height:9px; border-radius:999px;
-      background: var(--glowA);
-      box-shadow: 0 0 14px rgba(0,229,255,.55);
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-    .dot.ok{
-      background: var(--glowB);
-      box-shadow: 0 0 14px rgba(0,255,149,.55);
-    }
-    body.frozen .dot{ animation-play-state: paused !important; }
-    @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
+ .heroLeft{ padding: 32px 32px 30px; }
+ .kicker{
+ display:inline-flex; align-items:center; gap:10px;
+ padding: 9px 13px;
+ border-radius: 999px;
+ background: rgba(255,255,255,.06);
+ font-size:14px;
+ color: rgba(255,255,255,.82);
+ font-weight:500;
+ }
+ .dot{
+ width:9px; height:9px; border-radius:999px;
+ background: var(--glowA);
+ box-shadow: 0 0 14px rgba(0,229,255,.55);
+ animation: pulse 1.6s ease-in-out infinite;
+ }
+ .dot.ok{
+ background: var(--glowB);
+ box-shadow: 0 0 14px rgba(0,255,149,.55);
+ }
+ body.frozen .dot{ animation-play-state: paused !important; }
+ @keyframes pulse{ 50%{ transform:scale(1.4); opacity:.65; } }
 
-    .title{
-      margin: 16px 0 12px;
-      font-size: clamp(36px, 4.8vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -0.9px;
-      font-weight:700;
-    }
-    .title .grad{
-      background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.90));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .subtitle{
-      color: rgba(255,255,255,.74);
-      max-width: 68ch;
-      line-height:1.65;
-      font-size: 17px;
-      margin: 0 0 22px;
-      font-weight:400;
-    }
-    .ctaRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 14px; }
+ .title{
+ margin: 16px 0 12px;
+ font-size: clamp(36px, 4.8vw, 56px);
+ line-height: 1.05;
+ letter-spacing: -0.9px;
+ font-weight:700;
+ }
+ .title .grad{
+ background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.90));
+ -webkit-background-clip:text;
+ background-clip:text;
+ color:transparent;
+ }
+ .subtitle{
+ color: rgba(255,255,255,.74);
+ max-width: 68ch;
+ line-height:1.65;
+ font-size: 17px;
+ margin: 0 0 22px;
+ font-weight:400;
+ }
+ .ctaRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 14px; }
 
-    .heroRight{ padding: 18px; }
-    .stack{ display:flex; flex-direction:column; gap:12px; }
-    .miniCard{
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.18);
-      transition: transform .18s ease, background .18s ease;
-      overflow:hidden;
-      position:relative;
-      backdrop-filter: blur(16px) saturate(125%);
-      -webkit-backdrop-filter: blur(16px) saturate(125%);
-    }
-    .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
-    .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .miniTitle{ font-weight:700; font-size:14px; margin:0; }
-    .badge{
-      font-size:12px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.80);
-      white-space:nowrap;
-      font-weight:600;
-    }
-    .badge.ok{
-      background: rgba(0,255,149,.10);
-      box-shadow: 0 0 22px rgba(0,255,149,.12);
-    }
-    .miniBody{ margin-top:10px; color: rgba(255,255,255,.70); font-size:13.5px; line-height:1.55; font-weight:400; }
-    .bar{
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      overflow:hidden;
-      margin-top:12px;
-    }
-    .bar > span{
-      display:block;
-      height:100%;
-      width: var(--w, 72%);
-      background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(0,255,149,.82), rgba(125,255,204,.78));
-      border-radius: 999px;
-      animation: load 1.2s ease forwards;
-      transform-origin:left;
-      transform: scaleX(.65);
-      opacity:.75;
-    }
-    @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
+ .heroRight{ padding: 18px; }
+ .stack{ display:flex; flex-direction:column; gap:12px; }
+ .miniCard{
+ padding: 16px;
+ border-radius: 16px;
+ background: rgba(0,0,0,.18);
+ transition: transform .18s ease, background .18s ease;
+ overflow:hidden;
+ position:relative;
+ backdrop-filter: blur(16px) saturate(125%);
+ -webkit-backdrop-filter: blur(16px) saturate(125%);
+ }
+ .miniCard:hover{ transform: translateY(-2px); background: rgba(0,0,0,.22); }
+ .miniTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+ .miniTitle{ font-weight:700; font-size:14px; margin:0; }
+ .badge{
+ font-size:12px;
+ padding: 7px 12px;
+ border-radius: 999px;
+ background: rgba(255,255,255,.06);
+ color: rgba(255,255,255,.80);
+ white-space:nowrap;
+ font-weight:600;
+ }
+ .badge.ok{
+ background: rgba(0,255,149,.10);
+ box-shadow: 0 0 22px rgba(0,255,149,.12);
+ }
+ .miniBody{ margin-top:10px; color: rgba(255,255,255,.70); font-size:13.5px; line-height:1.55; font-weight:400; }
+ .bar{
+ height: 10px;
+ border-radius: 999px;
+ background: rgba(255,255,255,.07);
+ overflow:hidden;
+ margin-top:12px;
+ }
+ .bar > span{
+ display:block;
+ height:100%;
+ width: var(--w, 72%);
+ background: linear-gradient(90deg, rgba(0,229,255,.85), rgba(0,255,149,.82), rgba(125,255,204,.78));
+ border-radius: 999px;
+ animation: load 1.2s ease forwards;
+ transform-origin:left;
+ transform: scaleX(.65);
+ opacity:.75;
+ }
+ @keyframes load{ to{ transform:scaleX(1); opacity:1; } }
 
-    section{ margin-top: 28px; }
-    .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
-    @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
+ section{ margin-top: 28px; }
+ .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+ @media (max-width: 920px){ .grid3{ grid-template-columns:1fr; } }
 
-    .feat{
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.04);
-      overflow:hidden;
-      position:relative;
-      backdrop-filter: blur(16px) saturate(125%);
-      -webkit-backdrop-filter: blur(16px) saturate(125%);
-    }
-    .feat h3{ margin:0 0 8px; font-size:15px; letter-spacing:.2px; font-weight:700; }
-    .feat p{ margin:0; color: rgba(255,255,255,.70); font-size:14px; line-height:1.6; font-weight:400; }
+ .feat{
+ padding: 18px;
+ border-radius: 18px;
+ background: rgba(255,255,255,.04);
+ overflow:hidden;
+ position:relative;
+ backdrop-filter: blur(16px) saturate(125%);
+ -webkit-backdrop-filter: blur(16px) saturate(125%);
+ }
+ .feat h3{ margin:0 0 8px; font-size:15px; letter-spacing:.2px; font-weight:700; }
+ .feat p{ margin:0; color: rgba(255,255,255,.70); font-size:14px; line-height:1.6; font-weight:400; }
 
-    .pricing{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 14px; }
-    @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
-    .priceCard{
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.04);
-      overflow:hidden;
-      transition: transform .2s ease;
-      position:relative;
-      backdrop-filter: blur(16px) saturate(125%);
-      -webkit-backdrop-filter: blur(16px) saturate(125%);
-    }
-    .priceCard:hover{ transform: translateY(-3px); }
-    .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
-    .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .priceCard h4{ margin:0; font-size:15px; font-weight:700; }
-    .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; font-weight:700; }
-    .price small{ font-size:13px; color: rgba(255,255,255,.65); font-weight:500; }
-    .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; font-weight:400; }
-    .list li{ display:flex; gap:10px; align-items:flex-start; }
-    .bullet{
-      width:14px;
-      flex:0 0 14px;
-      text-align:center;
-      opacity:.95;
-      line-height:1.2;
-      margin-top:2px;
-    }
+ .pricing{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 14px; }
+ @media (max-width: 920px){ .pricing{ grid-template-columns:1fr; } }
+ .priceCard{
+ padding: 18px;
+ border-radius: 18px;
+ background: rgba(255,255,255,.04);
+ overflow:hidden;
+ transition: transform .2s ease;
+ position:relative;
+ backdrop-filter: blur(16px) saturate(125%);
+ -webkit-backdrop-filter: blur(16px) saturate(125%);
+ }
+ .priceCard:hover{ transform: translateY(-3px); }
+ .priceCard.pop{ box-shadow: 0 0 46px rgba(0,255,149,.08); }
+ .priceTop{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+ .priceCard h4{ margin:0; font-size:15px; font-weight:700; }
+ .price{ font-size: 34px; letter-spacing:-.7px; margin: 10px 0 4px; font-weight:700; }
+ .price small{ font-size:13px; color: rgba(255,255,255,.65); font-weight:500; }
+ .list{ margin: 12px 0 0; padding:0; list-style:none; color: rgba(255,255,255,.74); font-size: 13.5px; line-height:1.85; font-weight:400; }
+ .list li{ display:flex; gap:10px; align-items:flex-start; }
+ .bullet{
+ width:14px;
+ flex:0 0 14px;
+ text-align:center;
+ opacity:.95;
+ line-height:1.2;
+ margin-top:2px;
+ }
 
-    footer{
-      margin-top: 36px;
-      padding: 18px 0 34px;
-      color: rgba(255,255,255,.60);
-      font-size: 12.5px;
-      font-weight:400;
-    }
-    .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-    footer a{
-      display:inline-flex;
-      align-items:center;
-      padding: 6px 10px;
-      border-radius: 12px;
-      color: rgba(255,255,255,.60);
-      transition: background .2s ease, color .2s ease, transform .2s ease;
-      font-weight:500;
-    }
-    footer a:hover{
-      background: rgba(255,255,255,.05);
-      color: rgba(255,255,255,.86);
-      transform: translateY(-1px);
-    }
+ footer{
+ margin-top: 36px;
+ padding: 18px 0 34px;
+ color: rgba(255,255,255,.60);
+ font-size: 12.5px;
+ font-weight:400;
+ }
+ .foot{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+ footer a{
+ display:inline-flex;
+ align-items:center;
+ padding: 6px 10px;
+ border-radius: 12px;
+ color: rgba(255,255,255,.60);
+ transition: background .2s ease, color .2s ease, transform .2s ease;
+ font-weight:500;
+ }
+ footer a:hover{
+ background: rgba(255,255,255,.05);
+ color: rgba(255,255,255,.86);
+ transform: translateY(-1px);
+ }
 
-    .modalBack{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.62);
-      display:none;
-      place-items:center;
-      padding: 20px;
-      z-index: 99;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    .modal{
-      width: min(520px, 96vw);
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      box-shadow: 0 30px 90px rgba(0,0,0,.6);
-      overflow:hidden;
-      transform: translateY(10px) scale(.98);
-      opacity:0;
-      transition: transform .2s ease, opacity .2s ease;
-      position:relative;
-      backdrop-filter: blur(18px) saturate(125%);
-      -webkit-backdrop-filter: blur(18px) saturate(125%);
-    }
-    .modalBack.show{ display:grid; }
-    .modalBack.show .modal{ transform: translateY(0) scale(1); opacity:1; }
+ .modalBack{
+ position:fixed; inset:0;
+ background: rgba(0,0,0,.62);
+ display:none;
+ place-items:center;
+ padding: 20px;
+ z-index: 99;
+ backdrop-filter: blur(6px);
+ -webkit-backdrop-filter: blur(6px);
+ }
+ .modal{
+ width: min(520px, 96vw);
+ border-radius: 18px;
+ background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+ box-shadow: 0 30px 90px rgba(0,0,0,.6);
+ overflow:hidden;
+ transform: translateY(10px) scale(.98);
+ opacity:0;
+ transition: transform .2s ease, opacity .2s ease;
+ position:relative;
+ backdrop-filter: blur(18px) saturate(125%);
+ -webkit-backdrop-filter: blur(18px) saturate(125%);
+ }
+ .modalBack.show{ display:grid; }
+ .modalBack.show .modal{ transform: translateY(0) scale(1); opacity:1; }
 
-    .modalHead{
-      padding: 14px 16px;
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .modalHead strong{ font-size:22px; font-weight:700; }
+ .modalHead{
+ padding: 14px 16px;
+ display:flex; justify-content:space-between; align-items:center;
+ }
+ .modalHead strong{ font-size:22px; font-weight:700; }
 
-    .iconBtn{
-      width:42px; height:42px;
-      border-radius: 12px;
-      border:none;
-      background: rgba(255,255,255,.06);
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:0;
-      color: rgba(255,255,255,.92);
-    }
-    .iconBtn:hover{ background: rgba(255,255,255,.08); }
-    .iconBtn svg{ display:block; }
-    .xPath{ stroke: rgba(255,255,255,.95); stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
+ .iconBtn{
+ width:42px; height:42px;
+ border-radius: 12px;
+ border:none;
+ background: rgba(255,255,255,.06);
+ cursor:pointer;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:0;
+ color: rgba(255,255,255,.92);
+ }
+ .iconBtn:hover{ background: rgba(255,255,255,.08); }
+ .iconBtn svg{ display:block; }
+ .xPath{ stroke: rgba(255,255,255,.95); stroke-width:2.8; stroke-linecap:round; stroke-linejoin:round; }
 
-    .modalBody{ padding: 16px; }
-    .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
-    label{ font-size:13px; color: rgba(255,255,255,.72); font-weight:500; }
+ .modalBody{ padding: 16px; }
+ .field{ display:flex; flex-direction:column; gap:8px; margin-top: 10px; }
+ label{ font-size:13px; color: rgba(255,255,255,.72); font-weight:500; }
 
-    input{
-      height: 46px;
-      padding: 0 12px;
-      border-radius: 14px;
-      border:none;
-      background: rgba(0,0,0,.20);
-      color: rgba(255,255,255,.92);
-      outline:none;
-      transition: box-shadow .2s ease;
-      font-size:14px;
-      font-weight:500;
-    }
-    input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
+ input{
+ height: 46px;
+ padding: 0 12px;
+ border-radius: 14px;
+ border:none;
+ background: rgba(0,0,0,.20);
+ color: rgba(255,255,255,.92);
+ outline:none;
+ transition: box-shadow .2s ease;
+ font-size:14px;
+ font-weight:500;
+ }
+ input:focus{ box-shadow: 0 0 0 6px rgba(0,229,255,.07); }
 
-    .inputLocked{
-      -webkit-user-select:none !important;
-      user-select:none !important;
-      pointer-events:none !important;
-      caret-color: transparent !important;
-    }
-    .inputLocked:focus{ box-shadow:none !important; }
+ .inputLocked{
+ -webkit-user-select:none !important;
+ user-select:none !important;
+ pointer-events:none !important;
+ caret-color: transparent !important;
+ }
+ .inputLocked:focus{ box-shadow:none !important; }
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; font-weight:400; }
+ .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+ .hint{ margin-top: 10px; font-size: 13px; color: rgba(255,255,255,.62); line-height:1.55; font-weight:400; }
 
-    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
-    .reveal.on{ opacity:1; transform: translateY(0); }
+ .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
+ .reveal.on{ opacity:1; transform: translateY(0); }
 
-    .linkblue{
-      color: rgba(0,229,255,.95);
-      cursor:pointer;
-      border-bottom: 1px solid rgba(0,229,255,.35);
-      transition: opacity .15s ease, border-color .15s ease;
-      font-weight:500;
-    }
-    .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
+ .linkblue{
+ color: rgba(0,229,255,.95);
+ cursor:pointer;
+ border-bottom: 1px solid rgba(0,229,255,.35);
+ transition: opacity .15s ease, border-color .15s ease;
+ font-weight:500;
+ }
+ .linkblue:hover{ opacity:.9; border-color: rgba(0,229,255,.6); }
 
-    .downloadWrap{ padding: 56px 0 80px; }
-    .downloadHero{
-      padding: 32px;
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-      backdrop-filter: blur(16px) saturate(125%);
-      -webkit-backdrop-filter: blur(16px) saturate(125%);
-    }
-    .downloadTitle{
-      margin: 10px 0 8px;
-      font-size: clamp(46px, 5.6vw, 68px);
-      letter-spacing: -1px;
-      line-height: 1.02;
-      background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.9));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      font-weight:700;
-    }
-    .downloadSub{
-      margin:0;
-      color: rgba(255,255,255,.72);
-      line-height:1.65;
-      max-width: 70ch;
-      font-size:16.5px;
-      font-weight:400;
-    }
-    .downloadEnter .downloadHero,
-    .downloadEnter .downloadAnim{
-      opacity:0;
-      transform: translateY(10px);
-    }
-    .downloadEnter.play .downloadHero{
-      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
-    }
-    .downloadEnter.play .downloadAnim{
-      animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
-      animation-delay: .08s;
-    }
-    @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
+ .downloadWrap{ padding: 56px 0 80px; }
+ .downloadHero{
+ padding: 32px;
+ border-radius: var(--radius);
+ background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+ box-shadow: var(--shadow);
+ overflow:hidden;
+ position:relative;
+ backdrop-filter: blur(16px) saturate(125%);
+ -webkit-backdrop-filter: blur(16px) saturate(125%);
+ }
+ .downloadTitle{
+ margin: 10px 0 8px;
+ font-size: clamp(46px, 5.6vw, 68px);
+ letter-spacing: -1px;
+ line-height: 1.02;
+ background: linear-gradient(90deg, rgba(0,229,255,.95), rgba(0,255,149,.92), rgba(125,255,204,.9));
+ -webkit-background-clip:text;
+ background-clip:text;
+ color:transparent;
+ font-weight:700;
+ }
+ .downloadSub{
+ margin:0;
+ color: rgba(255,255,255,.72);
+ line-height:1.65;
+ max-width: 70ch;
+ font-size:16.5px;
+ font-weight:400;
+ }
+ .downloadEnter .downloadHero,
+ .downloadEnter .downloadAnim{
+ opacity:0;
+ transform: translateY(10px);
+ }
+ .downloadEnter.play .downloadHero{
+ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
+ }
+ .downloadEnter.play .downloadAnim{
+ animation: dlIn .55s cubic-bezier(.2,.9,.2,1) forwards;
+ animation-delay: .08s;
+ }
+ @keyframes dlIn{ to{ opacity:1; transform: translateY(0); } }
 
-    @media (prefers-reduced-motion: reduce){
-      body.fx::before, body.fx::after{ display:none; }
-      *{ animation:none !important; transition:none !important; }
-    }
-  </style>
+ @media (prefers-reduced-motion: reduce){
+ body.fx::before, body.fx::after{ display:none; }
+ *{ animation:none !important; transition:none !important; }
+ }
+ </style>
 </head>
 <body class="fx">
-  <div class="bg" aria-hidden="true"></div>
-  <div class="gridlines" aria-hidden="true"></div>
-  <canvas id="starCanvas" aria-hidden="true"></canvas>
-
-  <header>
-    <div class="wrap">
-      <div class="topbarShell ring" aria-label="Top bar">
-        <div class="topbar">
-          <div class="brand ring" id="brandHome" aria-label="Brand" role="button" tabindex="0">
-            <div>
-              <h1>Array Cheats</h1>
-              <small>Redefining Gorilla Tag mod menus</small>
-            </div>
-          </div>
-
-          <nav aria-label="Primary">
-            <a class="active ring" href="#" data-view="home">Home</a>
-            <a class="ring" href="#" data-view="download">Download</a>
-            <a class="ring" href="#" id="openSupportLink">Support</a>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div id="viewHome" class="view show">
-    <main class="wrap">
-      <div class="hero">
-        <div class="panel ring heroLeft">
-          <div class="kicker ring"><span class="dot ok"></span> All system up and running.</div>
-          <h2 class="title"><span class="grad">Array Cheats</span></h2>
-          <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
-          <div class="ctaRow">
-            <button class="btn primary ring" id="scrollPricing" type="button">View Plans</button>
-            <button class="btn ring" id="goDownload" type="button">Go to Download</button>
-          </div>
-        </div>
-
-        <aside class="panel ring heroRight" id="status">
-          <div class="stack">
-            <div class="miniCard ring">
-              <div class="miniTop">
-                <p class="miniTitle">System Status</p>
-                <span class="badge ok ring">Operational</span>
-              </div>
-              <div class="miniBody">
-                Latency stable • CDN healthy • Updates rolling.
-                <div class="bar" aria-label="Status bar"><span style="--w:100%"></span></div>
-              </div>
-            </div>
-            <div class="miniCard ring">
-              <div class="miniTop">
-                <p class="miniTitle">Detectability</p>
-                <span class="badge ok ring">Undetected</span>
-              </div>
-              <div class="miniBody">
-                Product is 99.9% undetected as of 5/02/26.
-                <div class="bar"><span style="--w:99%"></span></div>
-              </div>
-            </div>
-            <div class="miniCard ring">
-              <div class="miniTop">
-                <p class="miniTitle">Latest Drop</p>
-                <span class="badge ring">Patch Notes</span>
-              </div>
-              <div class="miniBody">
-                UI polish + animations + improved panel flow.
-                <div class="bar"><span style="--w:72%"></span></div>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
-
-      <section id="pricing" class="reveal">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Plans</h3>
-        <div class="pricing">
-          <div class="priceCard ring">
-            <div class="priceTop"><h4>Starter</h4><span class="badge ring">Basic</span></div>
-            <div class="price">$9.99 <small>/ lt</small></div>
-            <ul class="list">
-              <li><span class="bullet">•</span><span>Standard Support</span></li>
-              <li><span class="bullet">•</span><span>Minor Updates</span></li>
-              <li><span class="bullet">•</span><span>Full access to loader and menu injection</span></li>
-            </ul>
-            <div class="row"><button class="btn ring" type="button">Purchase</button></div>
-          </div>
-
-          <div class="priceCard pop ring">
-            <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
-            <div class="price">$14.99 <small>/ lt</small></div>
-            <ul class="list">
-              <li><span class="bullet">•</span><span>Everything from Starter + Priority support</span></li>
-              <li><span class="bullet">•</span><span>Frequent updates</span></li>
-              <li><span class="bullet">•</span><span>Exclusive premium features</span></li>
-            </ul>
-            <div class="row">
-              <button class="btn primary ring" id="openStripePurchase" type="button">Purchase</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="faq" class="reveal">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">FAQ</h3>
-        <div class="grid3">
-          <div class="feat ring">
-            <h3>Where do I download the loader?</h3>
-            <p>Download the loader in the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
-          </div>
-          <div class="feat ring">
-            <h3>Is this a trusted software?</h3>
-            <p>Array is trusted by many customers and many other trusted/popular mod menu creators.</p>
-          </div>
-          <div class="feat ring">
-            <h3>Can I get a refund?</h3>
-            <p>No, refunds are not accepted and all purchases are final.</p>
-          </div>
-        </div>
-      </section>
-
-      <footer>
-        <div class="wrap foot">
-          <div>© <span id="year"></span> Array Cheats. All rights reserved.</div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-            <a class="ring" href="#" data-view="home">Home</a>
-            <a class="ring" href="#" data-view="download">Download</a>
-            <a class="ring" href="#" id="openSupportFooter">Support</a>
-          </div>
-        </div>
-      </footer>
-    </main>
-  </div>
-
-  <div id="viewDownload" class="view downloadEnter">
-    <div class="wrap downloadWrap">
-      <div class="downloadHero ring">
-        <div class="kicker ring"><span class="dot ok"></span> Download category</div>
-        <div class="downloadTitle">Download</div>
-        <p class="downloadSub">Download & install the official Wyvern Loader.</p>
-        <div class="ctaRow" style="margin-top:16px;">
-          <button class="btn primary ring" type="button" id="downloadPrimary">Download Latest</button>
-          <button class="btn ring" type="button" id="backHome">Back to Home</button>
-        </div>
-      </div>
-
-      <section class="downloadAnim reveal" style="margin-top:18px;">
-        <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Temporary elements</h3>
-        <div class="grid3">
-          <div class="feat ring"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
-          <div class="feat ring"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
-          <div class="feat ring"><h3>Notes</h3><p>This is the first release, expect the unexpected.</p></div>
-        </div>
-      </section>
-
-      <footer>
-        <div class="wrap foot">
-          <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-            <a class="ring" href="#" data-view="home">Home</a>
-            <a class="ring" href="#" id="openSupportFooter2">Support</a>
-          </div>
-        </div>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Support Modal -->
-  <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
-    <div class="modal ring">
-      <div class="modalHead">
-        <strong id="supportTitle">Open Support Link?</strong>
-        <button class="iconBtn ring" id="closeSupport" type="button" aria-label="Close">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        <div class="hint" style="margin-top:0;">
-          You’re about to open an external link to Discord.
-        </div>
-        <div class="field" style="margin-top:10px;">
-          <label>Destination</label>
-          <input class="inputLocked" value="https://discord.gg/4UuCqrDgnF" readonly tabindex="-1" aria-readonly="true" />
-        </div>
-        <div class="row">
-          <button class="btn primary ring" id="confirmSupport" type="button">Open Discord</button>
-          <button class="btn ring" id="cancelSupport" type="button">Cancel</button>
-        </div>
-        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Stripe Modal (NEW) -->
-  <div class="modalBack" id="stripeBack" role="dialog" aria-modal="true" aria-labelledby="stripeTitle">
-    <div class="modal ring">
-      <div class="modalHead">
-        <strong id="stripeTitle">Proceed to Checkout?</strong>
-        <button class="iconBtn ring" id="closeStripe" type="button" aria-label="Close">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        <div class="hint" style="margin-top:0;">
-          You’re about to open an external link to Stripe to complete your purchase.
-        </div>
-        <div class="field" style="margin-top:10px;">
-          <label>Destination</label>
-          <input class="inputLocked" id="stripeDest" value="https://buy.stripe.com/8x28wQcmNawNesyepadfG00" readonly tabindex="-1" aria-readonly="true" />
-        </div>
-        <div class="row">
-          <button class="btn primary ring" id="confirmStripe" type="button">Open Stripe</button>
-          <button class="btn ring" id="cancelStripe" type="button">Cancel</button>
-        </div>
-        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Wyvern Download Modal (NEW) -->
-  <div class="modalBack" id="wyvernBack" role="dialog" aria-modal="true" aria-labelledby="wyvernTitle">
-    <div class="modal ring">
-      <div class="modalHead">
-        <strong id="wyvernTitle">Open Download Link?</strong>
-        <button class="iconBtn ring" id="closeWyvern" type="button" aria-label="Close">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="modalBody">
-        <div class="hint" style="margin-top:0;">
-          You’re about to open an external link to download Wyvern.
-        </div>
-        <div class="field" style="margin-top:10px;">
-          <label>Destination</label>
-          <input class="inputLocked" id="wyvernDest" value="https://wyvern.sh/public/loader/WyvernLoader.exe" readonly tabindex="-1" aria-readonly="true" />
-        </div>
-        <div class="row">
-          <button class="btn primary ring" id="confirmWyvern" type="button">Open Wyvern</button>
-          <button class="btn ring" id="cancelWyvern" type="button">Cancel</button>
-        </div>
-        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
-
-    window.addEventListener("keydown", (e) => {
-      const k = e.key.toLowerCase();
-      const ctrl = e.ctrlKey || e.metaKey;
-      if (e.key === "F12") { e.preventDefault(); e.stopPropagation(); }
-      if (ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); e.stopPropagation(); }
-      if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
-    }, true);
-
-    function applyRings(){
-      const selectors = [
-        "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn",
-        ".topbarShell"
-      ].join(",");
-      document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
-      document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
-      document.getElementById("brandHome").classList.add("ring");
-    }
-    applyRings();
-
-    let pmRAF = 0;
-    let lastX = 0, lastY = 0;
-    let hotspotEnabled = false;
-
-    function applyHotspot(){
-      pmRAF = 0;
-      document.documentElement.style.setProperty("--mx", (lastX / innerWidth) * 100 + "%");
-      document.documentElement.style.setProperty("--my", (lastY / innerHeight) * 100 + "%");
-    }
-
-    window.addEventListener("pointermove", (e) => {
-      if (!hotspotEnabled) return;
-      lastX = e.clientX; lastY = e.clientY;
-      if (!pmRAF) pmRAF = requestAnimationFrame(applyHotspot);
-    }, { passive:true });
-
-    function bindPrimaryHover(){
-      document.querySelectorAll(".btn.primary").forEach(el => {
-        el.addEventListener("pointerenter", () => { hotspotEnabled = true; });
-        el.addEventListener("pointerleave", () => { hotspotEnabled = false; });
-      });
-    }
-    bindPrimaryHover();
-
-    const reveals = [...document.querySelectorAll(".reveal")];
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (en.isIntersecting) {
-          en.target.classList.add("on");
-          io.unobserve(en.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(r => io.observe(r));
-
-    const viewHome = document.getElementById("viewHome");
-    const viewDownload = document.getElementById("viewDownload");
-    const navLinks = [...document.querySelectorAll("nav a")].filter(a => a.dataset.view);
-
-    function setActiveNav(view){
-      navLinks.forEach(a => a.classList.remove("active"));
-      const match = navLinks.find(a => a.dataset.view === view);
-      if (match) match.classList.add("active");
-    }
-
-    function playDownloadEnter(){
-      viewDownload.classList.remove("play");
-      void viewDownload.offsetWidth;
-      viewDownload.classList.add("play");
-    }
-
-    function showHome(){
-      viewDownload.classList.remove("show");
-      viewHome.classList.add("show");
-      setActiveNav("home");
-      window.scrollTo(0, 0);
-      targetScroll = 0;
-      currentScroll = 0;
-    }
-
-    function showDownload(){
-      viewHome.classList.remove("show");
-      viewDownload.classList.add("show");
-      setActiveNav("download");
-      window.scrollTo(0, 0);
-      targetScroll = 0;
-      currentScroll = 0;
-      playDownloadEnter();
-    }
-
-    document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
-    document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
-
-    const brandHome = document.getElementById("brandHome");
-    brandHome.addEventListener("click", showHome);
-    brandHome.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showHome(); }
-    });
-
-    document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
-    document.getElementById("goDownload").addEventListener("click", showDownload);
-    document.getElementById("backHome").addEventListener("click", showHome);
-
-    let targetScroll = window.scrollY;
-    let currentScroll = window.scrollY;
-    const EASE = 0.09;
-    const SCROLL_SPEED = 1.0;
-    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let scrollRaf = null;
-
-    function clamp(v, mn, mx){ return Math.max(mn, Math.min(mx, v)); }
-
-    function animateScroll(){
-      currentScroll += (targetScroll - currentScroll) * EASE;
-      if (Math.abs(targetScroll - currentScroll) < 0.5) {
-        currentScroll = targetScroll;
-        window.scrollTo(0, currentScroll);
-        scrollRaf = null;
-        return;
-      }
-      window.scrollTo(0, currentScroll);
-      scrollRaf = requestAnimationFrame(animateScroll);
-    }
-
-    function ensureScrollAnim(){ if (scrollRaf == null) scrollRaf = requestAnimationFrame(animateScroll); }
-
-    window.addEventListener("wheel", (e) => {
-      if (reduceMotion) return;
-      if (e.ctrlKey) return;
-      e.preventDefault();
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
-      ensureScrollAnim();
-    }, { passive: false });
-
-    function smoothJumpTo(hash){
-      const el = document.querySelector(hash);
-      if (!el) return;
-      const buffer = el.getBoundingClientRect().top + window.scrollY - 88;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      targetScroll = clamp(buffer, 0, maxScroll);
-      ensureScrollAnim();
-    }
-
-    document.getElementById("scrollPricing").addEventListener("click", () => {
-      if (!viewHome.classList.contains("show")) showHome();
-      smoothJumpTo("#pricing");
-    });
-
-    // Support modal
-    const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
-    const supportBack = document.getElementById("supportBack");
-    const closeSupport = document.getElementById("closeSupport");
-    const cancelSupport = document.getElementById("cancelSupport");
-    const confirmSupport = document.getElementById("confirmSupport");
-
-    function openSupportModal(){ supportBack.classList.add("show"); }
-    function closeSupportModal(){ supportBack.classList.remove("show"); }
-
-    ["openSupportLink","openSupportFooter","openSupportFooter2"].forEach(id=>{
-      const el = document.getElementById(id);
-      if (el) el.addEventListener("click", (e)=>{ e.preventDefault(); openSupportModal(); });
-    });
-
-    closeSupport.addEventListener("click", closeSupportModal);
-    cancelSupport.addEventListener("click", closeSupportModal);
-    supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
-
-    confirmSupport.addEventListener("click", () => {
-      window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
-      closeSupportModal();
-    });
-
-    // Stripe modal
-    const STRIPE_URL = "https://buy.stripe.com/8x28wQcmNawNesyepadfG00";
-    const stripeBack = document.getElementById("stripeBack");
-    const openStripePurchase = document.getElementById("openStripePurchase");
-    const closeStripe = document.getElementById("closeStripe");
-    const cancelStripe = document.getElementById("cancelStripe");
-    const confirmStripe = document.getElementById("confirmStripe");
-
-    function openStripeModal(){ stripeBack.classList.add("show"); }
-    function closeStripeModal(){ stripeBack.classList.remove("show"); }
-
-    if (openStripePurchase){
-      openStripePurchase.addEventListener("click", (e) => {
-        e.preventDefault();
-        openStripeModal();
-      });
-    }
-
-    closeStripe.addEventListener("click", closeStripeModal);
-    cancelStripe.addEventListener("click", closeStripeModal);
-    stripeBack.addEventListener("click", (e) => { if (e.target === stripeBack) closeStripeModal(); });
-
-    confirmStripe.addEventListener("click", () => {
-      window.open(STRIPE_URL, "_blank", "noopener,noreferrer");
-      closeStripeModal();
-    });
-
-    // Wyvern download modal (NEW)
-    const WYVERN_URL = "https://wyvern.sh/public/loader/WyvernLoader.exe";
-    const wyvernBack = document.getElementById("wyvernBack");
-    const closeWyvern = document.getElementById("closeWyvern");
-    const cancelWyvern = document.getElementById("cancelWyvern");
-    const confirmWyvern = document.getElementById("confirmWyvern");
-
-    function openWyvernModal(){ wyvernBack.classList.add("show"); }
-    function closeWyvernModal(){ wyvernBack.classList.remove("show"); }
-
-    closeWyvern.addEventListener("click", closeWyvernModal);
-    cancelWyvern.addEventListener("click", closeWyvernModal);
-    wyvernBack.addEventListener("click", (e) => { if (e.target === wyvernBack) closeWyvernModal(); });
-
-    confirmWyvern.addEventListener("click", () => {
-      window.open(WYVERN_URL, "_blank", "noopener,noreferrer");
-      closeWyvernModal();
-    });
-
-    // Download Latest now opens modal instead of alert
-    document.getElementById("downloadPrimary").addEventListener("click", (e) => {
-      e.preventDefault();
-      openWyvernModal();
-    });
-
-    const yr = new Date().getFullYear();
-    document.getElementById("year").textContent = yr;
-    document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
-
-    const canvas = document.getElementById("starCanvas");
-    const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-    let dpr = 1, cw = 0, ch = 0;
-
-    function resizeCanvas(){
-      const maxPixels = 2_000_000;
-      const w = Math.floor(window.innerWidth);
-      const h = Math.floor(window.innerHeight);
-      const scale = Math.min(2, Math.max(1, Math.sqrt(maxPixels / Math.max(1, (w * h)))));
-      dpr = scale;
-      cw = w; ch = h;
-      canvas.width = Math.floor(cw * dpr);
-      canvas.height = Math.floor(ch * dpr);
-      canvas.style.width = cw + "px";
-      canvas.style.height = ch + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    function destroyCanvasBackingStore(){
-      canvas.width = 0;
-      canvas.height = 0;
-    }
-
-    window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive: true });
-
-    const STAR_COUNT = 60;
-    const sx = new Float32Array(STAR_COUNT);
-    const sy = new Float32Array(STAR_COUNT);
-    const sr = new Float32Array(STAR_COUNT);
-    const svy = new Float32Array(STAR_COUNT);
-    const sa = new Float32Array(STAR_COUNT);
-    const sfadeTop = new Float32Array(STAR_COUNT);
-    const cr = new Uint8Array(STAR_COUNT);
-    const cg = new Uint8Array(STAR_COUNT);
-    const cb = new Uint8Array(STAR_COUNT);
-
-    function rand(mn, mx){ return Math.random() * (mx - mn) + mn; }
-    function lerp(a, b, t){ return a + (b - a) * t; }
-    const c1 = [0, 229, 255];
-    const c2 = [0, 255, 149];
-
-    function assignStarColor(i){
-      const t = cw > 1 ? (sx[i] / cw) : 0.5;
-      cr[i] = (lerp(c1[0], c2[0], t) + 0.5) | 0;
-      cg[i] = (lerp(c1[1], c2[1], t) + 0.5) | 0;
-      cb[i] = (lerp(c1[2], c2[2], t) + 0.5) | 0;
-    }
-
-    function resetStar(i, startFromBottom = true){
-      sx[i] = rand(0, cw);
-      sy[i] = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
-      sr[i] = rand(0.8, 1.8);
-      svy[i] = rand(18, 45);
-      sa[i] = rand(0.18, 0.55);
-      sfadeTop[i] = rand(0.18, 0.28);
-      assignStarColor(i);
-    }
-
-    let starRaf = null;
-    let lastT = 0;
-
-    function drawStars(t){
-      if (document.hidden) { stopStars(); return; }
-      const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
-      lastT = t;
-
-      ctx.clearRect(0, 0, cw, ch);
-
-      for (let i = 0; i < STAR_COUNT; i++){
-        sy[i] -= svy[i] * dt;
-        let alpha = sa[i];
-
-        const topZone = ch * sfadeTop[i];
-        if (sy[i] < topZone) alpha *= Math.max(0, sy[i] / topZone);
-        if (sy[i] > ch - 30) alpha *= Math.min(1, (ch - sy[i]) / 30);
-
-        if (sy[i] < -50){
-          resetStar(i, true);
-          continue;
-        }
-
-        const r = sr[i];
-        const rr = cr[i], gg = cg[i], bb = cb[i];
-
-        ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
-        ctx.beginPath(); ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2); ctx.fill();
-
-        ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha * 0.25})`;
-        ctx.beginPath(); ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2); ctx.fill();
-      }
-
-      starRaf = requestAnimationFrame(drawStars);
-    }
-
-    function startStars(){
-      if (starRaf != null) return;
-      resizeCanvas();
-      for (let i = 0; i < STAR_COUNT; i++) resetStar(i, false);
-      lastT = performance.now();
-      starRaf = requestAnimationFrame(drawStars);
-    }
-
-    function stopStars(){
-      if (starRaf == null) return;
-      cancelAnimationFrame(starRaf);
-      starRaf = null;
-      ctx.clearRect(0, 0, cw, ch);
-      destroyCanvasBackingStore();
-    }
-
-    function freezeAll(){
-      document.body.classList.add("frozen");
-      hotspotEnabled = false;
-      stopStars();
-    }
-
-    function unfreezeAll(){
-      document.body.classList.remove("frozen");
-      if (!document.hidden) startStars();
-    }
-
-    document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
-    window.addEventListener("blur", freezeAll);
-    window.addEventListener("focus", unfreezeAll);
-    window.addEventListener("pagehide", freezeAll);
-    window.addEventListener("pageshow", unfreezeAll);
-
-    startStars();
-  </script>
+ <div class="bg" aria-hidden="true"></div>
+ <div class="gridlines" aria-hidden="true"></div>
+ <canvas id="starCanvas" aria-hidden="true"></canvas>
+
+ <header>
+ <div class="wrap">
+ <div class="topbarShell ring" aria-label="Top bar">
+ <div class="topbar">
+ <div class="brand ring" id="brandHome" aria-label="Brand" role="button" tabindex="0">
+ <div>
+ <h1>Array Cheats</h1>
+ <small>Redefining Gorilla Tag mod menus</small>
+ </div>
+ </div>
+
+ <nav aria-label="Primary">
+ <a class="active ring" href="#" data-view="home">Home</a>
+ <a class="ring" href="#" data-view="download">Download</a>
+ <a class="ring" href="#" id="openSupportLink">Support</a>
+ </nav>
+ </div>
+ </div>
+ </div>
+ </header>
+
+ <div id="viewHome" class="view show">
+ <main class="wrap">
+ <div class="hero">
+ <div class="panel ring heroLeft">
+ <div class="kicker ring"><span class="dot ok"></span> All system up and running.</div>
+ <h2 class="title"><span class="grad">Array Cheats</span></h2>
+ <p class="subtitle">The official dashboard for the Array product. Buy, redeem, and download in seconds through this website.</p>
+ <div class="ctaRow">
+ <button class="btn primary ring" id="scrollPricing" type="button">View Plans</button>
+ <button class="btn ring" id="goDownload" type="button">Go to Download</button>
+ </div>
+ </div>
+
+ <aside class="panel ring heroRight" id="status">
+ <div class="stack">
+ <div class="miniCard ring">
+ <div class="miniTop">
+ <p class="miniTitle">System Status</p>
+ <span class="badge ok ring">Operational</span>
+ </div>
+ <div class="miniBody">
+ Latency stable • CDN healthy • Updates rolling.
+ <div class="bar" aria-label="Status bar"><span style="--w:100%"></span></div>
+ </div>
+ </div>
+ <div class="miniCard ring">
+ <div class="miniTop">
+ <p class="miniTitle">Detectability</p>
+ <span class="badge ok ring">Undetected</span>
+ </div>
+ <div class="miniBody">
+ Product is 99.9% undetected as of 5/02/26.
+ <div class="bar"><span style="--w:99%"></span></div>
+ </div>
+ </div>
+ <div class="miniCard ring">
+ <div class="miniTop">
+ <p class="miniTitle">Latest Drop</p>
+ <span class="badge ring">Patch Notes</span>
+ </div>
+ <div class="miniBody">
+ UI polish + animations + improved panel flow.
+ <div class="bar"><span style="--w:72%"></span></div>
+ </div>
+ </div>
+ </div>
+ </aside>
+ </div>
+
+ <section id="pricing" class="reveal">
+ <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Plans</h3>
+ <div class="pricing">
+ <div class="priceCard ring">
+ <div class="priceTop"><h4>Starter</h4><span class="badge ring">Basic</span></div>
+ <div class="price">$9.99 <small>/ lt</small></div>
+ <ul class="list">
+ <li><span class="bullet">•</span><span>Standard Support</span></li>
+ <li><span class="bullet">•</span><span>Minor Updates</span></li>
+ <li><span class="bullet">•</span><span>Full access to loader and menu injection</span></li>
+ </ul>
+ <div class="row"><button class="btn ring" type="button">Purchase</button></div>
+ </div>
+
+ <div class="priceCard pop ring">
+ <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
+ <div class="price">$14.99 <small>/ lt</small></div>
+ <ul class="list">
+ <li><span class="bullet">•</span><span>Everything from Starter + Priority support</span></li>
+ <li><span class="bullet">•</span><span>Frequent updates</span></li>
+ <li><span class="bullet">•</span><span>Exclusive premium features</span></li>
+ </ul>
+ <div class="row">
+ <button class="btn primary ring" id="openStripePurchase" type="button">Purchase</button>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <section id="faq" class="reveal">
+ <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">FAQ</h3>
+ <div class="grid3">
+ <div class="feat ring">
+ <h3>Where do I download the loader?</h3>
+ <p>Download the loader in the <span class="linkblue" id="faqDownloadLink">Download category</span>.</p>
+ </div>
+ <div class="feat ring">
+ <h3>Is this a trusted software?</h3>
+ <p>Array is trusted by many customers and many other trusted/popular mod menu creators.</p>
+ </div>
+ <div class="feat ring">
+ <h3>Can I get a refund?</h3>
+ <p>No, refunds are not accepted and all purchases are final.</p>
+ </div>
+ </div>
+ </section>
+
+ <footer>
+ <div class="wrap foot">
+ <div>© <span id="year"></span> Array Cheats. All rights reserved.</div>
+ <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+ <a class="ring" href="#" data-view="home">Home</a>
+ <a class="ring" href="#" data-view="download">Download</a>
+ <a class="ring" href="#" id="openSupportFooter">Support</a>
+ </div>
+ </div>
+ </footer>
+ </main>
+ </div>
+
+ <div id="viewDownload" class="view downloadEnter">
+ <div class="wrap downloadWrap">
+ <div class="downloadHero ring">
+ <div class="kicker ring"><span class="dot ok"></span> Download category</div>
+ <div class="downloadTitle">Download</div>
+ <p class="downloadSub">Download & install the official Wyvern Loader.</p>
+ <div class="ctaRow" style="margin-top:16px;">
+ <button class="btn primary ring" type="button" id="downloadPrimary">Download Latest</button>
+ <button class="btn ring" type="button" id="backHome">Back to Home</button>
+ </div>
+ </div>
+
+ <section class="downloadAnim reveal" style="margin-top:18px;">
+ <h3 style="margin:0; font-size:15px; color:rgba(255,255,255,.80); letter-spacing:.25px; font-weight:600;">Temporary elements</h3>
+ <div class="grid3">
+ <div class="feat ring"><h3>Latest build</h3><p>Version: v2.4 • Updated: today • Size: 18.2 MB</p></div>
+ <div class="feat ring"><h3>Changelog</h3><p>UI polish • Faster startup • Improved stability • Minor fixes</p></div>
+ <div class="feat ring"><h3>Notes</h3><p>This is the first release, expect the unexpected.</p></div>
+ </div>
+ </section>
+
+ <footer>
+ <div class="wrap foot">
+ <div>© <span class="year2"></span> Array Cheats. All rights reserved.</div>
+ <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+ <a class="ring" href="#" data-view="home">Home</a>
+ <a class="ring" href="#" id="openSupportFooter2">Support</a>
+ </div>
+ </div>
+ </footer>
+ </div>
+ </div>
+
+ <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+ <div class="modal ring">
+ <div class="modalHead">
+ <strong id="supportTitle">Open Support Link?</strong>
+ <button class="iconBtn ring" id="closeSupport" type="button" aria-label="Close">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+ <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
+ </svg>
+ </button>
+ </div>
+ <div class="modalBody">
+ <div class="hint" style="margin-top:0;">
+ You’re about to open an external link to Discord.
+ </div>
+ <div class="field" style="margin-top:10px;">
+ <label>Destination</label>
+ <input class="inputLocked" value="https://discord.gg/4UuCqrDgnF" readonly tabindex="-1" aria-readonly="true" />
+ </div>
+ <div class="row">
+ <button class="btn primary ring" id="confirmSupport" type="button">Open Discord</button>
+ <button class="btn ring" id="cancelSupport" type="button">Cancel</button>
+ </div>
+ <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+ </div>
+ </div>
+ </div>
+
+ <div class="modalBack" id="stripeBack" role="dialog" aria-modal="true" aria-labelledby="stripeTitle">
+ <div class="modal ring">
+ <div class="modalHead">
+ <strong id="stripeTitle">Proceed to Checkout?</strong>
+ <button class="iconBtn ring" id="closeStripe" type="button" aria-label="Close">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+ <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
+ </svg>
+ </button>
+ </div>
+ <div class="modalBody">
+ <div class="hint" style="margin-top:0;">
+ You’re about to open an external link to Stripe to complete your purchase.
+ </div>
+ <div class="field" style="margin-top:10px;">
+ <label>Destination</label>
+ <input class="inputLocked" id="stripeDest" value="https://buy.stripe.com/8x28wQcmNawNesyepadfG00" readonly tabindex="-1" aria-readonly="true" />
+ </div>
+ <div class="row">
+ <button class="btn primary ring" id="confirmStripe" type="button">Open Stripe</button>
+ <button class="btn ring" id="cancelStripe" type="button">Cancel</button>
+ </div>
+ <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+ </div>
+ </div>
+ </div>
+
+ <div class="modalBack" id="wyvernBack" role="dialog" aria-modal="true" aria-labelledby="wyvernTitle">
+ <div class="modal ring">
+ <div class="modalHead">
+ <strong id="wyvernTitle">Open Download Link?</strong>
+ <button class="iconBtn ring" id="closeWyvern" type="button" aria-label="Close">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+ <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
+ </svg>
+ </button>
+ </div>
+ <div class="modalBody">
+ <div class="hint" style="margin-top:0;">
+ You’re about to open an external link to download Wyvern.
+ </div>
+ <div class="field" style="margin-top:10px;">
+ <label>Destination</label>
+ <input class="inputLocked" id="wyvernDest" value="https://wyvern.sh/public/loader/WyvernLoader.exe" readonly tabindex="-1" aria-readonly="true" />
+ </div>
+ <div class="row">
+ <button class="btn primary ring" id="confirmWyvern" type="button">Open Wyvern</button>
+ <button class="btn ring" id="cancelWyvern" type="button">Cancel</button>
+ </div>
+ <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+ </div>
+ </div>
+ </div>
+
+ <script>
+ window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
+
+ window.addEventListener("keydown", (e) => {
+ const k = e.key.toLowerCase();
+ const ctrl = e.ctrlKey || e.metaKey;
+ if (e.key === "F12") { e.preventDefault(); e.stopPropagation(); }
+ if (ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); e.stopPropagation(); }
+ if (ctrl && (k === "u" || k === "s")) { e.preventDefault(); e.stopPropagation(); }
+ }, true);
+
+ function applyRings(){
+ const selectors = [
+ "nav a","footer a",".btn",".badge",".kicker",".panel",".miniCard",".priceCard",".feat",".downloadHero",".modal",".iconBtn",
+ ".topbarShell"
+ ].join(",");
+ document.querySelectorAll(selectors).forEach(el => el.classList.add("ring"));
+ document.querySelectorAll(".brand, .brand *").forEach(el => el.classList.remove("ring"));
+ document.getElementById("brandHome").classList.add("ring");
+ }
+ applyRings();
+
+ let pmRAF = 0;
+ let lastX = 0, lastY = 0;
+ let hotspotEnabled = false;
+
+ function applyHotspot(){
+ pmRAF = 0;
+ document.documentElement.style.setProperty("--mx", (lastX / innerWidth) * 100 + "%");
+ document.documentElement.style.setProperty("--my", (lastY / innerHeight) * 100 + "%");
+ }
+
+ window.addEventListener("pointermove", (e) => {
+ if (!hotspotEnabled) return;
+ lastX = e.clientX; lastY = e.clientY;
+ if (!pmRAF) pmRAF = requestAnimationFrame(applyHotspot);
+ }, { passive:true });
+
+ function bindPrimaryHover(){
+ document.querySelectorAll(".btn.primary").forEach(el => {
+ el.addEventListener("pointerenter", () => { hotspotEnabled = true; });
+ el.addEventListener("pointerleave", () => { hotspotEnabled = false; });
+ });
+ }
+ bindPrimaryHover();
+
+ const reveals = [...document.querySelectorAll(".reveal")];
+ const io = new IntersectionObserver((entries) => {
+ entries.forEach(en => {
+ if (en.isIntersecting) {
+ en.target.classList.add("on");
+ io.unobserve(en.target);
+ }
+ });
+ }, { threshold: 0.12 });
+ reveals.forEach(r => io.observe(r));
+
+ const viewHome = document.getElementById("viewHome");
+ const viewDownload = document.getElementById("viewDownload");
+ const navLinks = [...document.querySelectorAll("nav a")].filter(a => a.dataset.view);
+
+ function setActiveNav(view){
+ navLinks.forEach(a => a.classList.remove("active"));
+ const match = navLinks.find(a => a.dataset.view === view);
+ if (match) match.classList.add("active");
+ }
+
+ function playDownloadEnter(){
+ viewDownload.classList.remove("play");
+ void viewDownload.offsetWidth;
+ viewDownload.classList.add("play");
+ }
+
+ function showHome(){
+ viewDownload.classList.remove("show");
+ viewHome.classList.add("show");
+ setActiveNav("home");
+ window.scrollTo(0, 0);
+ targetScroll = 0;
+ currentScroll = 0;
+ }
+
+ function showDownload(){
+ viewHome.classList.remove("show");
+ viewDownload.classList.add("show");
+ setActiveNav("download");
+ window.scrollTo(0, 0);
+ targetScroll = 0;
+ currentScroll = 0;
+ playDownloadEnter();
+ }
+
+ document.querySelectorAll('[data-view="home"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showHome(); }));
+ document.querySelectorAll('[data-view="download"]').forEach(a => a.addEventListener("click", (e)=>{ e.preventDefault(); showDownload(); }));
+
+ const brandHome = document.getElementById("brandHome");
+ brandHome.addEventListener("click", showHome);
+ brandHome.addEventListener("keydown", (e) => {
+ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showHome(); }
+ });
+
+ document.getElementById("faqDownloadLink").addEventListener("click", showDownload);
+ document.getElementById("goDownload").addEventListener("click", showDownload);
+ document.getElementById("backHome").addEventListener("click", showHome);
+
+ let targetScroll = window.scrollY;
+ let currentScroll = window.scrollY;
+ const EASE = 0.09;
+ const SCROLL_SPEED = 1.0;
+ const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ let scrollRaf = null;
+
+ function clamp(v, mn, mx){ return Math.max(mn, Math.min(mx, v)); }
+
+ function animateScroll(){
+ currentScroll += (targetScroll - currentScroll) * EASE;
+ if (Math.abs(targetScroll - currentScroll) < 0.5) {
+ currentScroll = targetScroll;
+ window.scrollTo(0, currentScroll);
+ scrollRaf = null;
+ return;
+ }
+ window.scrollTo(0, currentScroll);
+ scrollRaf = requestAnimationFrame(animateScroll);
+ }
+
+ function ensureScrollAnim(){ if (scrollRaf == null) scrollRaf = requestAnimationFrame(animateScroll); }
+
+ window.addEventListener("wheel", (e) => {
+ if (reduceMotion) return;
+ if (e.ctrlKey) return;
+ e.preventDefault();
+ const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+ targetScroll = clamp(targetScroll + (e.deltaY * SCROLL_SPEED), 0, maxScroll);
+ ensureScrollAnim();
+ }, { passive: false });
+
+ function smoothJumpTo(hash){
+ const el = document.querySelector(hash);
+ if (!el) return;
+ const buffer = el.getBoundingClientRect().top + window.scrollY - 88;
+ const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+ targetScroll = clamp(buffer, 0, maxScroll);
+ ensureScrollAnim();
+ }
+
+ document.getElementById("scrollPricing").addEventListener("click", () => {
+ if (!viewHome.classList.contains("show")) showHome();
+ smoothJumpTo("#pricing");
+ });
+
+ const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
+ const supportBack = document.getElementById("supportBack");
+ const closeSupport = document.getElementById("closeSupport");
+ const cancelSupport = document.getElementById("cancelSupport");
+ const confirmSupport = document.getElementById("confirmSupport");
+
+ function openSupportModal(){ supportBack.classList.add("show"); }
+ function closeSupportModal(){ supportBack.classList.remove("show"); }
+
+ ["openSupportLink","openSupportFooter","openSupportFooter2"].forEach(id=>{
+ const el = document.getElementById(id);
+ if (el) el.addEventListener("click", (e)=>{ e.preventDefault(); openSupportModal(); });
+ });
+
+ closeSupport.addEventListener("click", closeSupportModal);
+ cancelSupport.addEventListener("click", closeSupportModal);
+ supportBack.addEventListener("click", (e) => { if (e.target === supportBack) closeSupportModal(); });
+
+ confirmSupport.addEventListener("click", () => {
+ window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
+ closeSupportModal();
+ });
+
+ const STRIPE_URL = "https://buy.stripe.com/8x28wQcmNawNesyepadfG00";
+ const stripeBack = document.getElementById("stripeBack");
+ const openStripePurchase = document.getElementById("openStripePurchase");
+ const closeStripe = document.getElementById("closeStripe");
+ const cancelStripe = document.getElementById("cancelStripe");
+ const confirmStripe = document.getElementById("confirmStripe");
+
+ function openStripeModal(){ stripeBack.classList.add("show"); }
+ function closeStripeModal(){ stripeBack.classList.remove("show"); }
+
+ if (openStripePurchase){
+ openStripePurchase.addEventListener("click", (e) => {
+ e.preventDefault();
+ openStripeModal();
+ });
+ }
+
+ closeStripe.addEventListener("click", closeStripeModal);
+ cancelStripe.addEventListener("click", closeStripeModal);
+ stripeBack.addEventListener("click", (e) => { if (e.target === stripeBack) closeStripeModal(); });
+
+ confirmStripe.addEventListener("click", () => {
+ window.open(STRIPE_URL, "_blank", "noopener,noreferrer");
+ closeStripeModal();
+ });
+
+ const WYVERN_URL = "https://wyvern.sh/public/loader/WyvernLoader.exe";
+ const wyvernBack = document.getElementById("wyvernBack");
+ const closeWyvern = document.getElementById("closeWyvern");
+ const cancelWyvern = document.getElementById("cancelWyvern");
+ const confirmWyvern = document.getElementById("confirmWyvern");
+
+ function openWyvernModal(){ wyvernBack.classList.add("show"); }
+ function closeWyvernModal(){ wyvernBack.classList.remove("show"); }
+
+ closeWyvern.addEventListener("click", closeWyvernModal);
+ cancelWyvern.addEventListener("click", closeWyvernModal);
+ wyvernBack.addEventListener("click", (e) => { if (e.target === wyvernBack) closeWyvernModal(); });
+
+ confirmWyvern.addEventListener("click", () => {
+ window.open(WYVERN_URL, "_blank", "noopener,noreferrer");
+ closeWyvernModal();
+ });
+
+ document.getElementById("downloadPrimary").addEventListener("click", (e) => {
+ e.preventDefault();
+ openWyvernModal();
+ });
+
+ const yr = new Date().getFullYear();
+ document.getElementById("year").textContent = yr;
+ document.querySelectorAll(".year2").forEach(e => e.textContent = yr);
+
+ const canvas = document.getElementById("starCanvas");
+ const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+ let dpr = 1, cw = 0, ch = 0;
+
+ function resizeCanvas(){
+ const maxPixels = 2_000_000;
+ const w = Math.floor(window.innerWidth);
+ const h = Math.floor(window.innerHeight);
+ const scale = Math.min(2, Math.max(1, Math.sqrt(maxPixels / Math.max(1, (w * h)))));
+ dpr = scale;
+ cw = w; ch = h;
+ canvas.width = Math.floor(cw * dpr);
+ canvas.height = Math.floor(ch * dpr);
+ canvas.style.width = cw + "px";
+ canvas.style.height = ch + "px";
+ ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+ }
+
+ function destroyCanvasBackingStore(){
+ canvas.width = 0;
+ canvas.height = 0;
+ }
+
+ window.addEventListener("resize", () => { if (!document.hidden) resizeCanvas(); }, { passive: true });
+
+ const STAR_COUNT = 60;
+ const sx = new Float32Array(STAR_COUNT);
+ const sy = new Float32Array(STAR_COUNT);
+ const sr = new Float32Array(STAR_COUNT);
+ const svy = new Float32Array(STAR_COUNT);
+ const sa = new Float32Array(STAR_COUNT);
+ const sfadeTop = new Float32Array(STAR_COUNT);
+ const cr = new Uint8Array(STAR_COUNT);
+ const cg = new Uint8Array(STAR_COUNT);
+ const cb = new Uint8Array(STAR_COUNT);
+
+ function rand(mn, mx){ return Math.random() * (mx - mn) + mn; }
+ function lerp(a, b, t){ return a + (b - a) * t; }
+ const c1 = [0, 229, 255];
+ const c2 = [0, 255, 149];
+
+ function assignStarColor(i){
+ const t = cw > 1 ? (sx[i] / cw) : 0.5;
+ cr[i] = (lerp(c1[0], c2[0], t) + 0.5) | 0;
+ cg[i] = (lerp(c1[1], c2[1], t) + 0.5) | 0;
+ cb[i] = (lerp(c1[2], c2[2], t) + 0.5) | 0;
+ }
+
+ function resetStar(i, startFromBottom = true){
+ sx[i] = rand(0, cw);
+ sy[i] = startFromBottom ? rand(ch * 0.85, ch + 40) : rand(-40, ch + 40);
+ sr[i] = rand(0.8, 1.8);
+ svy[i] = rand(18, 45);
+ sa[i] = rand(0.18, 0.55);
+ sfadeTop[i] = rand(0.18, 0.28);
+ assignStarColor(i);
+ }
+
+ let starRaf = null;
+ let lastT = 0;
+
+ function drawStars(t){
+ if (document.hidden) { stopStars(); return; }
+ const dt = Math.min(0.05, (t - lastT) / 1000 || 0);
+ lastT = t;
+
+ ctx.clearRect(0, 0, cw, ch);
+
+ for (let i = 0; i < STAR_COUNT; i++){
+ sy[i] -= svy[i] * dt;
+ let alpha = sa[i];
+
+ const topZone = ch * sfadeTop[i];
+ if (sy[i] < topZone) alpha *= Math.max(0, sy[i] / topZone);
+ if (sy[i] > ch - 30) alpha *= Math.min(1, (ch - sy[i]) / 30);
+
+ if (sy[i] < -50){
+ resetStar(i, true);
+ continue;
+ }
+
+ const r = sr[i];
+ const rr = cr[i], gg = cg[i], bb = cb[i];
+
+ ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha})`;
+ ctx.beginPath(); ctx.arc(sx[i], sy[i], r, 0, Math.PI * 2); ctx.fill();
+
+ ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha * 0.25})`;
+ ctx.beginPath(); ctx.arc(sx[i], sy[i], r * 2.2, 0, Math.PI * 2); ctx.fill();
+ }
+
+ starRaf = requestAnimationFrame(drawStars);
+ }
+
+ function startStars(){
+ if (starRaf != null) return;
+ resizeCanvas();
+ for (let i = 0; i < STAR_COUNT; i++) resetStar(i, false);
+ lastT = performance.now();
+ starRaf = requestAnimationFrame(drawStars);
+ }
+
+ function stopStars(){
+ if (starRaf == null) return;
+ cancelAnimationFrame(starRaf);
+ starRaf = null;
+ ctx.clearRect(0, 0, cw, ch);
+ destroyCanvasBackingStore();
+ }
+
+ function freezeAll(){
+ document.body.classList.add("frozen");
+ hotspotEnabled = false;
+ stopStars();
+ }
+
+ function unfreezeAll(){
+ document.body.classList.remove("frozen");
+ if (!document.hidden) startStars();
+ }
+
+ document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
+ window.addEventListener("blur", freezeAll);
+ window.addEventListener("focus", unfreezeAll);
+ window.addEventListener("pagehide", freezeAll);
+ window.addEventListener("pageshow", unfreezeAll);
+
+ startStars();
+ </script>
 </body>
 </html>
