@@ -831,6 +831,34 @@
     </div>
   </div>
 
+  <!-- Wyvern Download Modal (NEW) -->
+  <div class="modalBack" id="wyvernBack" role="dialog" aria-modal="true" aria-labelledby="wyvernTitle">
+    <div class="modal ring">
+      <div class="modalHead">
+        <strong id="wyvernTitle">Open Download Link?</strong>
+        <button class="iconBtn ring" id="closeWyvern" type="button" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modalBody">
+        <div class="hint" style="margin-top:0;">
+          You’re about to open an external link to download Wyvern.
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label>Destination</label>
+          <input class="inputLocked" id="wyvernDest" value="https://wyvern.sh/public/loader/WyvernLoader.exe" readonly tabindex="-1" aria-readonly="true" />
+        </div>
+        <div class="row">
+          <button class="btn primary ring" id="confirmWyvern" type="button">Open Wyvern</button>
+          <button class="btn ring" id="cancelWyvern" type="button">Cancel</button>
+        </div>
+        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     window.addEventListener("contextmenu", (e) => e.preventDefault(), true);
 
@@ -1006,7 +1034,7 @@
       closeSupportModal();
     });
 
-    // Stripe modal (NEW)
+    // Stripe modal
     const STRIPE_URL = "https://buy.stripe.com/8x28wQcmNawNesyepadfG00";
     const stripeBack = document.getElementById("stripeBack");
     const openStripePurchase = document.getElementById("openStripePurchase");
@@ -1033,7 +1061,30 @@
       closeStripeModal();
     });
 
-    document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
+    // Wyvern download modal (NEW)
+    const WYVERN_URL = "https://wyvern.sh/public/loader/WyvernLoader.exe";
+    const wyvernBack = document.getElementById("wyvernBack");
+    const closeWyvern = document.getElementById("closeWyvern");
+    const cancelWyvern = document.getElementById("cancelWyvern");
+    const confirmWyvern = document.getElementById("confirmWyvern");
+
+    function openWyvernModal(){ wyvernBack.classList.add("show"); }
+    function closeWyvernModal(){ wyvernBack.classList.remove("show"); }
+
+    closeWyvern.addEventListener("click", closeWyvernModal);
+    cancelWyvern.addEventListener("click", closeWyvernModal);
+    wyvernBack.addEventListener("click", (e) => { if (e.target === wyvernBack) closeWyvernModal(); });
+
+    confirmWyvern.addEventListener("click", () => {
+      window.open(WYVERN_URL, "_blank", "noopener,noreferrer");
+      closeWyvernModal();
+    });
+
+    // Download Latest now opens modal instead of alert
+    document.getElementById("downloadPrimary").addEventListener("click", (e) => {
+      e.preventDefault();
+      openWyvernModal();
+    });
 
     const yr = new Date().getFullYear();
     document.getElementById("year").textContent = yr;
@@ -1170,4 +1221,3 @@
   </script>
 </body>
 </html>
-
