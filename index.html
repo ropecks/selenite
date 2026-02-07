@@ -165,22 +165,17 @@
       .bar:hover::after{ opacity:0 !important; animation:none !important; }
     }
 
-    /* ===========================
-       UPDATED TOP BAR (CAPSULE)
-       + HITBOX ONLY ON CAPSULE
-       =========================== */
-
     header{
       position:sticky; top:0; z-index:50;
       background: transparent;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
       padding: 10px 0;
-      pointer-events: none; /* IMPORTANT: stop invisible header area blocking clicks */
+      pointer-events: none;
     }
     .topbarShell,
     .topbarShell *{
-      pointer-events: auto; /* re-enable interaction only on capsule */
+      pointer-events: auto;
     }
 
     .topbarShell{
@@ -703,13 +698,15 @@
 
           <div class="priceCard pop ring">
             <div class="priceTop"><h4>Pro</h4><span class="badge ok ring">Most Popular</span></div>
-            <div class="price">$19.99 <small>/ lt</small></div>
+            <div class="price">$14.99 <small>/ lt</small></div>
             <ul class="list">
               <li><span class="bullet">•</span><span>Everything from Starter + Priority support</span></li>
               <li><span class="bullet">•</span><span>Frequent updates</span></li>
               <li><span class="bullet">•</span><span>Exclusive premium features</span></li>
             </ul>
-            <div class="row"><button class="btn primary ring" type="button">Purchase</button></div>
+            <div class="row">
+              <button class="btn primary ring" id="openStripePurchase" type="button">Purchase</button>
+            </div>
           </div>
         </div>
       </section>
@@ -778,6 +775,7 @@
     </div>
   </div>
 
+  <!-- Support Modal -->
   <div class="modalBack" id="supportBack" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
     <div class="modal ring">
       <div class="modalHead">
@@ -799,6 +797,34 @@
         <div class="row">
           <button class="btn primary ring" id="confirmSupport" type="button">Open Discord</button>
           <button class="btn ring" id="cancelSupport" type="button">Cancel</button>
+        </div>
+        <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stripe Modal (NEW) -->
+  <div class="modalBack" id="stripeBack" role="dialog" aria-modal="true" aria-labelledby="stripeTitle">
+    <div class="modal ring">
+      <div class="modalHead">
+        <strong id="stripeTitle">Proceed to Checkout?</strong>
+        <button class="iconBtn ring" id="closeStripe" type="button" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path class="xPath" d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modalBody">
+        <div class="hint" style="margin-top:0;">
+          You’re about to open an external link to Stripe to complete your purchase.
+        </div>
+        <div class="field" style="margin-top:10px;">
+          <label>Destination</label>
+          <input class="inputLocked" id="stripeDest" value="https://buy.stripe.com/8x28wQcmNawNesyepadfG00" readonly tabindex="-1" aria-readonly="true" />
+        </div>
+        <div class="row">
+          <button class="btn primary ring" id="confirmStripe" type="button">Open Stripe</button>
+          <button class="btn ring" id="cancelStripe" type="button">Cancel</button>
         </div>
         <div class="hint">Tip: If your browser blocks popups, allow popups for this site.</div>
       </div>
@@ -956,6 +982,7 @@
       smoothJumpTo("#pricing");
     });
 
+    // Support modal
     const SUPPORT_URL = "https://discord.gg/4UuCqrDgnF";
     const supportBack = document.getElementById("supportBack");
     const closeSupport = document.getElementById("closeSupport");
@@ -977,6 +1004,33 @@
     confirmSupport.addEventListener("click", () => {
       window.open(SUPPORT_URL, "_blank", "noopener,noreferrer");
       closeSupportModal();
+    });
+
+    // Stripe modal (NEW)
+    const STRIPE_URL = "https://buy.stripe.com/8x28wQcmNawNesyepadfG00";
+    const stripeBack = document.getElementById("stripeBack");
+    const openStripePurchase = document.getElementById("openStripePurchase");
+    const closeStripe = document.getElementById("closeStripe");
+    const cancelStripe = document.getElementById("cancelStripe");
+    const confirmStripe = document.getElementById("confirmStripe");
+
+    function openStripeModal(){ stripeBack.classList.add("show"); }
+    function closeStripeModal(){ stripeBack.classList.remove("show"); }
+
+    if (openStripePurchase){
+      openStripePurchase.addEventListener("click", (e) => {
+        e.preventDefault();
+        openStripeModal();
+      });
+    }
+
+    closeStripe.addEventListener("click", closeStripeModal);
+    cancelStripe.addEventListener("click", closeStripeModal);
+    stripeBack.addEventListener("click", (e) => { if (e.target === stripeBack) closeStripeModal(); });
+
+    confirmStripe.addEventListener("click", () => {
+      window.open(STRIPE_URL, "_blank", "noopener,noreferrer");
+      closeStripeModal();
     });
 
     document.getElementById("downloadPrimary").addEventListener("click", () => alert("Download placeholder. Replace this with your real download URL."));
@@ -1116,6 +1170,3 @@
   </script>
 </body>
 </html>
-
-
-
