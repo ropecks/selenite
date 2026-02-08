@@ -1204,16 +1204,15 @@
  if (!document.hidden) startStars();
  }
 
- document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
- window.addEventListener("blur", freezeAll);
- window.addEventListener("focus", unfreezeAll);
- window.addEventListener("pagehide", freezeAll);
- window.addEventListener("pageshow", unfreezeAll);
+document.addEventListener("visibilitychange", () => { if (document.hidden) freezeAll(); else unfreezeAll(); });
+window.addEventListener("pagehide", freezeAll);
+window.addEventListener("pageshow", unfreezeAll);
 
  startStars();
  </script>
 </body>
 </html>
+
 
 
 
