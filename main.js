@@ -24,6 +24,8 @@ function slideTo(view, pushState = true) {
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
 
+  // Cache the current (correct) page height before unhiding all views
+  sbPageHeight = document.documentElement.scrollHeight;
   // Unhide all views so the page stays tall and scroll-to-top works
   VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
 
@@ -103,6 +105,7 @@ history.replaceState({ view: initView }, "", PATHS[initView]);
 requestAnimationFrame(() => requestAnimationFrame(() => {
   track.style.transition = "";
   updateViewVisibility(initView);
+  sbUpdate();
 }));
 
 document.querySelectorAll("[data-view]").forEach(el => {
@@ -191,29 +194,26 @@ sbThumb.id = "custom-scrollbar-thumb";
 sbTrack.appendChild(sbThumb);
 document.body.appendChild(sbTrack);
 
-let sbHideTimer = null;
 let sbDragging = false;
 
+// Cached page height used for scrollbar sizing — set to active-view height
+// after collapse so the thumb size is correct even when all views are unhidden
+let sbPageHeight = 0;
+
 function sbUpdate() {
-  if (isSliding) return; // don't update during slide — page height is artificially large
-  const scrollH = document.documentElement.scrollHeight;
+  // During slide, use the cached pre-slide page height so thumb size is correct
+  const scrollH = isSliding ? sbPageHeight || document.documentElement.scrollHeight : document.documentElement.scrollHeight;
   const winH = window.innerHeight;
   if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
+  sbTrack.classList.add("visible");
 
   const thumbH = Math.max(32, winH * (winH / scrollH));
   const maxTop = winH - thumbH;
-  const thumbTop = (window.scrollY / (scrollH - winH)) * maxTop;
+  const scrollY = isSliding ? Math.max(0, Math.min(window.scrollY, scrollH - winH)) : window.scrollY;
+  const thumbTop = (scrollY / (scrollH - winH)) * maxTop;
 
   sbThumb.style.height = thumbH + "px";
   sbThumb.style.top = thumbTop + "px";
-
-  if (!sbDragging) {
-    sbTrack.classList.add("visible");
-    if (sbHideTimer) clearTimeout(sbHideTimer);
-    sbHideTimer = setTimeout(() => {
-      if (!sbDragging) sbTrack.classList.remove("visible");
-    }, 1200);
-  }
 }
 
 let sbDragStartY = 0, sbDragStartScroll = 0;
@@ -223,7 +223,6 @@ sbThumb.addEventListener("pointerdown", e => {
   sbDragging = true;
   sbThumb.classList.add("dragging");
   sbTrack.classList.add("visible");
-  if (sbHideTimer) { clearTimeout(sbHideTimer); sbHideTimer = null; }
   sbThumb.setPointerCapture(e.pointerId);
   sbDragStartY = e.clientY;
   sbDragStartScroll = window.scrollY;
@@ -248,8 +247,7 @@ sbThumb.addEventListener("pointermove", e => {
 sbThumb.addEventListener("pointerup", () => {
   sbDragging = false;
   sbThumb.classList.remove("dragging");
-  if (sbHideTimer) clearTimeout(sbHideTimer);
-  sbHideTimer = setTimeout(() => sbTrack.classList.remove("visible"), 1200);
+  sbUpdate();
 });
 
 window.addEventListener("resize", () => { sbUpdate(); }, { passive: true });
