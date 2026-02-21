@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Array Cheats</title>
+  <title>Selenite Cheats</title>
   <meta name="theme-color" content="#111111" />
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,8 +19,9 @@
     --text: rgba(255,255,255,.92);
     --text-muted: rgba(255,255,255,.45);
     --text-sub: rgba(255,255,255,.62);
-    --accent-a: #ff3b3b;
-    --accent-b: #b0b0b0;
+    --accent-a: #e8e8ee;
+    --accent-b: #a0a0b0;
+    --accent-bright: #d4d4de;
     --radius-sm: 10px;
     --radius: 16px;
     --radius-lg: 22px;
@@ -29,9 +30,7 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  ::selection { background: rgba(255,59,59,.18); }
-  body, body * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
-  input { -webkit-user-select: text !important; user-select: text !important; }
+  ::selection { background: rgba(200,200,220,.18); }
 
   html { height: 100%; background: var(--bg); }
   body {
@@ -49,20 +48,15 @@
   a { color: inherit; text-decoration: none; }
   .wrap { width: min(1060px, 92vw); margin: 0 auto; }
 
-  .viewport-outer {
-    position: relative; z-index: 1;
-    overflow: hidden;
-  }
+  .viewport-outer { position: relative; z-index: 1; overflow: hidden; }
   .viewport-track {
     display: flex;
     transition: transform var(--slide-dur) var(--slide-ease);
     will-change: transform;
     align-items: flex-start;
   }
-  .view {
-    flex: 0 0 100vw;
-    width: 100vw;
-  }
+  .view { flex: 0 0 100vw; width: 100vw; }
+
   /* ── NAV ── */
   header { position: sticky; top: 0; z-index: 50; padding: 14px 0; pointer-events: none; }
   .nav-shell {
@@ -73,21 +67,22 @@
     background: rgba(17,17,17,.85);
     backdrop-filter: blur(20px) saturate(140%);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid var(--border); gap: 16px;
+    border: 1px solid var(--border);
+    gap: 16px;
   }
   .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 8px; border-radius: var(--radius-sm); transition: background .15s; }
   .brand:hover { background: var(--surface); }
   .brand-name { font-size: 14px; font-weight: 700; letter-spacing: -.2px; }
   .brand-sub { font-size: 12px; color: var(--text-muted); display: block; margin-top: 1px; }
 
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-a); box-shadow: 0 0 8px rgba(255,59,59,.7); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
-  @keyframes blink { 50% { opacity: .35; } }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 8px rgba(212,212,222,.4); animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes blink { 50% { opacity: .3; } }
   body.frozen .dot { animation-play-state: paused; }
 
   nav { display: flex; align-items: center; gap: 2px; font-size: 13.5px; }
   nav a { padding: 8px 14px; border-radius: var(--radius-sm); color: var(--text-sub); font-weight: 500; transition: color .15s, background .15s; display: inline-flex; cursor: pointer; }
   nav a:hover { color: var(--text); background: var(--surface); }
-  nav a.active { color: var(--text); background: rgba(255,59,59,.1); }
+  nav a.active { color: var(--accent-bright); background: rgba(212,212,222,.08); }
 
   /* ── BUTTONS ── */
   .btn {
@@ -101,17 +96,17 @@
   .btn:hover { transform: translateY(-1px); }
   .btn:active { transform: translateY(0); }
 
-  .btn-ghost { background: rgba(255,59,59,.06); color: rgba(255,59,59,.8); border: 1px solid rgba(255,59,59,.18); }
-  .btn-ghost:hover { background: rgba(255,59,59,.11); color: rgba(255,59,59,1); border-color: rgba(255,59,59,.32); }
+  .btn-ghost { background: rgba(212,212,222,.06); color: var(--accent-bright); border: 1px solid rgba(212,212,222,.2); }
+  .btn-ghost:hover { background: rgba(212,212,222,.11); border-color: rgba(212,212,222,.36); }
 
-  .btn-primary { background: rgba(255,59,59,.14); color: var(--accent-a); border: 1px solid rgba(255,59,59,.28); }
-  .btn-primary:hover { background: rgba(255,59,59,.22); border-color: rgba(255,59,59,.45); }
-  .btn-primary::before { content: ""; position: absolute; inset: 0; background: radial-gradient(160px 120px at var(--bx,50%) var(--by,50%), rgba(255,59,59,.32), transparent 70%); opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .btn-primary { background: rgba(212,212,222,.1); color: var(--accent-bright); border: 1px solid rgba(212,212,222,.22); }
+  .btn-primary:hover { background: rgba(212,212,222,.18); border-color: rgba(212,212,222,.4); }
+  .btn-primary::before { content: ""; position: absolute; inset: 0; background: radial-gradient(160px 120px at var(--bx,50%) var(--by,50%), rgba(212,212,222,.2), transparent 70%); opacity: 0; transition: opacity .2s; pointer-events: none; }
   .btn-primary:hover::before { opacity: 1; }
 
-  .btn-green { background: rgba(255,59,59,.14); color: var(--accent-a); border: 1px solid rgba(255,59,59,.28); }
-  .btn-green:hover { background: rgba(255,59,59,.22); border-color: rgba(255,59,59,.45); }
-  .btn-green::before { content: ""; position: absolute; inset: 0; background: radial-gradient(160px 120px at var(--bx,50%) var(--by,50%), rgba(255,59,59,.32), transparent 70%); opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .btn-green { background: rgba(212,212,222,.1); color: var(--accent-bright); border: 1px solid rgba(212,212,222,.22); }
+  .btn-green:hover { background: rgba(212,212,222,.18); border-color: rgba(212,212,222,.4); }
+  .btn-green::before { content: ""; position: absolute; inset: 0; background: radial-gradient(160px 120px at var(--bx,50%) var(--by,50%), rgba(212,212,222,.2), transparent 70%); opacity: 0; transition: opacity .2s; pointer-events: none; }
   .btn-green:hover::before { opacity: 1; }
 
   /* ── PAGE INNER PADDING ── */
@@ -124,10 +119,9 @@
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .card-pad { padding: 28px; }
 
-  .tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: rgba(255,59,59,.06); border: 1px solid rgba(255,59,59,.18); font-size: 12.5px; color: rgba(255,100,100,.9); font-weight: 500; margin-bottom: 20px; }
+  .tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: rgba(212,212,222,.06); border: 1px solid rgba(212,212,222,.16); font-size: 12.5px; color: var(--accent-bright); font-weight: 500; margin-bottom: 20px; }
   .hero-title { font-size: clamp(38px, 5vw, 58px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 14px; }
-  /* CHANGED: red (#ff3b3b) fading into dark red (#8b0000) instead of grey */
-  .hero-title .grad { background: linear-gradient(110deg, #ff3b3b 0%, #8b0000 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-title .grad { background: linear-gradient(110deg, #e8e8ee 0%, #808090 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero-sub { font-size: 15.5px; color: var(--text-sub); line-height: 1.7; max-width: 50ch; margin-bottom: 26px; }
   .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
@@ -140,8 +134,8 @@
   .status-detail { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
   .pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
-  .pill-green { background: rgba(176,176,176,.07); color: rgba(176,176,176,.9); border: 1px solid rgba(176,176,176,.14); }
-  .pill-cyan { background: rgba(255,59,59,.07); color: rgba(255,59,59,.9); border: 1px solid rgba(255,59,59,.14); }
+  .pill-green { background: rgba(176,176,176,.07); color: rgba(200,200,200,.9); border: 1px solid rgba(176,176,176,.14); }
+  .pill-cyan { background: rgba(212,212,222,.07); color: var(--accent-bright); border: 1px solid rgba(212,212,222,.16); }
   .pill-neutral { background: var(--surface); color: var(--text-sub); border: 1px solid var(--border); }
   .pill-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .8; }
 
@@ -155,8 +149,8 @@
 
   .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color .2s, transform .2s; }
   .price-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
-  .price-card.featured { border-color: rgba(255,59,59,.16); background: linear-gradient(160deg, rgba(255,59,59,.04), rgba(176,176,176,.02)); }
-  .price-card.featured:hover { border-color: rgba(255,59,59,.28); }
+  .price-card.featured { border-color: rgba(212,212,222,.14); background: linear-gradient(160deg, rgba(212,212,222,.04), rgba(160,160,176,.02)); }
+  .price-card.featured:hover { border-color: rgba(212,212,222,.26); }
   .price-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .price-name { font-size: 15px; font-weight: 700; }
   .price-amount { font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
@@ -164,7 +158,7 @@
   .price-divider { height: 1px; background: var(--border); margin: 18px 0; }
   .price-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; }
   .price-features li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; color: var(--text-sub); }
-  .check { width: 16px; height: 16px; border-radius: 50%; background: rgba(176,176,176,.08); border: 1px solid rgba(176,176,176,.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .check { width: 16px; height: 16px; border-radius: 50%; background: rgba(212,212,222,.06); border: 1px solid rgba(212,212,222,.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .check svg { display: block; }
 
   /* ── FAQ ── */
@@ -174,7 +168,7 @@
   .faq-card:hover { border-color: var(--border-bright); }
   .faq-q { font-size: 14px; font-weight: 600; margin-bottom: 7px; }
   .faq-a { font-size: 13.5px; color: var(--text-sub); line-height: 1.6; }
-  .link-blue { color: var(--accent-a); cursor: pointer; opacity: .8; transition: opacity .15s; }
+  .link-blue { color: var(--accent-bright); cursor: pointer; opacity: .8; transition: opacity .15s; }
   .link-blue:hover { opacity: 1; }
 
   /* ── FOOTER ── */
@@ -187,8 +181,7 @@
 
   /* ── DOWNLOAD PAGE ── */
   .dl-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 38px; margin-top: 10px; }
-  /* CHANGED: same red-to-dark-red gradient */
-  .dl-title { font-size: clamp(48px,6vw,72px); font-weight: 700; letter-spacing: -2px; line-height: 1; background: linear-gradient(110deg, #ff3b3b, #8b0000); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
+  .dl-title { font-size: clamp(48px,6vw,72px); font-weight: 700; letter-spacing: -2px; line-height: 1; background: linear-gradient(110deg, #e8e8ee, #808090); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
   .dl-sub { font-size: 15.5px; color: var(--text-sub); max-width: 52ch; line-height: 1.65; margin-bottom: 24px; }
   .info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 16px; }
   @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
@@ -198,8 +191,7 @@
 
   /* ── TERMS PAGE ── */
   .terms-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 38px; margin-top: 10px; }
-  /* CHANGED: same red-to-dark-red gradient */
-  .terms-title { font-size: clamp(40px,5vw,60px); font-weight: 700; letter-spacing: -1.5px; line-height: 1; background: linear-gradient(110deg, #ff3b3b, #8b0000); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
+  .terms-title { font-size: clamp(40px,5vw,60px); font-weight: 700; letter-spacing: -1.5px; line-height: 1; background: linear-gradient(110deg, #e8e8ee, #808090); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
   .terms-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 0; }
 
   .terms-body { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -221,9 +213,9 @@
 
   .modal-head { padding: 20px 20px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
   .modal-icon-wrap { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .micon-cyan { background: rgba(255,59,59,.07); border: 1px solid rgba(255,59,59,.14); }
-  .micon-green { background: rgba(176,176,176,.07); border: 1px solid rgba(176,176,176,.14); }
-  .micon-teal { background: rgba(200,200,200,.07); border: 1px solid rgba(200,200,200,.14); }
+  .micon-cyan { background: rgba(212,212,222,.07); border: 1px solid rgba(212,212,222,.14); }
+  .micon-green { background: rgba(212,212,222,.07); border: 1px solid rgba(212,212,222,.14); }
+  .micon-teal { background: rgba(212,212,222,.07); border: 1px solid rgba(212,212,222,.14); }
   .modal-title-group { display: flex; align-items: center; gap: 12px; }
   .modal-title { font-size: 15.5px; font-weight: 700; }
   .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -235,9 +227,9 @@
   .modal-url-box { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: rgba(0,0,0,.25); border: 1px solid var(--border); border-radius: var(--radius-sm); }
   .modal-url-text { font-family: 'DM Mono', ui-monospace, monospace; font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
   .modal-notice { display: flex; align-items: flex-start; gap: 9px; padding: 11px 13px; border-radius: var(--radius-sm); margin-top: 12px; font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
-  .mnotice-cyan { background: rgba(255,59,59,.04); border: 1px solid rgba(255,59,59,.1); }
-  .mnotice-green { background: rgba(176,176,176,.04); border: 1px solid rgba(176,176,176,.1); }
-  .mnotice-teal { background: rgba(200,200,200,.04); border: 1px solid rgba(200,200,200,.1); }
+  .mnotice-cyan { background: rgba(212,212,222,.04); border: 1px solid rgba(212,212,222,.1); }
+  .mnotice-green { background: rgba(212,212,222,.04); border: 1px solid rgba(212,212,222,.1); }
+  .mnotice-teal { background: rgba(212,212,222,.04); border: 1px solid rgba(212,212,222,.1); }
   .modal-notice svg { flex-shrink: 0; margin-top: 1px; }
   .modal-divider { height: 1px; background: var(--border); margin: 18px 0; }
   .modal-actions { display: flex; gap: 8px; }
@@ -254,7 +246,7 @@
       <div class="brand" id="brandHome" role="button" tabindex="0">
         <div class="dot"></div>
         <div>
-          <div class="brand-name">Array Cheats</div>
+          <div class="brand-name">Selenite Cheats</div>
           <span class="brand-sub">Gorilla Tag mod menu</span>
         </div>
       </div>
@@ -276,8 +268,8 @@
           <div class="hero">
             <div class="card card-pad">
               <div class="tag"><div class="dot"></div>All systems operational</div>
-              <h2 class="hero-title"><span class="grad">Array Cheats</span></h2>
-              <p class="hero-sub">The official dashboard for the Array Mod Menu. Buy, redeem, and download in seconds.</p>
+              <h2 class="hero-title"><span class="grad">Selenite Cheats</span></h2>
+              <p class="hero-sub">The official dashboard for the Selenite Mod Menu. Buy, redeem, and download in seconds.</p>
               <div class="cta-row">
                 <button class="btn btn-primary" id="scrollPricing" type="button">View Plans</button>
                 <button class="btn btn-ghost" id="goDownload" type="button">Download</button>
@@ -308,9 +300,9 @@
                 <div class="price-period">one-time</div>
                 <div class="price-divider"></div>
                 <ul class="price-features">
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Standard support</li>
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Minor updates</li>
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Full loader + menu injection access</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Standard support</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Minor updates</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Full loader + menu injection access</li>
                 </ul>
                 <button class="btn btn-ghost" style="width:100%;justify-content:center;" type="button">Purchase</button>
               </div>
@@ -320,9 +312,9 @@
                 <div class="price-period">one-time</div>
                 <div class="price-divider"></div>
                 <ul class="price-features">
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Starter</li>
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority support + frequent updates</li>
-                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(176,176,176,.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Exclusive premium features</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Everything in Starter</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Priority support + frequent updates</li>
+                  <li><span class="check"><svg width="8" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="rgba(92,92,112,.8)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Exclusive premium features</li>
                 </ul>
                 <button class="btn btn-primary" id="openStripePurchase" style="width:100%;justify-content:center;" type="button">Purchase</button>
               </div>
@@ -338,7 +330,7 @@
               </div>
               <div class="faq-card">
                 <div class="faq-q">Is this trusted software?</div>
-                <div class="faq-a">Array is trusted by many customers and popular mod menu creators alike.</div>
+                <div class="faq-a">Selenite is trusted by many customers and popular mod menu creators alike.</div>
               </div>
               <div class="faq-card">
                 <div class="faq-q">Can I get a refund?</div>
@@ -349,7 +341,7 @@
 
           <footer>
             <div class="foot">
-              <div class="foot-copy">© <span class="yr"></span> Array Cheats. All rights reserved.</div>
+              <div class="foot-copy">© <span class="yr"></span> Selenite Cheats. All rights reserved.</div>
               <div class="foot-links">
                 <a data-view="home">Home</a>
                 <a data-view="download">Download</a>
@@ -367,7 +359,7 @@
           <div class="dl-hero">
             <div class="tag"><div class="dot"></div>Download</div>
             <div class="dl-title">Download</div>
-            <p class="dl-sub">Download and install the official Wyvern Loader to get started with Array Cheats.</p>
+            <p class="dl-sub">Download and install the official Wyvern Loader to get started with Selenite Cheats.</p>
             <div class="cta-row">
               <button class="btn btn-primary" id="downloadPrimary" type="button">Download Latest</button>
               <button class="btn btn-ghost" id="backHome" type="button">Back to Home</button>
@@ -379,13 +371,13 @@
             <div class="info-grid">
               <div class="info-card"><h3>Status</h3><p>All systems operational. No outages or disruptions — services running as expected.</p></div>
               <div class="info-card"><h3>Support</h3><p>Need help? Join the official Discord, head to the Support category, and open a ticket.</p></div>
-              <div class="info-card"><h3>Notes</h3><p>Array Cheats runs through Wyvern Loader — a third-party platform not developed or maintained by Array Cheats.</p></div>
+              <div class="info-card"><h3>Notes</h3><p>Selenite Cheats runs through Wyvern Loader — a third-party platform not developed or maintained by Selenite Cheats.</p></div>
             </div>
           </div>
 
           <footer>
             <div class="foot">
-              <div class="foot-copy">© <span class="yr"></span> Array Cheats. All rights reserved.</div>
+              <div class="foot-copy">© <span class="yr"></span> Selenite Cheats. All rights reserved.</div>
               <div class="foot-links">
                 <a data-view="home">Home</a>
                 <a data-view="terms">Terms</a>
@@ -402,19 +394,19 @@
           <div class="terms-hero">
             <div class="tag"><div class="dot"></div>Legal</div>
             <div class="terms-title">Terms of Use</div>
-            <p class="terms-sub">Last updated: February 2026. By purchasing or using Array Cheats, you agree to the following terms.</p>
+            <p class="terms-sub">Last updated: February 2026. By purchasing or using Selenite Cheats, you agree to the following terms.</p>
           </div>
 
           <div class="terms-body" style="margin-top:20px;">
 
             <div class="terms-section">
               <h3>1. Acceptance of Terms</h3>
-              <p>By accessing, purchasing, downloading, or using Array Cheats ("the Software"), you confirm that you are at least 13 years of age and agree to be legally bound by these Terms of Use. If you do not agree to these terms, do not use the Software.</p>
+              <p>By accessing, purchasing, downloading, or using Selenite Cheats ("the Software"), you confirm that you are at least 13 years of age and agree to be legally bound by these Terms of Use. If you do not agree to these terms, do not use the Software.</p>
             </div>
 
             <div class="terms-section">
               <h3>2. Nature of the Software</h3>
-              <p>Array Cheats is a third-party modification tool ("mod menu") designed for use with Gorilla Tag, a virtual reality game. The Software is provided for entertainment and personal use only. Array Cheats is not affiliated with, endorsed by, or in any way officially connected with Gorilla Tag, Another Axiom, or Meta Platforms.</p>
+              <p>Selenite Cheats is a third-party modification tool ("mod menu") designed for use with Gorilla Tag, a virtual reality game. The Software is provided for entertainment and personal use only. Selenite Cheats is not affiliated with, endorsed by, or in any way officially connected with Gorilla Tag, Another Axiom, or Meta Platforms.</p>
               <p>Use of mod menus may violate the terms of service of Gorilla Tag and/or your platform provider. You assume full responsibility for any consequences resulting from use of the Software, including but not limited to account suspension or bans.</p>
             </div>
 
@@ -432,18 +424,18 @@
 
             <div class="terms-section">
               <h3>4. Purchases & Refund Policy</h3>
-              <p>All purchases made through Array Cheats are <strong style="color:var(--text)">final and non-refundable</strong>. By completing a purchase you acknowledge that you have read and understood this policy. No refunds will be issued under any circumstances, including but not limited to: change of mind, game updates that affect functionality, account bans, or dissatisfaction with the product.</p>
+              <p>All purchases made through Selenite Cheats are <strong style="color:var(--text)">final and non-refundable</strong>. By completing a purchase you acknowledge that you have read and understood this policy. No refunds will be issued under any circumstances, including but not limited to: change of mind, game updates that affect functionality, account bans, or dissatisfaction with the product.</p>
               <p>Chargebacks or payment disputes filed against legitimate purchases may result in immediate and permanent license termination.</p>
             </div>
 
             <div class="terms-section">
               <h3>5. Updates & Availability</h3>
-              <p>Array Cheats reserves the right to update, modify, or discontinue the Software at any time without notice. While we make every reasonable effort to keep the Software functional following game updates, we do not guarantee uninterrupted availability or compatibility. Downtime during update periods does not entitle users to refunds or compensation.</p>
+              <p>Selenite Cheats reserves the right to update, modify, or discontinue the Software at any time without notice. While we make every reasonable effort to keep the Software functional following game updates, we do not guarantee uninterrupted availability or compatibility. Downtime during update periods does not entitle users to refunds or compensation.</p>
             </div>
 
             <div class="terms-section">
               <h3>6. Detection & Account Risk</h3>
-              <p>While Array Cheats takes reasonable measures to minimize detectability, we cannot guarantee that the Software will remain undetected at all times. Game developers may update their anti-cheat systems without notice. You accept full responsibility for any account penalties, bans, or suspensions resulting from use of the Software. Array Cheats is not liable for any such consequences.</p>
+              <p>While Selenite Cheats takes reasonable measures to minimize detectability, we cannot guarantee that the Software will remain undetected at all times. Game developers may update their anti-cheat systems without notice. You accept full responsibility for any account penalties, bans, or suspensions resulting from use of the Software. Selenite Cheats is not liable for any such consequences.</p>
             </div>
 
             <div class="terms-section">
@@ -461,17 +453,17 @@
 
             <div class="terms-section">
               <h3>8. Disclaimer of Warranties</h3>
-              <p>The Software is provided "as is" and "as available" without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Array Cheats does not warrant that the Software will be error-free, uninterrupted, or free from harmful components.</p>
+              <p>The Software is provided "as is" and "as available" without warranties of any kind, either express or implied, including but not limited to implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Selenite Cheats does not warrant that the Software will be error-free, uninterrupted, or free from harmful components.</p>
             </div>
 
             <div class="terms-section">
               <h3>9. Limitation of Liability</h3>
-              <p>To the fullest extent permitted by applicable law, Array Cheats and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, goodwill, or other intangible losses resulting from your use of or inability to use the Software.</p>
+              <p>To the fullest extent permitted by applicable law, Selenite Cheats and its operators shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, goodwill, or other intangible losses resulting from your use of or inability to use the Software.</p>
             </div>
 
             <div class="terms-section">
               <h3>10. Termination</h3>
-              <p>Array Cheats reserves the right to terminate or suspend your license at any time, with or without cause, and with or without notice, including if we believe you have violated these Terms. Upon termination, your right to use the Software immediately ceases. No refund will be issued upon termination for cause.</p>
+              <p>Selenite Cheats reserves the right to terminate or suspend your license at any time, with or without cause, and with or without notice, including if we believe you have violated these Terms. Upon termination, your right to use the Software immediately ceases. No refund will be issued upon termination for cause.</p>
             </div>
 
             <div class="terms-section">
@@ -481,14 +473,14 @@
 
             <div class="terms-section">
               <h3>12. Contact</h3>
-              <p>For questions regarding these Terms, please reach out via the official Array Cheats Discord server. Links are available in the Support section of this website.</p>
+              <p>For questions regarding these Terms, please reach out via the official Selenite Cheats Discord server. Links are available in the Support section of this website.</p>
             </div>
 
           </div>
 
           <footer>
             <div class="foot">
-              <div class="foot-copy">© <span class="yr"></span> Array Cheats. All rights reserved.</div>
+              <div class="foot-copy">© <span class="yr"></span> Selenite Cheats. All rights reserved.</div>
               <div class="foot-links">
                 <a data-view="home">Home</a>
                 <a data-view="download">Download</a>
@@ -508,7 +500,7 @@
       <div class="modal-head">
         <div class="modal-title-group">
           <div class="modal-icon-wrap micon-cyan">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.057a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" fill="rgba(255,59,59,.75)"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.057a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" fill="rgba(92,92,112,.7)"/></svg>
           </div>
           <div><div class="modal-title">Open Support</div><div class="modal-subtitle">discord.gg · external link</div></div>
         </div>
@@ -521,8 +513,8 @@
           <span class="modal-url-text">https://discord.gg/BPMkRjs7AP</span>
         </div>
         <div class="modal-notice mnotice-cyan">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(255,59,59,.55)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(255,59,59,.55)" stroke-width="2" stroke-linecap="round"/></svg>
-          <span>You're leaving Array Cheats and opening a Discord invite. Allow popups if blocked by your browser.</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(92,92,112,.5)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(92,92,112,.5)" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>You're leaving Selenite Cheats and opening a Discord invite. Allow popups if blocked by your browser.</span>
         </div>
         <div class="modal-divider"></div>
         <div class="modal-actions">
@@ -539,7 +531,7 @@
       <div class="modal-head">
         <div class="modal-title-group">
           <div class="modal-icon-wrap micon-green">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="rgba(176,176,176,.75)" stroke-width="2"/><path d="M2 10h20" stroke="rgba(176,176,176,.75)" stroke-width="2"/><path d="M6 15h4" stroke="rgba(176,176,176,.75)" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="rgba(92,92,112,.65)" stroke-width="2"/><path d="M2 10h20" stroke="rgba(92,92,112,.65)" stroke-width="2"/><path d="M6 15h4" stroke="rgba(92,92,112,.65)" stroke-width="2" stroke-linecap="round"/></svg>
           </div>
           <div><div class="modal-title">Proceed to Checkout</div><div class="modal-subtitle">buy.stripe.com · secure payment</div></div>
         </div>
@@ -552,7 +544,7 @@
           <span class="modal-url-text">https://buy.stripe.com/8x28wQcmNawNesyepadfG00</span>
         </div>
         <div class="modal-notice mnotice-green">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(176,176,176,.55)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(176,176,176,.55)" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(92,92,112,.5)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(92,92,112,.5)" stroke-width="2" stroke-linecap="round"/></svg>
           <span>You're being redirected to Stripe for secure checkout. All purchases are final — refunds are not accepted.</span>
         </div>
         <div class="modal-divider"></div>
@@ -570,7 +562,7 @@
       <div class="modal-head">
         <div class="modal-title-group">
           <div class="modal-icon-wrap micon-teal">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 11l4 4 4-4" stroke="rgba(200,200,200,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1" stroke="rgba(200,200,200,.8)" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 11l4 4 4-4" stroke="rgba(92,92,112,.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1" stroke="rgba(92,92,112,.7)" stroke-width="2" stroke-linecap="round"/></svg>
           </div>
           <div><div class="modal-title">Download Loader</div><div class="modal-subtitle">wyvern.sh · external file</div></div>
         </div>
@@ -583,8 +575,8 @@
           <span class="modal-url-text">https://wyvern.sh/public/loader/WyvernLoader.exe</span>
         </div>
         <div class="modal-notice mnotice-teal">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(200,200,200,.55)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(200,200,200,.55)" stroke-width="2" stroke-linecap="round"/></svg>
-          <span>You're downloading the Wyvern Loader, a third-party tool not maintained by Array Cheats. Allow popups if blocked.</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10" stroke="rgba(92,92,112,.5)" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="rgba(92,92,112,.5)" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>You're downloading the Wyvern Loader, a third-party tool not maintained by Selenite Cheats. Allow popups if blocked.</span>
         </div>
         <div class="modal-divider"></div>
         <div class="modal-actions">
@@ -624,8 +616,8 @@
       a.classList.toggle("active", a.dataset.view === view);
     });
     if(pushState) history.pushState({ view }, "", PATHS[view]);
-    const titles = { home: "Array Cheats", download: "Download — Array Cheats", terms: "Terms — Array Cheats" };
-    document.title = titles[view] || "Array Cheats";
+    const titles = { home: "Selenite Cheats", download: "Download — Selenite Cheats", terms: "Terms — Selenite Cheats" };
+    document.title = titles[view] || "Selenite Cheats";
   }
 
   window.addEventListener("popstate", e => {
@@ -732,7 +724,7 @@
   const yr=new Date().getFullYear();
   document.querySelectorAll(".yr").forEach(e=>e.textContent=yr);
 
-  // ── STARS ──
+  // ── STARS (silver/white particles on light bg) ──
   const canvas=document.getElementById("starCanvas");
   const ctx=canvas.getContext("2d",{alpha:true});
   let dpr=1,cw=0,ch=0;
@@ -753,9 +745,11 @@
   const lerp=(a,b,t)=>a+(b-a)*t;
   function initStar(i,bot=true){
     sx[i]=rnd(0,cw);sy[i]=bot?rnd(ch*.85,ch+30):rnd(-30,ch+30);
-    sr[i]=rnd(.5,1.4);svy[i]=rnd(12,32);sa[i]=rnd(.12,.4);sft[i]=rnd(.14,.24);
+    sr[i]=rnd(.6,1.6);svy[i]=rnd(12,32);sa[i]=rnd(.06,.18);sft[i]=rnd(.14,.24);
     const t=cw>1?sx[i]/cw:.5;
-    cr[i]=(lerp(255,176,t)+.5)|0;cg[i]=(lerp(59,176,t)+.5)|0;cb[i]=(lerp(59,176,t)+.5)|0;
+    // Silver-grey palette: ranges from ~140 to ~180 lightness
+    const base = (lerp(140,175,t)+.5)|0;
+    cr[i]=base;cg[i]=base;cb[i]=(base+8)|0;
   }
   let stRaf=null,lastT=0;
   function draw(t){
@@ -771,7 +765,7 @@
       if(sy[i]<-40){initStar(i,true);continue;}
       ctx.fillStyle=`rgba(${cr[i]},${cg[i]},${cb[i]},${a})`;
       ctx.beginPath();ctx.arc(sx[i],sy[i],sr[i],0,Math.PI*2);ctx.fill();
-      ctx.fillStyle=`rgba(${cr[i]},${cg[i]},${cb[i]},${a*.18})`;
+      ctx.fillStyle=`rgba(${cr[i]},${cg[i]},${cb[i]},${a*.15})`;
       ctx.beginPath();ctx.arc(sx[i],sy[i],sr[i]*2.6,0,Math.PI*2);ctx.fill();
     }
     stRaf=requestAnimationFrame(draw);
