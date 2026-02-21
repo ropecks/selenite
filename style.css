@@ -239,7 +239,7 @@ footer { margin-top: 60px; padding: 20px 0 40px; border-top: 1px solid var(--bor
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
-/* ── VIEW VISIBILITY (collapse inactive views to prevent phantom scroll) ── */
+/* ── VIEW VISIBILITY ── */
 .view--hidden { height: 0 !important; overflow: hidden; visibility: hidden; }
 
 /* ── HIDE NATIVE SCROLLBAR ── */
@@ -255,10 +255,10 @@ html::-webkit-scrollbar { display: none; }
   width: 10px;
   z-index: 999;
   pointer-events: none;
-  opacity: 0;
+  display: none;
 }
 #custom-scrollbar.visible {
-  opacity: 1;
+  display: block;
   pointer-events: auto;
 }
 #custom-scrollbar-thumb {
