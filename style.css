@@ -239,6 +239,9 @@ footer { margin-top: 60px; padding: 20px 0 40px; border-top: 1px solid var(--bor
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
+/* ── VIEW VISIBILITY (collapse inactive views to prevent phantom scroll) ── */
+.view--hidden { height: 0 !important; overflow: hidden; visibility: hidden; }
+
 /* ── HIDE NATIVE SCROLLBAR ── */
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
@@ -249,7 +252,7 @@ html::-webkit-scrollbar { display: none; }
   right: 6px;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: 10px;
   z-index: 999;
   pointer-events: none;
   opacity: 0;
@@ -261,25 +264,20 @@ html::-webkit-scrollbar { display: none; }
 }
 #custom-scrollbar-thumb {
   position: absolute;
-  right: 0;
+  right: 3px;
   width: 4px;
   min-height: 32px;
   border-radius: 999px;
   background: rgba(212, 212, 222, 0.25);
-  transition: width 0.15s, background 0.15s, right 0.15s;
+  transition: width 0.15s, right 0.15s, background 0.15s;
   cursor: grab;
-  will-change: transform;
 }
 #custom-scrollbar:hover #custom-scrollbar-thumb,
 #custom-scrollbar-thumb.dragging {
   width: 6px;
-  right: 0;
+  right: 2px;
   background: rgba(212, 212, 222, 0.5);
-  cursor: grab;
 }
 #custom-scrollbar-thumb.dragging {
   cursor: grabbing;
 }
-
-/* ── VIEW VISIBILITY (collapse inactive views to prevent phantom scroll) ── */
-.view--hidden { height: 0 !important; overflow: hidden; visibility: hidden; }
