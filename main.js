@@ -15,23 +15,32 @@ function updateViewVisibility(activeView) {
   });
 }
 
+let slideTimer = null;
+
 function slideTo(view, pushState = true) {
   if (view === currentView) return;
   const idx = getIndexOf(view);
   if (idx === -1) return;
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
-  // Unhide destination view before animating, hide others after transition
-  const destEl = track.children[idx];
-  if (destEl) destEl.classList.remove("view--hidden");
-  // Smoothly scroll to top while the slide transition plays
-  tScroll = 0;
-  ensureS();
-  setTimeout(() => {
-    updateViewVisibility(view);
-    // Snap to exactly 0 in case smooth scroll hasn't fully landed
-    cScroll = 0; window.scrollTo(0, 0);
-  }, 430);
+
+  // Unhide all views during the animation so nothing is clipped mid-slide
+  VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
+
+  // Smooth scroll to top concurrently with the slide transition.
+  // Stop any in-flight custom scroll rAF first so they don't fight each other.
+  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
+  tScroll = 0; cScroll = 0;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Cancel any previous pending collapse (prevents flicker on rapid switching)
+  if (slideTimer) clearTimeout(slideTimer);
+  slideTimer = setTimeout(() => {
+    slideTimer = null;
+    updateViewVisibility(currentView);
+    window.scrollTo(0, 0);
+    cScroll = 0;
+  }, 440);
   document.querySelectorAll("nav a[data-view]").forEach(a => {
     a.classList.toggle("active", a.dataset.view === view);
   });
