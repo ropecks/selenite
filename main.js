@@ -23,18 +23,26 @@ sbTrack.appendChild(sbThumb);
 document.body.appendChild(sbTrack);
 
 let sbDragging = false;
-let sbPageHeight = 0; // cached page height before views are unhidden during slide
+// For smooth thumb resize during slide: interpolate between source and dest heights
+let sbSlideStartH = 0, sbSlideEndH = 0, sbSlideStartTime = 0, sbSlideDur = 420;
 
 function sbUpdate() {
-  // Use cached height during slide so thumb doesn't jump when views are unhidden
-  const scrollH = isSliding && sbPageHeight > 0 ? sbPageHeight : document.documentElement.scrollHeight;
   const winH = window.innerHeight;
+  let scrollH;
+  if (isSliding && sbSlideStartH > 0) {
+    // Interpolate page height so thumb smoothly resizes with the slide
+    const t = Math.min(1, (performance.now() - sbSlideStartTime) / sbSlideDur);
+    const ease = 1 - Math.pow(1 - t, 3);
+    scrollH = sbSlideStartH + (sbSlideEndH - sbSlideStartH) * ease;
+  } else {
+    scrollH = document.documentElement.scrollHeight;
+  }
   if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
   sbTrack.classList.add("visible");
   const thumbH = Math.max(32, winH * (winH / scrollH));
   const maxTop = winH - thumbH;
   const scrollY = Math.min(window.scrollY, scrollH - winH);
-  const thumbTop = (scrollY / (scrollH - winH)) * maxTop;
+  const thumbTop = scrollH > winH ? (scrollY / (scrollH - winH)) * maxTop : 0;
   sbThumb.style.height = thumbH + "px";
   sbThumb.style.top = thumbTop + "px";
 }
@@ -81,9 +89,23 @@ function slideTo(view, pushState = true) {
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
 
-  // Cache page height before unhiding so sbUpdate uses correct size during slide
-  sbPageHeight = document.documentElement.scrollHeight;
+  // Capture source height, then unhide all views, then measure dest height
+  sbSlideStartH = document.documentElement.scrollHeight;
+  sbSlideStartTime = performance.now();
+  sbSlideDur = 420;
   VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
+  // Dest height = height of the target view element (header + view content)
+  const destViewEl = track.children[idx];
+  sbSlideEndH = destViewEl ? (destViewEl.scrollHeight + (document.querySelector("header") ? document.querySelector("header").offsetHeight : 0)) : document.documentElement.scrollHeight;
+
+  // Fade scrollbar out when going to download (no scroll), fade in otherwise
+  if (view === "download") {
+    sbTrack.classList.add("sb-fading-out");
+    sbTrack.classList.remove("sb-fading-in");
+  } else {
+    sbTrack.classList.add("sb-fading-in");
+    sbTrack.classList.remove("sb-fading-out");
+  }
 
   isSliding = true;
 
@@ -112,13 +134,21 @@ function slideTo(view, pushState = true) {
   } else {
     ourScroll = true; window.scrollTo(0, 0);
     tScroll = 0; cScroll = 0;
+    // Still need rAF loop to animate thumb resize even when already at top
+    function resizeAnim(now) {
+      sbUpdate();
+      if (now - sbSlideStartTime < sbSlideDur) sRaf = requestAnimationFrame(resizeAnim);
+      else { sRaf = null; sbUpdate(); }
+    }
+    sRaf = requestAnimationFrame(resizeAnim);
   }
 
   if (slideTimer) clearTimeout(slideTimer);
   slideTimer = setTimeout(() => {
     slideTimer = null;
     isSliding = false;
-    sbPageHeight = 0;
+    sbSlideStartH = 0; sbSlideEndH = 0;
+    sbTrack.classList.remove("sb-fading-out", "sb-fading-in");
     updateViewVisibility(currentView);
     ourScroll = true; window.scrollTo(0, 0);
     cScroll = 0; tScroll = 0;
