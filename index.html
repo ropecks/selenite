@@ -617,8 +617,7 @@
   const track = document.getElementById("track");
 
   let currentView = "home";
-  // Per-view saved scroll positions
-  const scrollPositions = { home: 0, download: 0, terms: 0 };
+
 
   function getIndexOf(v){ return VIEWS.indexOf(v); }
 
@@ -636,8 +635,6 @@
     if(idx === -1) return;
 
     // Save scroll position of the view we're leaving
-    scrollPositions[currentView] = window.scrollY;
-
     currentView = view;
     track.style.transform = `translateX(${-idx * 100}vw)`;
 
@@ -650,14 +647,10 @@
     const titles = { home: "Array Cheats", download: "Download — Array Cheats", terms: "Terms — Array Cheats" };
     document.title = titles[view] || "Array Cheats";
 
-    // After slide animation completes, restore the target view's scroll position
-    // and update visibility so inactive views don't add to scroll height
+    // After slide completes, hide inactive views so they don't add to scroll height
     setTimeout(() => {
       updateViewVisibility(view);
-      const saved = scrollPositions[view] || 0;
-      tScroll = saved; cScroll = saved;
-      window.scrollTo(0, saved);
-    }, 430); // slightly after slide-dur (420ms)
+    }, 430);
   }
 
   // Handle browser back/forward
