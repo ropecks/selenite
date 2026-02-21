@@ -639,11 +639,11 @@
 
   // Handle browser back/forward
   window.addEventListener("popstate", e => {
-    const v = e.state?.view || "home";
+    const v = (e.state && e.state.view) ? e.state.view : viewFromPath();
     slideTo(v, false);
   });
 
-  // Read initial URL — supports /download path AND ?view=download query param (redirect fallback)
+  // Read initial URL — supports /path AND ?view= query param (404 redirect fallback)
   function viewFromPath() {
     const p = location.pathname;
     if(p.startsWith("/download")) return "download";
@@ -655,16 +655,17 @@
   const initView = viewFromPath();
   const initIdx = getIndexOf(initView);
   currentView = initView;
-  // Set initial track position without animation
+  // Set track to correct position instantly (no animation on first load)
   track.style.transition = "none";
   track.style.transform = `translateX(${-initIdx * 100}vw)`;
+  // Set nav active state
   document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
-  // Re-enable transition after paint
+  // Replace URL: cleans up ?view= and sets the canonical path
+  history.replaceState({ view: initView }, "", PATHS[initView]);
+  // Re-enable slide transition after first paint so there's no flash
   requestAnimationFrame(() => requestAnimationFrame(() => {
     track.style.transition = "";
   }));
-  // Clean up ?view= from URL and replace with the canonical path
-  history.replaceState({ view: initView }, "", PATHS[initView]);
 
   // Wire up all nav links (data-view attribute)
   document.querySelectorAll("[data-view]").forEach(el => {
