@@ -255,11 +255,22 @@ html::-webkit-scrollbar { display: none; }
   width: 10px;
   z-index: 999;
   pointer-events: none;
-  display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
 }
 #custom-scrollbar.visible {
-  display: block;
+  opacity: 1;
   pointer-events: auto;
+}
+#custom-scrollbar.sb-fading-out {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.35s ease;
+}
+#custom-scrollbar.sb-fading-in {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.35s ease;
 }
 #custom-scrollbar-thumb {
   position: absolute;
