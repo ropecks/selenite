@@ -38,7 +38,8 @@ function sbUpdate() {
     scrollH = document.documentElement.scrollHeight;
   }
   if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
-  sbTrack.classList.add("visible");
+  // Don't re-add visible if we're intentionally fading out
+  if (!sbTrack.classList.contains("sb-fading-out")) sbTrack.classList.add("visible");
   const thumbH = Math.max(32, winH * (winH / scrollH));
   const maxTop = winH - thumbH;
   const scrollY = Math.min(window.scrollY, scrollH - winH);
@@ -89,22 +90,27 @@ function slideTo(view, pushState = true) {
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
 
-  // Capture source height, then unhide all views, then measure dest height
+  // Capture source height BEFORE unhiding views
   sbSlideStartH = document.documentElement.scrollHeight;
   sbSlideStartTime = performance.now();
   sbSlideDur = 420;
-  VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
-  // Dest height = height of the target view element (header + view content)
-  const destViewEl = track.children[idx];
-  sbSlideEndH = destViewEl ? (destViewEl.scrollHeight + (document.querySelector("header") ? document.querySelector("header").offsetHeight : 0)) : document.documentElement.scrollHeight;
 
-  // Fade scrollbar out when going to download (no scroll), fade in otherwise
-  if (view === "download") {
+  // Temporarily unhide dest view only to measure its natural height
+  const destViewEl = track.children[idx];
+  if (destViewEl) destViewEl.classList.remove("view--hidden");
+  const headerH = document.querySelector("header") ? document.querySelector("header").offsetHeight : 0;
+  sbSlideEndH = destViewEl ? destViewEl.scrollHeight + headerH : sbSlideStartH;
+  // Now unhide all views for the slide animation
+  VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
+
+  // Fade scrollbar when going to/from download
+  const goingToNoScroll = view === "download";
+  if (goingToNoScroll) {
     sbTrack.classList.add("sb-fading-out");
-    sbTrack.classList.remove("sb-fading-in");
+    sbTrack.classList.remove("sb-fading-in", "visible");
   } else {
-    sbTrack.classList.add("sb-fading-in");
     sbTrack.classList.remove("sb-fading-out");
+    sbTrack.classList.add("sb-fading-in", "visible");
   }
 
   isSliding = true;
@@ -148,6 +154,7 @@ function slideTo(view, pushState = true) {
     slideTimer = null;
     isSliding = false;
     sbSlideStartH = 0; sbSlideEndH = 0;
+    // Let CSS fade finish before removing classes and re-evaluating visibility
     sbTrack.classList.remove("sb-fading-out", "sb-fading-in");
     updateViewVisibility(currentView);
     ourScroll = true; window.scrollTo(0, 0);
