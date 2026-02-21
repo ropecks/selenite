@@ -135,7 +135,7 @@
 
   .pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
   .pill-green { background: rgba(176,176,176,.07); color: rgba(200,200,200,.9); border: 1px solid rgba(176,176,176,.14); }
-  .pill-cyan { background: rgba(212,212,222,.07); color: var(--accent-bright); border: 1px solid rgba(212,212,222,.16); }
+  .pill-cyan { background: rgba(212,212,222,.14); color: #e8e8ee; border: 1px solid rgba(212,212,222,.32); }
   .pill-neutral { background: var(--surface); color: var(--text-sub); border: 1px solid var(--border); }
   .pill-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .8; }
 
@@ -149,8 +149,22 @@
 
   .price-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color .2s, transform .2s; }
   .price-card:hover { border-color: var(--border-bright); transform: translateY(-2px); }
-  .price-card.featured { border-color: rgba(212,212,222,.14); background: linear-gradient(160deg, rgba(212,212,222,.04), rgba(160,160,176,.02)); }
-  .price-card.featured:hover { border-color: rgba(212,212,222,.26); }
+  .price-card.featured {
+    border-color: rgba(212,212,222,.35);
+    background: linear-gradient(160deg, rgba(212,212,222,.09) 0%, rgba(160,160,176,.04) 100%);
+    box-shadow: 0 0 0 1px rgba(212,212,222,.15), 0 8px 32px rgba(212,212,222,.08), 0 2px 8px rgba(0,0,0,.4);
+    position: relative;
+    transform: translateY(-3px);
+  }
+  .price-card.featured::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(255,255,255,.07) 0%, transparent 50%, rgba(255,255,255,.03) 100%);
+    pointer-events: none;
+  }
+  .price-card.featured:hover { border-color: rgba(212,212,222,.55); transform: translateY(-5px); box-shadow: 0 0 0 1px rgba(212,212,222,.25), 0 16px 48px rgba(212,212,222,.12), 0 4px 12px rgba(0,0,0,.4); }
   .price-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .price-name { font-size: 15px; font-weight: 700; }
   .price-amount { font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
