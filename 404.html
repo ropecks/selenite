@@ -6,11 +6,12 @@
   <script>
     (function() {
       var path = window.location.pathname.toLowerCase().replace(/\/$/, "");
-      var view = "home";
+      var view = "";
       if (path === "/download" || path.startsWith("/download/")) view = "download";
       else if (path === "/terms" || path.startsWith("/terms/")) view = "terms";
 
-      var dest = view === "home" ? "/" : ("/?view=" + view);
+      // Use query param redirect — hash approach for maximum host compatibility
+      var dest = view ? ("/?view=" + view) : "/";
       window.location.replace(dest);
     })();
   </script>
