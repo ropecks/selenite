@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+  <script>
+    (function() {
+      var path = window.location.pathname.toLowerCase().replace(/\/$/, "");
+      var view = "home";
+      if (path === "/download" || path.startsWith("/download/")) view = "download";
+      else if (path === "/terms" || path.startsWith("/terms/")) view = "terms";
+
+      var dest = view === "home" ? "/" : ("/?view=" + view);
+      window.location.replace(dest);
+    })();
+  </script>
+</head>
+<body></body>
+</html>
