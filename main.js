@@ -32,28 +32,29 @@ function slideTo(view, pushState = true) {
   isSliding = true;
   document.body.style.overflow = "hidden";
 
-  // Adaptive scroll-to-top: duration scales with scroll distance so it always
-  // finishes well within the 420ms slide, with an ease-out-cubic curve
+  // Adaptive scroll-to-top: duration scales with scroll distance
   if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
   const startY = window.scrollY;
   if (startY > 1) {
-    // 180ms minimum, grows with distance but capped at 380ms
     const dur = Math.min(380, 180 + (startY / 1500) * 200);
     const startTime = performance.now();
     function scrollAnim(now) {
       const t = Math.min(1, (now - startTime) / dur);
       const ease = 1 - Math.pow(1 - t, 3);
       const y = Math.round(startY * (1 - ease));
+      ourScroll = true;
       window.scrollTo(0, y);
       cScroll = y; tScroll = 0;
       if (t < 1) {
         sRaf = requestAnimationFrame(scrollAnim);
       } else {
+        ourScroll = true;
         window.scrollTo(0, 0); cScroll = 0; tScroll = 0; sRaf = null;
       }
     }
     sRaf = requestAnimationFrame(scrollAnim);
   } else {
+    ourScroll = true;
     window.scrollTo(0, 0); tScroll = 0; cScroll = 0;
   }
 
@@ -64,6 +65,7 @@ function slideTo(view, pushState = true) {
     isSliding = false;
     document.body.style.overflow = "";
     updateViewVisibility(currentView);
+    ourScroll = true;
     window.scrollTo(0, 0);
     cScroll = 0; tScroll = 0;
   }, 440);
@@ -144,14 +146,29 @@ document.querySelectorAll(".reveal").forEach(r => io.observe(r));
 
 // ── SMOOTH SCROLL ──
 let tScroll = window.scrollY, cScroll = window.scrollY, sRaf = null;
+// ourScroll: true when we called window.scrollTo, so the scroll event doesn't re-sync
+let ourScroll = false;
 const EASE = 0.09, rm = matchMedia("(prefers-reduced-motion:reduce)").matches;
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 function animS() {
   cScroll += (tScroll - cScroll) * EASE;
-  if (Math.abs(tScroll - cScroll) < 0.5) { cScroll = tScroll; window.scrollTo(0, cScroll); sRaf = null; return; }
-  window.scrollTo(0, cScroll); sRaf = requestAnimationFrame(animS);
+  if (Math.abs(tScroll - cScroll) < 0.5) { cScroll = tScroll; ourScroll = true; window.scrollTo(0, cScroll); sRaf = null; return; }
+  ourScroll = true; window.scrollTo(0, cScroll); sRaf = requestAnimationFrame(animS);
 }
 function ensureS() { if (!sRaf) sRaf = requestAnimationFrame(animS); }
+
+// Sync tScroll/cScroll when browser scrolls us (native scrollbar, keyboard, etc.)
+window.addEventListener("scroll", () => {
+  if (ourScroll) { ourScroll = false; return; }
+  // External scroll (native bar / keyboard) — adopt the real position
+  if (!isSliding) {
+    tScroll = window.scrollY;
+    cScroll = window.scrollY;
+    if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
+  }
+  sbUpdate();
+}, { passive: true });
+
 window.addEventListener("wheel", e => {
   if (rm || e.ctrlKey) return; e.preventDefault();
   if (isSliding) return;
@@ -168,6 +185,78 @@ function scrollToPricing() {
   tScroll = clamp(el.getBoundingClientRect().top + window.scrollY - 80, 0, document.documentElement.scrollHeight - innerHeight);
   ensureS();
 }
+
+// ── CUSTOM SCROLLBAR ──
+const sbTrack = document.createElement("div");
+sbTrack.id = "custom-scrollbar";
+const sbThumb = document.createElement("div");
+sbThumb.id = "custom-scrollbar-thumb";
+sbTrack.appendChild(sbThumb);
+document.body.appendChild(sbTrack);
+
+let sbHideTimer = null;
+
+function sbUpdate() {
+  const scrollH = document.documentElement.scrollHeight;
+  const winH = window.innerHeight;
+  if (scrollH <= winH) { sbTrack.classList.remove("visible"); return; }
+
+  const ratio = winH / scrollH;
+  const thumbH = Math.max(32, winH * ratio);
+  const maxThumbTop = winH - thumbH;
+  const scrollRatio = window.scrollY / (scrollH - winH);
+  const thumbTop = scrollRatio * maxThumbTop;
+
+  sbThumb.style.height = thumbH + "px";
+  sbThumb.style.top = thumbTop + "px";
+
+  sbTrack.classList.add("visible");
+  if (sbHideTimer) clearTimeout(sbHideTimer);
+  sbHideTimer = setTimeout(() => {
+    if (!sbDragging) sbTrack.classList.remove("visible");
+  }, 1200);
+}
+
+// Dragging
+let sbDragging = false;
+let sbDragStartY = 0;
+let sbDragStartScroll = 0;
+
+sbThumb.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  sbDragging = true;
+  sbThumb.classList.add("dragging");
+  sbThumb.setPointerCapture(e.pointerId);
+  sbDragStartY = e.clientY;
+  sbDragStartScroll = window.scrollY;
+  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
+});
+
+sbThumb.addEventListener("pointermove", e => {
+  if (!sbDragging) return;
+  const scrollH = document.documentElement.scrollHeight;
+  const winH = window.innerHeight;
+  const thumbH = Math.max(32, winH * (winH / scrollH));
+  const trackRange = winH - thumbH;
+  const scrollRange = scrollH - winH;
+  const dy = e.clientY - sbDragStartY;
+  const newScroll = clamp(sbDragStartScroll + (dy / trackRange) * scrollRange, 0, scrollRange);
+  tScroll = newScroll; cScroll = newScroll;
+  ourScroll = true;
+  window.scrollTo(0, newScroll);
+  sbUpdate();
+});
+
+sbThumb.addEventListener("pointerup", () => {
+  sbDragging = false;
+  sbThumb.classList.remove("dragging");
+  sbHideTimer = setTimeout(() => sbTrack.classList.remove("visible"), 1200);
+});
+
+// Also show on wheel scroll (triggered via sbUpdate in scroll event above)
+// and on page load
+window.addEventListener("resize", sbUpdate, { passive: true });
+sbUpdate();
 
 // ── MODALS ──
 function makeModal(overlayId, openIds, closeIds, confirmId, url) {
