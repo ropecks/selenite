@@ -16,6 +16,7 @@ function updateViewVisibility(activeView) {
 }
 
 let slideTimer = null;
+let isSliding = false;
 
 function slideTo(view, pushState = true) {
   if (view === currentView) return;
@@ -27,19 +28,39 @@ function slideTo(view, pushState = true) {
   // Unhide all views during the animation so nothing is clipped mid-slide
   VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
 
-  // Smooth scroll to top concurrently with the slide transition.
-  // Stop any in-flight custom scroll rAF first so they don't fight each other.
+  // Lock scrolling for the duration of the slide
+  isSliding = true;
+
+  // Adaptive smooth scroll to top: duration scales with how far down you are
+  // so it always comfortably finishes within the 420ms slide transition.
   if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
-  tScroll = 0; cScroll = 0;
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  const startY = window.scrollY;
+  if (startY > 0) {
+    // 200ms when near top, up to 360ms when very far down — always under 420ms
+    const dur = Math.min(360, 200 + (startY / 2000) * 160);
+    const startTime = performance.now();
+    function scrollAnim(now) {
+      const t = Math.min(1, (now - startTime) / dur);
+      const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      const y = startY * (1 - ease);
+      window.scrollTo(0, y);
+      cScroll = y; tScroll = 0;
+      if (t < 1) { sRaf = requestAnimationFrame(scrollAnim); }
+      else { cScroll = 0; tScroll = 0; window.scrollTo(0, 0); sRaf = null; }
+    }
+    sRaf = requestAnimationFrame(scrollAnim);
+  } else {
+    tScroll = 0; cScroll = 0;
+  }
 
   // Cancel any previous pending collapse (prevents flicker on rapid switching)
   if (slideTimer) clearTimeout(slideTimer);
   slideTimer = setTimeout(() => {
     slideTimer = null;
+    isSliding = false;
     updateViewVisibility(currentView);
     window.scrollTo(0, 0);
-    cScroll = 0;
+    cScroll = 0; tScroll = 0;
   }, 440);
   document.querySelectorAll("nav a[data-view]").forEach(a => {
     a.classList.toggle("active", a.dataset.view === view);
@@ -127,6 +148,7 @@ function animS() {
 function ensureS() { if (!sRaf) sRaf = requestAnimationFrame(animS); }
 window.addEventListener("wheel", e => {
   if (rm || e.ctrlKey) return; e.preventDefault();
+  if (isSliding) return; // block scrolling during slide transition
   tScroll = clamp(tScroll + e.deltaY, 0, document.documentElement.scrollHeight - innerHeight);
   ensureS();
 }, { passive: false });
