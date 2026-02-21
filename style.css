@@ -280,3 +280,6 @@ html::-webkit-scrollbar { display: none; }
 #custom-scrollbar-thumb.dragging {
   cursor: grabbing;
 }
+
+/* ── VIEW VISIBILITY (collapse inactive views to prevent phantom scroll) ── */
+.view--hidden { height: 0 !important; overflow: hidden; visibility: hidden; }
