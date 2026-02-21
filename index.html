@@ -634,7 +634,6 @@
     const idx = getIndexOf(view);
     if(idx === -1) return;
 
-    // Save scroll position of the view we're leaving
     currentView = view;
     track.style.transform = `translateX(${-idx * 100}vw)`;
 
@@ -647,9 +646,13 @@
     const titles = { home: "Array Cheats", download: "Download — Array Cheats", terms: "Terms — Array Cheats" };
     document.title = titles[view] || "Array Cheats";
 
-    // After slide completes, hide inactive views so they don't add to scroll height
+    // After slide completes, hide inactive views so they don't add to scroll height.
+    // Save & restore scroll position so collapsing inactive views doesn't snap the page.
     setTimeout(() => {
+      const savedY = window.scrollY;
       updateViewVisibility(view);
+      window.scrollTo(0, savedY);
+      tScroll = savedY; cScroll = savedY;
     }, 430);
   }
 
