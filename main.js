@@ -14,6 +14,63 @@ function updateViewVisibility(activeView) {
   });
 }
 
+// ── CUSTOM SCROLLBAR (DOM created early so sbUpdate() can be called anywhere) ──
+const sbTrack = document.createElement("div");
+sbTrack.id = "custom-scrollbar";
+const sbThumb = document.createElement("div");
+sbThumb.id = "custom-scrollbar-thumb";
+sbTrack.appendChild(sbThumb);
+document.body.appendChild(sbTrack);
+
+let sbDragging = false;
+let sbPageHeight = 0; // cached page height before views are unhidden during slide
+
+function sbUpdate() {
+  // Use cached height during slide so thumb doesn't jump when views are unhidden
+  const scrollH = isSliding && sbPageHeight > 0 ? sbPageHeight : document.documentElement.scrollHeight;
+  const winH = window.innerHeight;
+  if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
+  sbTrack.classList.add("visible");
+  const thumbH = Math.max(32, winH * (winH / scrollH));
+  const maxTop = winH - thumbH;
+  const scrollY = Math.min(window.scrollY, scrollH - winH);
+  const thumbTop = (scrollY / (scrollH - winH)) * maxTop;
+  sbThumb.style.height = thumbH + "px";
+  sbThumb.style.top = thumbTop + "px";
+}
+
+let sbDragStartY = 0, sbDragStartScroll = 0;
+
+sbThumb.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  sbDragging = true;
+  sbThumb.classList.add("dragging");
+  sbThumb.setPointerCapture(e.pointerId);
+  sbDragStartY = e.clientY;
+  sbDragStartScroll = window.scrollY;
+  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
+});
+
+sbThumb.addEventListener("pointermove", e => {
+  if (!sbDragging) return;
+  const scrollH = document.documentElement.scrollHeight;
+  const winH = window.innerHeight;
+  const thumbH = Math.max(32, winH * (winH / scrollH));
+  const trackRange = winH - thumbH;
+  const scrollRange = scrollH - winH;
+  const newScroll = clamp(sbDragStartScroll + ((e.clientY - sbDragStartY) / trackRange) * scrollRange, 0, scrollRange);
+  tScroll = newScroll; cScroll = newScroll;
+  ourScroll = true; window.scrollTo(0, newScroll);
+  sbUpdate();
+});
+
+sbThumb.addEventListener("pointerup", () => {
+  sbDragging = false;
+  sbThumb.classList.remove("dragging");
+  sbUpdate();
+});
+
+// ── SLIDE ──
 let slideTimer = null;
 let isSliding = false;
 
@@ -24,14 +81,13 @@ function slideTo(view, pushState = true) {
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
 
-  // Cache the current (correct) page height before unhiding all views
+  // Cache page height before unhiding so sbUpdate uses correct size during slide
   sbPageHeight = document.documentElement.scrollHeight;
-  // Unhide all views so the page stays tall and scroll-to-top works
   VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
 
   isSliding = true;
 
-  // Scroll to top — adaptive duration based on distance
+  // Adaptive scroll-to-top
   if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
   const startY = window.scrollY;
   if (startY > 1) {
@@ -62,7 +118,7 @@ function slideTo(view, pushState = true) {
   slideTimer = setTimeout(() => {
     slideTimer = null;
     isSliding = false;
-    // Collapse inactive views NOW that transition + scroll are done
+    sbPageHeight = 0;
     updateViewVisibility(currentView);
     ourScroll = true; window.scrollTo(0, 0);
     cScroll = 0; tScroll = 0;
@@ -161,7 +217,6 @@ function ensureS() { if (!sRaf) sRaf = requestAnimationFrame(animS); }
 window.addEventListener("scroll", () => {
   sbUpdate();
   if (ourScroll) { ourScroll = false; return; }
-  // External scroll (native bar drag, keyboard) — sync state
   if (!isSliding) {
     tScroll = window.scrollY;
     cScroll = window.scrollY;
@@ -185,73 +240,6 @@ function scrollToPricing() {
   tScroll = clamp(el.getBoundingClientRect().top + window.scrollY - 80, 0, document.documentElement.scrollHeight - innerHeight);
   ensureS();
 }
-
-// ── CUSTOM SCROLLBAR ──
-const sbTrack = document.createElement("div");
-sbTrack.id = "custom-scrollbar";
-const sbThumb = document.createElement("div");
-sbThumb.id = "custom-scrollbar-thumb";
-sbTrack.appendChild(sbThumb);
-document.body.appendChild(sbTrack);
-
-let sbDragging = false;
-
-// Cached page height used for scrollbar sizing — set to active-view height
-// after collapse so the thumb size is correct even when all views are unhidden
-let sbPageHeight = 0;
-
-function sbUpdate() {
-  // During slide, use the cached pre-slide page height so thumb size is correct
-  const scrollH = isSliding ? sbPageHeight || document.documentElement.scrollHeight : document.documentElement.scrollHeight;
-  const winH = window.innerHeight;
-  if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
-  sbTrack.classList.add("visible");
-
-  const thumbH = Math.max(32, winH * (winH / scrollH));
-  const maxTop = winH - thumbH;
-  const scrollY = isSliding ? Math.max(0, Math.min(window.scrollY, scrollH - winH)) : window.scrollY;
-  const thumbTop = (scrollY / (scrollH - winH)) * maxTop;
-
-  sbThumb.style.height = thumbH + "px";
-  sbThumb.style.top = thumbTop + "px";
-}
-
-let sbDragStartY = 0, sbDragStartScroll = 0;
-
-sbThumb.addEventListener("pointerdown", e => {
-  e.preventDefault();
-  sbDragging = true;
-  sbThumb.classList.add("dragging");
-  sbTrack.classList.add("visible");
-  sbThumb.setPointerCapture(e.pointerId);
-  sbDragStartY = e.clientY;
-  sbDragStartScroll = window.scrollY;
-  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
-});
-
-sbThumb.addEventListener("pointermove", e => {
-  if (!sbDragging) return;
-  const scrollH = document.documentElement.scrollHeight;
-  const winH = window.innerHeight;
-  const thumbH = Math.max(32, winH * (winH / scrollH));
-  const trackRange = winH - thumbH;
-  const scrollRange = scrollH - winH;
-  const newScroll = clamp(sbDragStartScroll + ((e.clientY - sbDragStartY) / trackRange) * scrollRange, 0, scrollRange);
-  tScroll = newScroll; cScroll = newScroll;
-  ourScroll = true; window.scrollTo(0, newScroll);
-  // Update thumb position directly during drag
-  const thumbTop = (newScroll / scrollRange) * trackRange;
-  sbThumb.style.top = thumbTop + "px";
-});
-
-sbThumb.addEventListener("pointerup", () => {
-  sbDragging = false;
-  sbThumb.classList.remove("dragging");
-  sbUpdate();
-});
-
-window.addEventListener("resize", () => { sbUpdate(); }, { passive: true });
-sbUpdate();
 
 // ── MODALS ──
 function makeModal(overlayId, openIds, closeIds, confirmId, url) {
