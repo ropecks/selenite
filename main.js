@@ -159,7 +159,7 @@ function ensureS() { if (!sRaf) sRaf = requestAnimationFrame(animS); }
 
 // Sync tScroll/cScroll when browser scrolls us (native scrollbar, keyboard, etc.)
 window.addEventListener("scroll", () => {
-  if (ourScroll) { ourScroll = false; return; }
+  if (ourScroll) { ourScroll = false; sbUpdate(); return; }
   // External scroll (native bar / keyboard) — adopt the real position
   if (!isSliding) {
     tScroll = window.scrollY;
