@@ -132,7 +132,8 @@
   .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
   /* ── STATUS ── */
-  .status-item { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); transition: background .15s; }
+  .card.status-card { display: flex; flex-direction: column; }
+  .status-item { padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); transition: background .15s; flex: 1; min-height: 68px; }
   .status-item:last-child { border-bottom: none; }
   .status-item:hover { background: rgba(255,255,255,.02); }
   .status-label { font-size: 13.5px; font-weight: 500; }
@@ -282,7 +283,7 @@
                 <button class="btn btn-ghost" id="goDownload" type="button">Download</button>
               </div>
             </div>
-            <div class="card">
+            <div class="card status-card">
               <div class="status-item">
                 <div><div class="status-label">System Status</div><div class="status-detail">CDN healthy · Updates rolling</div></div>
                 <span class="pill pill-green"><span class="pill-dot"></span>Operational</span>
