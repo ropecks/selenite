@@ -64,6 +64,11 @@
     flex: 0 0 100vw;
     width: 100vw;
   }
+  .view.inactive {
+    position: absolute;
+    pointer-events: none;
+    visibility: hidden;
+  }
   /* ── NAV ── */
   header { position: sticky; top: 0; z-index: 50; padding: 14px 0; pointer-events: none; }
   .nav-shell {
@@ -612,11 +617,23 @@
 
   function getIndexOf(v){ return VIEWS.indexOf(v); }
 
+  function setInactive() {
+    VIEWS.forEach(v => {
+      const el = document.getElementById("view" + v.charAt(0).toUpperCase() + v.slice(1));
+      if(el) el.classList.toggle("inactive", v !== currentView);
+    });
+  }
+
   function slideTo(view, pushState = true) {
     if(view === currentView) return;
     const idx = getIndexOf(view);
     if(idx === -1) return;
     currentView = view;
+    // Make all views visible during slide so both show during animation
+    VIEWS.forEach(v => {
+      const el = document.getElementById("view" + v.charAt(0).toUpperCase() + v.slice(1));
+      if(el) el.classList.remove("inactive");
+    });
     track.style.transform = `translateX(${-idx * 100}vw)`;
     document.querySelectorAll("nav a[data-view]").forEach(a => {
       a.classList.toggle("active", a.dataset.view === view);
@@ -624,6 +641,8 @@
     if(pushState) history.pushState({ view }, "", PATHS[view]);
     const titles = { home: "Array Cheats", download: "Download — Array Cheats", terms: "Terms — Array Cheats" };
     document.title = titles[view] || "Array Cheats";
+    // Re-hide inactive views after slide finishes
+    setTimeout(setInactive, 440);
   }
 
   // Handle browser back/forward
@@ -649,6 +668,8 @@
   track.style.transform = `translateX(${-initIdx * 100}vw)`;
   // Set nav active state
   document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
+  // Hide inactive views so they don't add to scroll height
+  setInactive();
   // Replace URL: cleans up ?view= and sets the canonical path
   history.replaceState({ view: initView }, "", PATHS[initView]);
   // Re-enable slide transition after first paint so there's no flash
