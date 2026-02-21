@@ -2,24 +2,18 @@
 const VIEWS = ["home", "download", "terms"];
 const PATHS = { home: "/", download: "/download", terms: "/terms" };
 const track = document.getElementById("track");
-const viewportOuter = track.parentElement;
-
-// ── SYNC HEIGHT ──
-// Clamp viewport-outer height to the active view so inactive views
-// don't add phantom scrollable space.
-function syncHeight(view) {
-  const idx = VIEWS.indexOf(view);
-  const viewEl = track.children[idx];
-  if (!viewEl) return;
-  viewportOuter.style.height = viewEl.scrollHeight + "px";
-}
-// Re-sync after fonts/images load and on resize
-window.addEventListener("resize", () => syncHeight(currentView), { passive: true });
-window.addEventListener("load", () => syncHeight(currentView));
 
 let currentView = "home";
 
 function getIndexOf(v) { return VIEWS.indexOf(v); }
+
+// Collapse off-screen views so they don't contribute to scroll height
+function updateViewVisibility(activeView) {
+  VIEWS.forEach((v, i) => {
+    const el = track.children[i];
+    if (el) el.classList.toggle("view--hidden", v !== activeView);
+  });
+}
 
 function slideTo(view, pushState = true) {
   if (view === currentView) return;
@@ -27,14 +21,17 @@ function slideTo(view, pushState = true) {
   if (idx === -1) return;
   currentView = view;
   track.style.transform = `translateX(${-idx * 100}vw)`;
+  // Unhide destination view before animating, hide others after transition
+  const destEl = track.children[idx];
+  if (destEl) destEl.classList.remove("view--hidden");
+  setTimeout(() => {
+    updateViewVisibility(view);
+    tScroll = 0; cScroll = 0; window.scrollTo(0, 0);
+  }, 430);
   document.querySelectorAll("nav a[data-view]").forEach(a => {
     a.classList.toggle("active", a.dataset.view === view);
   });
   if (pushState) history.pushState({ view }, "", PATHS[view]);
-  // Reset scroll and update height for new view
-  tScroll = 0; cScroll = 0; window.scrollTo(0, 0);
-  // Sync after transition completes so height matches final rendered state
-  setTimeout(() => syncHeight(view), 440);
   const titles = {
     home: "Selenite Cheats",
     download: "Download — Selenite Cheats",
@@ -66,7 +63,7 @@ document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("a
 history.replaceState({ view: initView }, "", PATHS[initView]);
 requestAnimationFrame(() => requestAnimationFrame(() => {
   track.style.transition = "";
-  syncHeight(initView);
+  updateViewVisibility(initView);
 }));
 
 document.querySelectorAll("[data-view]").forEach(el => {
