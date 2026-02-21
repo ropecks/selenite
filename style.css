@@ -256,7 +256,6 @@ html::-webkit-scrollbar { display: none; }
   z-index: 999;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s;
 }
 #custom-scrollbar.visible {
   opacity: 1;
