@@ -64,14 +64,6 @@
     flex: 0 0 100vw;
     width: 100vw;
   }
-  /* Hide inactive views so they don't contribute to page scroll height */
-  .view.inactive {
-    visibility: hidden;
-    pointer-events: none;
-    height: 0;
-    overflow: hidden;
-  }
-
   /* ── NAV ── */
   header { position: sticky; top: 0; z-index: 50; padding: 14px 0; pointer-events: none; }
   .nav-shell {
@@ -618,42 +610,20 @@
 
   let currentView = "home";
 
-
   function getIndexOf(v){ return VIEWS.indexOf(v); }
-
-  // Mark all views inactive except the current one
-  function updateViewVisibility(active) {
-    VIEWS.forEach(v => {
-      const el = document.getElementById("view" + v.charAt(0).toUpperCase() + v.slice(1));
-      if(el) el.classList.toggle("inactive", v !== active);
-    });
-  }
 
   function slideTo(view, pushState = true) {
     if(view === currentView) return;
     const idx = getIndexOf(view);
     if(idx === -1) return;
-
     currentView = view;
     track.style.transform = `translateX(${-idx * 100}vw)`;
-
     document.querySelectorAll("nav a[data-view]").forEach(a => {
       a.classList.toggle("active", a.dataset.view === view);
     });
-
     if(pushState) history.pushState({ view }, "", PATHS[view]);
-
     const titles = { home: "Array Cheats", download: "Download — Array Cheats", terms: "Terms — Array Cheats" };
     document.title = titles[view] || "Array Cheats";
-
-    // After slide completes, hide inactive views so they don't add to scroll height.
-    // Save & restore scroll position so collapsing inactive views doesn't snap the page.
-    setTimeout(() => {
-      const savedY = window.scrollY;
-      updateViewVisibility(view);
-      window.scrollTo(0, savedY);
-      tScroll = savedY; cScroll = savedY;
-    }, 430);
   }
 
   // Handle browser back/forward
@@ -679,8 +649,6 @@
   track.style.transform = `translateX(${-initIdx * 100}vw)`;
   // Set nav active state
   document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
-  // Mark inactive views so they don't contribute to scroll height
-  updateViewVisibility(initView);
   // Replace URL: cleans up ?view= and sets the canonical path
   history.replaceState({ view: initView }, "", PATHS[initView]);
   // Re-enable slide transition after first paint so there's no flash
