@@ -45,7 +45,6 @@
   canvas#starCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
 
   /* ── SLIDE VIEWPORT ── */
-  /* All views live side-by-side in a single flex row that slides horizontally */
   header, .modal-overlay { position: relative; z-index: 10; }
   a { color: inherit; text-decoration: none; }
   .wrap { width: min(1060px, 92vw); margin: 0 auto; }
@@ -127,7 +126,8 @@
 
   .tag { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: rgba(255,59,59,.06); border: 1px solid rgba(255,59,59,.18); font-size: 12.5px; color: rgba(255,100,100,.9); font-weight: 500; margin-bottom: 20px; }
   .hero-title { font-size: clamp(38px, 5vw, 58px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.05; margin-bottom: 14px; }
-  .hero-title .grad { background: linear-gradient(110deg, var(--accent-a) 0%, var(--accent-b) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  /* CHANGED: red (#ff3b3b) fading into dark red (#8b0000) instead of grey */
+  .hero-title .grad { background: linear-gradient(110deg, #ff3b3b 0%, #8b0000 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero-sub { font-size: 15.5px; color: var(--text-sub); line-height: 1.7; max-width: 50ch; margin-bottom: 26px; }
   .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
 
@@ -186,7 +186,8 @@
 
   /* ── DOWNLOAD PAGE ── */
   .dl-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 38px; margin-top: 10px; }
-  .dl-title { font-size: clamp(48px,6vw,72px); font-weight: 700; letter-spacing: -2px; line-height: 1; background: linear-gradient(110deg, var(--accent-a), var(--accent-b)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
+  /* CHANGED: same red-to-dark-red gradient */
+  .dl-title { font-size: clamp(48px,6vw,72px); font-weight: 700; letter-spacing: -2px; line-height: 1; background: linear-gradient(110deg, #ff3b3b, #8b0000); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
   .dl-sub { font-size: 15.5px; color: var(--text-sub); max-width: 52ch; line-height: 1.65; margin-bottom: 24px; }
   .info-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 16px; }
   @media (max-width: 720px) { .info-grid { grid-template-columns: 1fr; } }
@@ -196,7 +197,8 @@
 
   /* ── TERMS PAGE ── */
   .terms-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 38px; margin-top: 10px; }
-  .terms-title { font-size: clamp(40px,5vw,60px); font-weight: 700; letter-spacing: -1.5px; line-height: 1; background: linear-gradient(110deg, var(--accent-a), var(--accent-b)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
+  /* CHANGED: same red-to-dark-red gradient */
+  .terms-title { font-size: clamp(40px,5vw,60px); font-weight: 700; letter-spacing: -1.5px; line-height: 1; background: linear-gradient(110deg, #ff3b3b, #8b0000); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; margin-top: 14px; }
   .terms-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 0; }
 
   .terms-body { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -603,7 +605,6 @@
   }, true);
 
   // ── ROUTER ──
-  // Views in order — index maps to translateX offset
   const VIEWS = ["home","download","terms"];
   const PATHS = { home: "/", download: "/download", terms: "/terms" };
   const track = document.getElementById("track");
@@ -626,13 +627,11 @@
     document.title = titles[view] || "Array Cheats";
   }
 
-  // Handle browser back/forward
   window.addEventListener("popstate", e => {
     const v = (e.state && e.state.view) ? e.state.view : viewFromPath();
     slideTo(v, false);
   });
 
-  // Read initial URL — supports /path AND ?view= query param (404 redirect fallback)
   function viewFromPath() {
     const p = location.pathname;
     if(p.startsWith("/download")) return "download";
@@ -644,19 +643,14 @@
   const initView = viewFromPath();
   const initIdx = getIndexOf(initView);
   currentView = initView;
-  // Set track to correct position instantly (no animation on first load)
   track.style.transition = "none";
   track.style.transform = `translateX(${-initIdx * 100}vw)`;
-  // Set nav active state
   document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
-  // Replace URL: cleans up ?view= and sets the canonical path
   history.replaceState({ view: initView }, "", PATHS[initView]);
-  // Re-enable slide transition after first paint so there's no flash
   requestAnimationFrame(() => requestAnimationFrame(() => {
     track.style.transition = "";
   }));
 
-  // Wire up all nav links (data-view attribute)
   document.querySelectorAll("[data-view]").forEach(el => {
     el.addEventListener("click", e => {
       e.preventDefault();
@@ -664,13 +658,11 @@
     });
   });
 
-  // Brand → home
   document.getElementById("brandHome").addEventListener("click", () => slideTo("home"));
   document.getElementById("brandHome").addEventListener("keydown", e => {
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); slideTo("home"); }
   });
 
-  // Specific button shortcuts
   document.getElementById("faqDownloadLink").addEventListener("click", () => slideTo("download"));
   document.getElementById("goDownload").addEventListener("click", () => slideTo("download"));
   document.getElementById("backHome").addEventListener("click", () => slideTo("home"));
