@@ -24,9 +24,13 @@ function slideTo(view, pushState = true) {
   // Unhide destination view before animating, hide others after transition
   const destEl = track.children[idx];
   if (destEl) destEl.classList.remove("view--hidden");
+  // Smoothly scroll to top while the slide transition plays
+  tScroll = 0;
+  ensureS();
   setTimeout(() => {
     updateViewVisibility(view);
-    tScroll = 0; cScroll = 0; window.scrollTo(0, 0);
+    // Snap to exactly 0 in case smooth scroll hasn't fully landed
+    cScroll = 0; window.scrollTo(0, 0);
   }, 430);
   document.querySelectorAll("nav a[data-view]").forEach(a => {
     a.classList.toggle("active", a.dataset.view === view);
