@@ -649,22 +649,21 @@
     if(p.startsWith("/download")) return "download";
     if(p.startsWith("/terms")) return "terms";
     const q = new URLSearchParams(location.search).get("view");
-    if(q === "download") return "download";
-    if(q === "terms") return "terms";
+    if(q === "download" || q === "terms") return q;
     return "home";
   }
   const initView = viewFromPath();
-  currentView = "home"; // start at home so slideTo triggers
+  const initIdx = getIndexOf(initView);
+  currentView = initView;
   // Set initial track position without animation
   track.style.transition = "none";
-  track.style.transform = `translateX(${-getIndexOf(initView) * 100}vw)`;
-  currentView = initView;
+  track.style.transform = `translateX(${-initIdx * 100}vw)`;
   document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
   // Re-enable transition after paint
   requestAnimationFrame(() => requestAnimationFrame(() => {
     track.style.transition = "";
   }));
-  // Push initial state
+  // Clean up ?view= from URL and replace with the canonical path
   history.replaceState({ view: initView }, "", PATHS[initView]);
 
   // Wire up all nav links (data-view attribute)
