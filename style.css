@@ -44,8 +44,6 @@ a { color: inherit; text-decoration: none; }
   align-items: flex-start;
 }
 .view { flex: 0 0 100vw; width: 100vw; }
-/* Collapse inactive views so they don't add phantom scroll height */
-.view.view--hidden { height: 0 !important; overflow: hidden; visibility: hidden; }
 
 /* ── NAV ── */
 header { position: sticky; top: 0; z-index: 50; padding: 14px 0; pointer-events: none; }
@@ -240,3 +238,45 @@ footer { margin-top: 60px; padding: 20px 0 40px; border-top: 1px solid var(--bor
 .modal-actions .btn { flex: 1; font-size: 13.5px; padding: 10px 14px; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ── HIDE NATIVE SCROLLBAR ── */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+
+/* ── CUSTOM SCROLLBAR ── */
+#custom-scrollbar {
+  position: fixed;
+  right: 6px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#custom-scrollbar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#custom-scrollbar-thumb {
+  position: absolute;
+  right: 0;
+  width: 4px;
+  min-height: 32px;
+  border-radius: 999px;
+  background: rgba(212, 212, 222, 0.25);
+  transition: width 0.15s, background 0.15s, right 0.15s;
+  cursor: grab;
+  will-change: transform;
+}
+#custom-scrollbar:hover #custom-scrollbar-thumb,
+#custom-scrollbar-thumb.dragging {
+  width: 6px;
+  right: 0;
+  background: rgba(212, 212, 222, 0.5);
+  cursor: grab;
+}
+#custom-scrollbar-thumb.dragging {
+  cursor: grabbing;
+}
