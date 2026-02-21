@@ -643,11 +643,14 @@
     slideTo(v, false);
   });
 
-  // Read initial URL
+  // Read initial URL — supports /download path AND ?view=download query param (redirect fallback)
   function viewFromPath() {
     const p = location.pathname;
     if(p.startsWith("/download")) return "download";
     if(p.startsWith("/terms")) return "terms";
+    const q = new URLSearchParams(location.search).get("view");
+    if(q === "download") return "download";
+    if(q === "terms") return "terms";
     return "home";
   }
   const initView = viewFromPath();
