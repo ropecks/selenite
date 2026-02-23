@@ -284,7 +284,8 @@ function makeModal(overlayId, openIds, closeIds, confirmId, url) {
   if (confirmId) document.getElementById(confirmId).addEventListener("click", () => { window.open(url, "_blank", "noopener,noreferrer"); close(); });
 }
 makeModal("supportBack", ["openSupportLink", "openSupportFooter", "openSupportFooter2", "openSupportFooter3"], ["closeSupport", "cancelSupport"], "confirmSupport", "https://discord.gg/BPMkRjs7AP");
-makeModal("stripeBack", ["openStripePurchase"], ["closeStripe", "cancelStripe"], "confirmStripe", "https://buy.stripe.com/8x28wQcmNawNesyepadfG00");
+makeModal("starterBack", ["openStarterPurchase"], ["closeStarter", "cancelStarter"], "confirmStarter", "https://reseller.best");
+makeModal("stripeBack", ["openStripePurchase"], ["closeStripe", "cancelStripe"], "confirmStripe", "https://reseller.best");
 makeModal("wyvernBack", ["downloadPrimary"], ["closeWyvern", "cancelWyvern"], "confirmWyvern", "https://wyvern.sh/public/loader/WyvernLoader.exe");
 
 const yr = new Date().getFullYear();
