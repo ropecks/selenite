@@ -321,8 +321,9 @@ function initStar(i, bot = true) {
   sx[i] = rnd(0, cw); sy[i] = bot ? rnd(ch * .85, ch + 30) : rnd(-30, ch + 30);
   sr[i] = rnd(.6, 1.6); svy[i] = rnd(12, 32); sa[i] = rnd(.06, .18); sft[i] = rnd(.14, .24);
   const t = cw > 1 ? sx[i] / cw : .5;
-  const base = (lerp(140, 175, t) + .5) | 0;
-  cr[i] = base; cg[i] = base; cb[i] = (base + 8) | 0;
+  cr[i] = (lerp(0, 20, t) + .5) | 0;
+  cg[i] = (lerp(200, 255, t) + .5) | 0;
+  cb[i] = (lerp(40, 80, t) + .5) | 0;
 }
 let stRaf = null, lastT = 0;
 function draw(t) {
