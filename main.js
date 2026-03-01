@@ -1,345 +1,249 @@
-const VIEWS = ["home", "download", "terms"];
-const PATHS = { home: "/", download: "/download", terms: "/terms" };
-const track = document.getElementById("track");
+(function initCanvas() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
 
-let currentView = "home";
+  let W, H;
+  let mouse = { x: -9999, y: -9999 };
+  let targetMouse = { x: -9999, y: -9999 };
+  const PARTICLE_COUNT = 80;
+  const CONNECT_DIST = 130;
+  const MOUSE_REPEL = 100;
+  let particles = [];
 
-function getIndexOf(v) { return VIEWS.indexOf(v); }
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
 
-function updateViewVisibility(activeView) {
-  VIEWS.forEach((v, i) => {
-    const el = track.children[i];
-    if (el) el.classList.toggle("view--hidden", v !== activeView);
+  window.addEventListener('mousemove', e => {
+    targetMouse.x = e.clientX;
+    targetMouse.y = e.clientY;
   });
-}
 
-const sbTrack = document.createElement("div");
-sbTrack.id = "custom-scrollbar";
-const sbThumb = document.createElement("div");
-sbThumb.id = "custom-scrollbar-thumb";
-sbTrack.appendChild(sbThumb);
-document.body.appendChild(sbTrack);
+  window.addEventListener('mouseleave', () => {
+    targetMouse.x = -9999;
+    targetMouse.y = -9999;
+  });
 
-let sbDragging = false;
+  class Particle {
+    constructor() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.ox = this.x;
+      this.oy = this.y;
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.vy = (Math.random() - 0.5) * 0.3;
+      this.r = Math.random() * 1.5 + 0.4;
+      this.alpha = Math.random() * 0.35 + 0.1;
+    }
 
-let sbSlideStartH = 0, sbSlideEndH = 0, sbSlideStartTime = 0, sbSlideDur = 420;
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
 
-function sbUpdate() {
-  const winH = window.innerHeight;
-  let scrollH;
-  if (isSliding && sbSlideStartH > 0) {
-    
-    const t = Math.min(1, (performance.now() - sbSlideStartTime) / sbSlideDur);
-    const ease = 1 - Math.pow(1 - t, 3);
-    scrollH = sbSlideStartH + (sbSlideEndH - sbSlideStartH) * ease;
-  } else {
-    scrollH = document.documentElement.scrollHeight;
-  }
-  if (scrollH <= winH + 2) { sbTrack.classList.remove("visible"); return; }
-  
-  if (!sbTrack.classList.contains("sb-fading-out")) sbTrack.classList.add("visible");
-  const thumbH = Math.max(32, winH * (winH / scrollH));
-  const maxTop = winH - thumbH;
-  const scrollY = Math.min(window.scrollY, scrollH - winH);
-  const thumbTop = scrollH > winH ? (scrollY / (scrollH - winH)) * maxTop : 0;
-  sbThumb.style.height = thumbH + "px";
-  sbThumb.style.top = thumbTop + "px";
-}
+      if (this.x < 0 || this.x > W) this.vx *= -1;
+      if (this.y < 0 || this.y > H) this.vy *= -1;
 
-let sbDragStartY = 0, sbDragStartScroll = 0;
-
-sbThumb.addEventListener("pointerdown", e => {
-  e.preventDefault();
-  sbDragging = true;
-  sbThumb.classList.add("dragging");
-  sbThumb.setPointerCapture(e.pointerId);
-  sbDragStartY = e.clientY;
-  sbDragStartScroll = window.scrollY;
-  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
-});
-
-sbThumb.addEventListener("pointermove", e => {
-  if (!sbDragging) return;
-  const scrollH = document.documentElement.scrollHeight;
-  const winH = window.innerHeight;
-  const thumbH = Math.max(32, winH * (winH / scrollH));
-  const trackRange = winH - thumbH;
-  const scrollRange = scrollH - winH;
-  const newScroll = clamp(sbDragStartScroll + ((e.clientY - sbDragStartY) / trackRange) * scrollRange, 0, scrollRange);
-  tScroll = newScroll; cScroll = newScroll;
-  ourScroll = true; window.scrollTo(0, newScroll);
-  sbUpdate();
-});
-
-sbThumb.addEventListener("pointerup", () => {
-  sbDragging = false;
-  sbThumb.classList.remove("dragging");
-  sbUpdate();
-});
-
-let slideTimer = null;
-let isSliding = false;
-
-function slideTo(view, pushState = true) {
-  if (view === currentView) return;
-  const idx = getIndexOf(view);
-  if (idx === -1) return;
-  currentView = view;
-  track.style.transform = `translateX(${-idx * 100}vw)`;
-
-  
-  sbSlideStartH = document.documentElement.scrollHeight;
-  sbSlideStartTime = performance.now();
-  sbSlideDur = 420;
-
-  
-  const destViewEl = track.children[idx];
-  if (destViewEl) destViewEl.classList.remove("view--hidden");
-  const headerH = document.querySelector("header") ? document.querySelector("header").offsetHeight : 0;
-  sbSlideEndH = destViewEl ? destViewEl.scrollHeight + headerH : sbSlideStartH;
-  
-  VIEWS.forEach((v, i) => { const el = track.children[i]; if (el) el.classList.remove("view--hidden"); });
-
-  
-  const goingToNoScroll = view === "download";
-  if (goingToNoScroll) {
-    sbTrack.classList.add("sb-fading-out");
-    sbTrack.classList.remove("sb-fading-in", "visible");
-  } else {
-    sbTrack.classList.remove("sb-fading-out");
-    sbTrack.classList.add("sb-fading-in", "visible");
-  }
-
-  isSliding = true;
-
-  
-  if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
-  const startY = window.scrollY;
-  if (startY > 1) {
-    const dur = Math.min(380, 180 + (startY / 1500) * 200);
-    const startTime = performance.now();
-    function scrollAnim(now) {
-      const t = Math.min(1, (now - startTime) / dur);
-      const ease = 1 - Math.pow(1 - t, 3);
-      const y = Math.round(startY * (1 - ease));
-      ourScroll = true;
-      window.scrollTo(0, y);
-      cScroll = y; tScroll = 0;
-      sbUpdate();
-      if (t < 1) {
-        sRaf = requestAnimationFrame(scrollAnim);
-      } else {
-        ourScroll = true; window.scrollTo(0, 0);
-        cScroll = 0; tScroll = 0; sRaf = null;
+      const dx = this.x - mouse.x;
+      const dy = this.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < MOUSE_REPEL) {
+        const force = (MOUSE_REPEL - dist) / MOUSE_REPEL;
+        this.x += (dx / dist) * force * 2.5;
+        this.y += (dy / dist) * force * 2.5;
       }
     }
-    sRaf = requestAnimationFrame(scrollAnim);
-  } else {
-    ourScroll = true; window.scrollTo(0, 0);
-    tScroll = 0; cScroll = 0;
-    
-    function resizeAnim(now) {
-      sbUpdate();
-      if (now - sbSlideStartTime < sbSlideDur) sRaf = requestAnimationFrame(resizeAnim);
-      else { sRaf = null; sbUpdate(); }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+      ctx.fill();
     }
-    sRaf = requestAnimationFrame(resizeAnim);
   }
 
-  if (slideTimer) clearTimeout(slideTimer);
-  slideTimer = setTimeout(() => {
-    slideTimer = null;
-    isSliding = false;
-    sbSlideStartH = 0; sbSlideEndH = 0;
-    
-    sbTrack.classList.remove("sb-fading-out", "sb-fading-in");
-    updateViewVisibility(currentView);
-    ourScroll = true; window.scrollTo(0, 0);
-    cScroll = 0; tScroll = 0;
-    sbUpdate();
-  }, 440);
-
-  document.querySelectorAll("nav a[data-view]").forEach(a => {
-    a.classList.toggle("active", a.dataset.view === view);
-  });
-  if (pushState) history.pushState({ view }, "", PATHS[view]);
-  const titles = {
-    home: "Selenite Cheats",
-    download: "Download — Selenite Cheats",
-    terms: "Terms — Selenite Cheats"
-  };
-  document.title = titles[view] || "Selenite Cheats";
-}
-
-window.addEventListener("popstate", e => {
-  const v = (e.state && e.state.view) ? e.state.view : viewFromPath();
-  slideTo(v, false);
-});
-
-function viewFromPath() {
-  const p = location.pathname;
-  if (p.startsWith("/download")) return "download";
-  if (p.startsWith("/terms")) return "terms";
-  const q = new URLSearchParams(location.search).get("view");
-  if (q === "download" || q === "terms") return q;
-  return "home";
-}
-
-const initView = viewFromPath();
-const initIdx = getIndexOf(initView);
-currentView = initView;
-track.style.transition = "none";
-track.style.transform = `translateX(${-initIdx * 100}vw)`;
-document.querySelectorAll("nav a[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === initView));
-history.replaceState({ view: initView }, "", PATHS[initView]);
-requestAnimationFrame(() => requestAnimationFrame(() => {
-  track.style.transition = "";
-  updateViewVisibility(initView);
-  sbUpdate();
-}));
-
-document.querySelectorAll("[data-view]").forEach(el => {
-  el.addEventListener("click", e => {
-    e.preventDefault();
-    slideTo(el.dataset.view);
-  });
-});
-
-document.getElementById("brandHome").addEventListener("click", () => slideTo("home"));
-document.getElementById("brandHome").addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); slideTo("home"); }
-});
-
-document.getElementById("faqDownloadLink").addEventListener("click", () => slideTo("download"));
-document.getElementById("goDownload").addEventListener("click", () => slideTo("download"));
-document.getElementById("backHome").addEventListener("click", () => slideTo("home"));
-
-function bindGlow() {
-  document.querySelectorAll(".btn-primary,.btn-green").forEach(el => {
-    el.addEventListener("pointermove", e => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--bx", ((e.clientX - r.left) / r.width * 100) + "%");
-      el.style.setProperty("--by", ((e.clientY - r.top) / r.height * 100) + "%");
-    });
-  });
-}
-bindGlow();
-
-const io = new IntersectionObserver(entries => {
-  entries.forEach(en => {
-    if (en.isIntersecting) { en.target.classList.add("on"); io.unobserve(en.target); }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll(".reveal").forEach(r => io.observe(r));
-
-let tScroll = window.scrollY, cScroll = window.scrollY, sRaf = null;
-let ourScroll = false;
-const EASE = 0.09, rm = matchMedia("(prefers-reduced-motion:reduce)").matches;
-function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-function animS() {
-  cScroll += (tScroll - cScroll) * EASE;
-  if (Math.abs(tScroll - cScroll) < 0.5) {
-    cScroll = tScroll; ourScroll = true; window.scrollTo(0, cScroll); sRaf = null; return;
+  function init() {
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
   }
-  ourScroll = true; window.scrollTo(0, cScroll); sRaf = requestAnimationFrame(animS);
-}
-function ensureS() { if (!sRaf) sRaf = requestAnimationFrame(animS); }
 
-window.addEventListener("scroll", () => {
-  sbUpdate();
-  if (ourScroll) { ourScroll = false; return; }
-  if (!isSliding) {
-    tScroll = window.scrollY;
-    cScroll = window.scrollY;
-    if (sRaf) { cancelAnimationFrame(sRaf); sRaf = null; }
+  function drawLines() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECT_DIST) {
+          const alpha = (1 - dist / CONNECT_DIST) * 0.08;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      const mdx = particles[i].x - mouse.x;
+      const mdy = particles[i].y - mouse.y;
+      const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+      if (mdist < CONNECT_DIST * 1.4) {
+        const alpha = (1 - mdist / (CONNECT_DIST * 1.4)) * 0.18;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
   }
-}, { passive: true });
 
-window.addEventListener("wheel", e => {
-  if (rm || e.ctrlKey) return; e.preventDefault();
-  if (isSliding) return;
-  tScroll = clamp(tScroll + e.deltaY, 0, document.documentElement.scrollHeight - innerHeight);
-  ensureS();
-}, { passive: false });
+  function drawGlow() {
+    if (mouse.x < 0) return;
+    const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 180);
+    grad.addColorStop(0, 'rgba(255,255,255,0.04)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
 
-document.getElementById("scrollPricing").addEventListener("click", () => {
-  if (currentView !== "home") { slideTo("home"); setTimeout(() => { scrollToPricing(); }, 450); return; }
-  scrollToPricing();
+  function loop() {
+    mouse.x += (targetMouse.x - mouse.x) * 0.08;
+    mouse.y += (targetMouse.y - mouse.y) * 0.08;
+
+    ctx.clearRect(0, 0, W, H);
+    drawGlow();
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawLines();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', () => { resize(); init(); });
+  resize();
+  init();
+  loop();
+})();
+
+const overlay  = document.getElementById('modal-overlay');
+const modalDesc   = document.getElementById('modal-desc');
+const cancelBtn   = document.getElementById('modal-cancel');
+const confirmBtn  = document.getElementById('modal-confirm');
+let pendingUrl = '';
+
+function openModal(url, label) {
+  pendingUrl = url;
+  modalDesc.textContent = `You are about to leave Selenite and visit: ${label}. Continue?`;
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  overlay.classList.remove('active');
+  pendingUrl = '';
+}
+
+cancelBtn.addEventListener('click', closeModal);
+
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) closeModal();
 });
-function scrollToPricing() {
-  const el = document.getElementById("pricing"); if (!el) return;
-  tScroll = clamp(el.getBoundingClientRect().top + window.scrollY - 80, 0, document.documentElement.scrollHeight - innerHeight);
-  ensureS();
+
+confirmBtn.addEventListener('click', () => {
+  if (pendingUrl) window.open(pendingUrl, '_blank', 'noopener,noreferrer');
+  closeModal();
+});
+
+const hamburger      = document.getElementById('hamburger-btn');
+const sidebarEl      = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const sidebarClose   = document.getElementById('sidebar-close');
+const sidebarSupportBtn = document.getElementById('sidebar-support-btn');
+
+function openSidebar() {
+  sidebarEl.classList.add('active');
+  sidebarOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
-function makeModal(overlayId, openIds, closeIds, confirmId, url) {
-  const ov = document.getElementById(overlayId);
-  const open = () => ov.classList.add("show");
-  const close = () => ov.classList.remove("show");
-  openIds.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", e => { e.preventDefault(); open(); }); });
-  closeIds.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("click", close); });
-  let downOnModal = false;
-  ov.addEventListener("mousedown", e => { downOnModal = e.target !== ov; });
-  ov.addEventListener("click", e => { if (e.target === ov && !downOnModal) close(); });
-  if (confirmId) document.getElementById(confirmId).addEventListener("click", () => { window.open(url, "_blank", "noopener,noreferrer"); close(); });
+function closeSidebar() {
+  sidebarEl.classList.remove('active');
+  sidebarOverlay.classList.remove('active');
+  document.body.style.overflow = '';
 }
-makeModal("supportBack", ["openSupportLink", "openSupportFooter", "openSupportFooter2", "openSupportFooter3"], ["closeSupport", "cancelSupport"], "confirmSupport", "https://discord.gg/BPMkRjs7AP");
-makeModal("starterBack", ["openStarterPurchase"], ["closeStarter", "cancelStarter"], "confirmStarter", "https://reseller.best");
-makeModal("stripeBack", ["openStripePurchase"], ["closeStripe", "cancelStripe"], "confirmStripe", "https://reseller.best");
-makeModal("wyvernBack", ["downloadPrimary"], ["closeWyvern", "cancelWyvern"], "confirmWyvern", "https://wyvern.sh/public/loader/WyvernLoader.exe");
 
-const yr = new Date().getFullYear();
-document.querySelectorAll(".yr").forEach(e => e.textContent = yr);
+hamburger.addEventListener('click', openSidebar);
+sidebarClose.addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
 
-const canvas = document.getElementById("starCanvas");
-const ctx = canvas.getContext("2d", { alpha: true });
-let dpr = 1, cw = 0, ch = 0;
-function resize() {
-  const w = innerWidth, h = innerHeight, scale = Math.min(1.5, Math.sqrt(1_600_000 / Math.max(1, w * h)));
-  dpr = scale; cw = w; ch = h;
-  canvas.width = Math.floor(cw * dpr); canvas.height = Math.floor(ch * dpr);
-  canvas.style.width = cw + "px"; canvas.style.height = ch + "px";
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', closeSidebar);
+});
+
+sidebarSupportBtn.addEventListener('click', () => {
+  closeSidebar();
+  openModal('https://discord.gg/y5m6EWUyQA', 'discord.gg/y5m6EWUyQA');
+});
+
+document.getElementById('support-btn').addEventListener('click', () => {
+  openModal('https://discord.gg/y5m6EWUyQA', 'discord.gg/y5m6EWUyQA');
+});
+
+document.querySelectorAll('.btn-purchase').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const url = btn.dataset.url;
+    openModal(url, 'reseller.best');
+  });
+});
+
+document.getElementById('download-btn').addEventListener('click', () => {
+  window.location.href = 'https://wyvern.sh/public/loader/WyvernLoader.exe';
+});
+
+const lightbox      = document.getElementById('lightbox');
+const lightboxBg    = document.getElementById('lightbox-bg');
+const lightboxClose = document.getElementById('lightbox-close');
+const uiCard        = document.getElementById('ui-card');
+
+uiCard.addEventListener('click', () => {
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+});
+
+function closeLightbox() {
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
 }
-window.addEventListener("resize", () => { if (!document.hidden) resize(); }, { passive: true });
 
-const N = 45;
-const sx = new Float32Array(N), sy = new Float32Array(N), sr = new Float32Array(N);
-const svy = new Float32Array(N), sa = new Float32Array(N), sft = new Float32Array(N);
-const cr = new Uint8Array(N), cg = new Uint8Array(N), cb = new Uint8Array(N);
-const rnd = (a, b) => Math.random() * (b - a) + a;
-const lerp = (a, b, t) => a + (b - a) * t;
-function initStar(i, bot = true) {
-  sx[i] = rnd(0, cw); sy[i] = bot ? rnd(ch * .85, ch + 30) : rnd(-30, ch + 30);
-  sr[i] = rnd(.6, 1.6); svy[i] = rnd(12, 32); sa[i] = rnd(.06, .18); sft[i] = rnd(.14, .24);
-  const t = cw > 1 ? sx[i] / cw : .5;
-  const base = (lerp(140, 175, t) + .5) | 0;
-  cr[i] = base; cg[i] = base; cb[i] = (base + 8) | 0;
-}
-let stRaf = null, lastT = 0;
-function draw(t) {
-  if (document.hidden) { stop(); return; }
-  const dt = Math.min(.05, (t - lastT) / 1000 || 0); lastT = t;
-  ctx.clearRect(0, 0, cw, ch);
-  for (let i = 0; i < N; i++) {
-    sy[i] -= svy[i] * dt;
-    let a = sa[i];
-    const top = ch * sft[i];
-    if (sy[i] < top) a *= Math.max(0, sy[i] / top);
-    if (sy[i] > ch - 24) a *= Math.min(1, (ch - sy[i]) / 24);
-    if (sy[i] < -40) { initStar(i, true); continue; }
-    ctx.fillStyle = `rgba(${cr[i]},${cg[i]},${cb[i]},${a})`;
-    ctx.beginPath(); ctx.arc(sx[i], sy[i], sr[i], 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = `rgba(${cr[i]},${cg[i]},${cb[i]},${a * .15})`;
-    ctx.beginPath(); ctx.arc(sx[i], sy[i], sr[i] * 2.6, 0, Math.PI * 2); ctx.fill();
+lightboxBg.addEventListener('click', closeLightbox);
+lightboxClose.addEventListener('click', closeLightbox);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 30) {
+    nav.style.background = 'rgba(10,10,10,0.95)';
+  } else {
+    nav.style.background = 'rgba(10,10,10,0.7)';
   }
-  stRaf = requestAnimationFrame(draw);
-}
-function start() { if (stRaf) return; resize(); for (let i = 0; i < N; i++) initStar(i, false); lastT = performance.now(); stRaf = requestAnimationFrame(draw); }
-function stop() { if (!stRaf) return; cancelAnimationFrame(stRaf); stRaf = null; ctx.clearRect(0, 0, cw, ch); canvas.width = 0; canvas.height = 0; }
-function freezeAll() { document.body.classList.add("frozen"); stop(); }
-function unfreezeAll() { document.body.classList.remove("frozen"); if (!document.hidden) start(); }
-document.addEventListener("visibilitychange", () => document.hidden ? freezeAll() : unfreezeAll());
-window.addEventListener("pagehide", freezeAll);
-window.addEventListener("pageshow", unfreezeAll);
-start();
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.plan-card, .preview-card, .step, .terms-block, .download-box').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
