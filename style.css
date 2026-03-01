@@ -1,7 +1,3 @@
-/* ============================================================
-   SELENITE 3.0 — style.css
-   ============================================================ */
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -36,7 +32,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Canvas BG ── */
 #bg-canvas {
   position: fixed;
   inset: 0;
@@ -45,7 +40,6 @@ body {
   opacity: 0.4;
 }
 
-/* ── Modal ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -141,7 +135,6 @@ body {
   opacity: 0.88;
 }
 
-/* ── Navbar ── */
 #navbar {
   position: fixed;
   top: 0;
@@ -218,7 +211,6 @@ body {
   color: var(--text);
 }
 
-/* ── Hero ── */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -336,7 +328,6 @@ body {
   color: var(--text);
 }
 
-/* ── Sections ── */
 .section {
   position: relative;
   z-index: 1;
@@ -372,7 +363,6 @@ body {
   margin-bottom: 56px;
 }
 
-/* ── Preview ── */
 .preview-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -419,7 +409,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* ── Plans ── */
 .plans-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -546,7 +535,6 @@ body {
   border-color: var(--border-hover);
 }
 
-/* ── Download ── */
 .download-box {
   display: flex;
   align-items: center;
@@ -598,7 +586,6 @@ body {
   line-height: 1.5;
 }
 
-/* ── Terms ── */
 .terms-box {
   display: flex;
   flex-direction: column;
@@ -637,7 +624,6 @@ body {
   line-height: 1.65;
 }
 
-/* ── Footer ── */
 .footer {
   position: relative;
   z-index: 1;
@@ -665,7 +651,6 @@ body {
   color: var(--text-dim);
 }
 
-/* ── Animations ── */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -677,7 +662,6 @@ body {
   }
 }
 
-/* ── UI Preview Image ── */
 #ui-card {
   overflow: hidden;
   cursor: zoom-in;
@@ -696,7 +680,6 @@ body {
   transform: scale(1.06);
 }
 
-/* ── Lightbox ── */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -757,7 +740,6 @@ body {
   background: rgba(255,255,255,0.14);
 }
 
-/* ── Hamburger (hidden on desktop) ── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -783,7 +765,6 @@ body {
   background: var(--text);
 }
 
-/* ── Sidebar ── */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -895,7 +876,6 @@ body {
   color: var(--text);
 }
 
-/* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
