@@ -1,8 +1,3 @@
-/* ============================================================
-   SELENITE 3.0 — main.js
-   ============================================================ */
-
-// ── Background Canvas ──────────────────────────────────────
 (function initCanvas() {
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
@@ -43,15 +38,12 @@
     }
 
     update() {
-      // drift
       this.x += this.vx;
       this.y += this.vy;
 
-      // bounce
       if (this.x < 0 || this.x > W) this.vx *= -1;
       if (this.y < 0 || this.y > H) this.vy *= -1;
 
-      // mouse repulsion
       const dx = this.x - mouse.x;
       const dy = this.y - mouse.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
@@ -92,7 +84,6 @@
         }
       }
 
-      // draw line from particle to mouse cursor
       const mdx = particles[i].x - mouse.x;
       const mdy = particles[i].y - mouse.y;
       const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
@@ -120,7 +111,6 @@
   }
 
   function loop() {
-    // smooth mouse follow
     mouse.x += (targetMouse.x - mouse.x) * 0.08;
     mouse.y += (targetMouse.y - mouse.y) * 0.08;
 
@@ -138,7 +128,6 @@
 })();
 
 
-// ── Modal System ───────────────────────────────────────────
 const overlay  = document.getElementById('modal-overlay');
 const modalDesc   = document.getElementById('modal-desc');
 const cancelBtn   = document.getElementById('modal-cancel');
@@ -168,7 +157,6 @@ confirmBtn.addEventListener('click', () => {
 });
 
 
-// ── Mobile Sidebar ─────────────────────────────────────────
 const hamburger      = document.getElementById('hamburger-btn');
 const sidebarEl      = document.getElementById('sidebar');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -191,7 +179,6 @@ hamburger.addEventListener('click', openSidebar);
 sidebarClose.addEventListener('click', closeSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
-// close sidebar when a link is tapped
 document.querySelectorAll('.sidebar-link').forEach(link => {
   link.addEventListener('click', closeSidebar);
 });
@@ -208,7 +195,6 @@ document.getElementById('support-btn').addEventListener('click', () => {
 });
 
 
-// ── Purchase Buttons ───────────────────────────────────────
 document.querySelectorAll('.btn-purchase').forEach(btn => {
   btn.addEventListener('click', () => {
     const url = btn.dataset.url;
@@ -217,13 +203,11 @@ document.querySelectorAll('.btn-purchase').forEach(btn => {
 });
 
 
-// ── Download Button ────────────────────────────────────────
 document.getElementById('download-btn').addEventListener('click', () => {
   window.location.href = 'https://wyvern.sh/public/loader/WyvernLoader.exe';
 });
 
 
-// ── UI Image Lightbox ──────────────────────────────────────
 const lightbox      = document.getElementById('lightbox');
 const lightboxBg    = document.getElementById('lightbox-bg');
 const lightboxClose = document.getElementById('lightbox-close');
@@ -247,7 +231,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-// ── Navbar scroll effect ───────────────────────────────────
 window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
   if (window.scrollY > 30) {
@@ -258,7 +241,6 @@ window.addEventListener('scroll', () => {
 });
 
 
-// ── Scroll reveal ──────────────────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
