@@ -140,7 +140,7 @@ function navigateTo(page) {
     oldEl.classList.remove('visible');
     setTimeout(() => {
       oldEl.classList.remove('active');
-    }, 350);
+    }, 550);
   }
 
   currentPage = page;
