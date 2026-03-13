@@ -136,27 +136,23 @@ function navigateTo(page) {
   const newEl = document.getElementById('page-' + page);
   if (!newEl) return;
 
+  // Fade out the current page
   if (oldEl) {
     oldEl.classList.remove('visible');
-    setTimeout(() => {
-      oldEl.classList.remove('active');
-    }, 450);
+    setTimeout(() => oldEl.classList.remove('active'), 400);
   }
 
   currentPage = page;
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  // Force starting state so move-up always fires fresh regardless of nav direction
-  newEl.style.transition = 'none';
-  newEl.style.opacity = '0';
-  newEl.style.transform = 'translateY(18px)';
+  // Strip visible first (page may have been visited before and still have it)
+  newEl.classList.remove('visible');
+  // Force browser to acknowledge the removed class before we set active + transition
   newEl.classList.add('active');
 
+  // Double rAF ensures the browser has painted the translateY(18px) starting state
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      newEl.style.transition = '';
-      newEl.style.opacity = '';
-      newEl.style.transform = '';
       newEl.classList.add('visible');
     });
   });
