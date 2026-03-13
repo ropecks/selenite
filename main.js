@@ -140,14 +140,23 @@ function navigateTo(page) {
     oldEl.classList.remove('visible');
     setTimeout(() => {
       oldEl.classList.remove('active');
-    }, 550);
+    }, 450);
   }
 
   currentPage = page;
   window.scrollTo({ top: 0, behavior: 'instant' });
+
+  // Force starting state so move-up always fires fresh regardless of nav direction
+  newEl.style.transition = 'none';
+  newEl.style.opacity = '0';
+  newEl.style.transform = 'translateY(18px)';
   newEl.classList.add('active');
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      newEl.style.transition = '';
+      newEl.style.opacity = '';
+      newEl.style.transform = '';
       newEl.classList.add('visible');
     });
   });
