@@ -41,6 +41,39 @@ function navClick(e, id) {
   scrollToSection(id, true);
 }
 
+const hamburger = document.getElementById('navHamburger');
+const mobileSidebar = document.getElementById('mobileSidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function openSidebar() {
+  hamburger.classList.add('open');
+  mobileSidebar.classList.add('open');
+  sidebarOverlay.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+
+function closeSidebar() {
+  hamburger.classList.remove('open');
+  mobileSidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+  document.body.classList.remove('modal-open');
+}
+
+hamburger.addEventListener('click', () => {
+  if (mobileSidebar.classList.contains('open')) closeSidebar();
+  else openSidebar();
+});
+
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+function sidebarNavClick(e, id) {
+  e.preventDefault();
+  closeSidebar();
+  navLockUntil = Date.now() + 2000;
+  updateUrl(id);
+  setTimeout(() => scrollToSection(id, true), 60);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const target = getSectionFromUrl();
   if (target) {
@@ -52,9 +85,9 @@ window.addEventListener('DOMContentLoaded', () => {
 const dotCanvas = document.getElementById('dotCanvas');
 const ctx = dotCanvas.getContext('2d');
 const DOT_SPACING = 36;
-const DOT_RADIUS = 1.4;
-const DOT_COLOR = '#5a5a68';
-const DOT_OPACITY = 0.45;
+const DOT_RADIUS = 1.6;
+const DOT_COLOR = '#888899';
+const DOT_OPACITY = 0.7;
 let scrollY = 0;
 let rafPending = false;
 
@@ -271,5 +304,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeModal();
     closeLightbox();
+    closeSidebar();
   }
 });
