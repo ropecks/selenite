@@ -44,26 +44,22 @@ function navClick(e, id) {
 const hamburger = document.getElementById('navHamburger');
 const mobileSidebar = document.getElementById('mobileSidebar');
 const sidebarOverlay = document.getElementById('sidebarOverlay');
+const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
 
 function openSidebar() {
-  hamburger.classList.add('open');
   mobileSidebar.classList.add('open');
   sidebarOverlay.classList.add('open');
   document.body.classList.add('modal-open');
 }
 
 function closeSidebar() {
-  hamburger.classList.remove('open');
   mobileSidebar.classList.remove('open');
   sidebarOverlay.classList.remove('open');
   document.body.classList.remove('modal-open');
 }
 
-hamburger.addEventListener('click', () => {
-  if (mobileSidebar.classList.contains('open')) closeSidebar();
-  else openSidebar();
-});
-
+hamburger.addEventListener('click', openSidebar);
+sidebarCloseBtn.addEventListener('click', closeSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
 function sidebarNavClick(e, id) {
