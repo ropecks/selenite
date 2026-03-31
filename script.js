@@ -13,23 +13,14 @@ function getSectionFromUrl() {
   return null;
 }
 
-let navLockUntil = 0;
-let scrollStopTimer = null;
-
-function navClick(e, id) {
-  e.preventDefault();
-  navLockUntil = Date.now() + 2000;
-  history.replaceState(null, '', '/' + id);
-  scrollToSection(id, true);
-}
-
 function getActiveSectionId() {
   let active = null;
+  const threshold = window.innerHeight * 0.4;
   for (const id of SECTIONS) {
     const el = document.getElementById(id);
-    if (el && el.getBoundingClientRect().top <= window.innerHeight / 3) {
-      active = id;
-    }
+    if (!el) continue;
+    const top = el.getBoundingClientRect().top;
+    if (top <= threshold) active = id;
   }
   return active;
 }
@@ -39,6 +30,16 @@ function updateUrl(sectionId) {
   if (window.location.pathname !== newPath) {
     history.replaceState(null, '', newPath);
   }
+}
+
+let navLockUntil = 0;
+let scrollStopTimer = null;
+
+function navClick(e, id) {
+  e.preventDefault();
+  navLockUntil = Date.now() + 2000;
+  history.replaceState(null, '', '/' + id);
+  scrollToSection(id, true);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -91,10 +92,7 @@ window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
   drawDots();
   if (Date.now() > navLockUntil) {
-    clearTimeout(scrollStopTimer);
-    scrollStopTimer = setTimeout(() => {
-      updateUrl(getActiveSectionId());
-    }, 150);
+    updateUrl(getActiveSectionId());
   }
 }, { passive: true });
 
