@@ -26,8 +26,7 @@ function getActiveSectionId() {
 }
 
 function updateUrl(sectionId) {
-  const base = window.location.pathname.replace(/\/(download|preview|changelog|support|purchase)(\/.*)?$/, '').replace(/\/$/, '');
-  const newPath = sectionId ? base + '/' + sectionId : base + '/';
+  const newPath = sectionId ? '/' + sectionId : '/';
   if (window.location.pathname !== newPath) {
     history.replaceState(null, '', newPath);
   }
@@ -57,6 +56,7 @@ const DOT_RADIUS = 1;
 const DOT_COLOR = '#3a3a45';
 const DOT_OPACITY = 0.18;
 let scrollY = 0;
+let rafPending = false;
 
 function resizeCanvas() {
   dotCanvas.width = window.innerWidth;
@@ -83,6 +83,14 @@ function drawDots() {
   }
 
   ctx.globalAlpha = 1;
+  rafPending = false;
+}
+
+function scheduleDrawDots() {
+  if (!rafPending) {
+    rafPending = true;
+    requestAnimationFrame(drawDots);
+  }
 }
 
 resizeCanvas();
@@ -90,7 +98,7 @@ drawDots();
 
 window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
-  drawDots();
+  scheduleDrawDots();
   if (Date.now() > navLockUntil) {
     updateUrl(getActiveSectionId());
   }
@@ -98,7 +106,7 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('resize', () => {
   resizeCanvas();
-  drawDots();
+  scheduleDrawDots();
 });
 
 function openLightbox(card) {
