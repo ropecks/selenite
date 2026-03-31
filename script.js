@@ -1,3 +1,43 @@
+const SECTIONS = ['download', 'preview', 'changelog', 'support', 'purchase'];
+
+function scrollToSection(id, smooth) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: smooth ? 'smooth' : 'instant' });
+}
+
+function getSectionFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const view = params.get('view');
+  if (view && SECTIONS.includes(view)) return view;
+  return null;
+}
+
+function getActiveSectionId() {
+  const scrollPos = window.scrollY + window.innerHeight / 3;
+  let active = null;
+  for (const id of SECTIONS) {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollPos) active = id;
+  }
+  return active;
+}
+
+function updateUrl(sectionId) {
+  const newPath = sectionId ? '/' + sectionId : '/';
+  if (window.location.pathname !== newPath) {
+    history.replaceState(null, '', newPath);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const target = getSectionFromUrl();
+  if (target) {
+    history.replaceState(null, '', '/' + target);
+    setTimeout(() => scrollToSection(target, false), 0);
+  }
+});
+
 const dotCanvas = document.getElementById('dotCanvas');
 const ctx = dotCanvas.getContext('2d');
 const DOT_SPACING = 36;
@@ -39,6 +79,7 @@ drawDots();
 window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
   drawDots();
+  updateUrl(getActiveSectionId());
 }, { passive: true });
 
 window.addEventListener('resize', () => {
