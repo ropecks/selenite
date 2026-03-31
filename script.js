@@ -14,17 +14,13 @@ function getSectionFromUrl() {
 }
 
 let isProgrammaticScroll = false;
-let programmaticScrollTimer = null;
+let scrollStopTimer = null;
 
 function navClick(e, id) {
   e.preventDefault();
   isProgrammaticScroll = true;
-  clearTimeout(programmaticScrollTimer);
   history.replaceState(null, '', '/' + id);
   scrollToSection(id, true);
-  programmaticScrollTimer = setTimeout(() => {
-    isProgrammaticScroll = false;
-  }, 1000);
 }
 
 function getActiveSectionId() {
@@ -93,7 +89,17 @@ drawDots();
 window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
   drawDots();
-  if (!isProgrammaticScroll) updateUrl(getActiveSectionId());
+  if (isProgrammaticScroll) {
+    clearTimeout(scrollStopTimer);
+    scrollStopTimer = setTimeout(() => {
+      isProgrammaticScroll = false;
+    }, 150);
+  } else {
+    clearTimeout(scrollStopTimer);
+    scrollStopTimer = setTimeout(() => {
+      updateUrl(getActiveSectionId());
+    }, 150);
+  }
 }, { passive: true });
 
 window.addEventListener('resize', () => {
