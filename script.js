@@ -24,11 +24,12 @@ function navClick(e, id) {
 }
 
 function getActiveSectionId() {
-  const scrollPos = window.scrollY + window.innerHeight / 3;
   let active = null;
   for (const id of SECTIONS) {
     const el = document.getElementById(id);
-    if (el && el.offsetTop <= scrollPos) active = id;
+    if (el && el.getBoundingClientRect().top <= window.innerHeight / 3) {
+      active = id;
+    }
   }
   return active;
 }
