@@ -13,12 +13,11 @@ function getSectionFromUrl() {
   return null;
 }
 
-let isProgrammaticScroll = false;
-let scrollStopTimer = null;
+let navLockUntil = 0;
 
 function navClick(e, id) {
   e.preventDefault();
-  isProgrammaticScroll = true;
+  navLockUntil = Date.now() + 2000;
   history.replaceState(null, '', '/' + id);
   scrollToSection(id, true);
 }
@@ -89,12 +88,7 @@ drawDots();
 window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
   drawDots();
-  if (isProgrammaticScroll) {
-    clearTimeout(scrollStopTimer);
-    scrollStopTimer = setTimeout(() => {
-      isProgrammaticScroll = false;
-    }, 150);
-  } else {
+  if (Date.now() > navLockUntil) {
     clearTimeout(scrollStopTimer);
     scrollStopTimer = setTimeout(() => {
       updateUrl(getActiveSectionId());
