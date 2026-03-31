@@ -36,7 +36,7 @@ let navLockUntil = 0;
 
 function navClick(e, id) {
   e.preventDefault();
-  navLockUntil = Date.now() + 2000;
+  navLockUntil = Date.now() + 500;
   updateUrl(id);
   scrollToSection(id, true);
 }
@@ -69,7 +69,7 @@ sidebarOverlay.addEventListener('click', closeSidebar);
 function sidebarNavClick(e, id) {
   e.preventDefault();
   closeSidebar();
-  navLockUntil = Date.now() + 2000;
+  navLockUntil = Date.now() + 500;
   updateUrl(id);
   setTimeout(() => scrollToSection(id, true), 60);
 }
@@ -85,9 +85,9 @@ window.addEventListener('DOMContentLoaded', () => {
 const dotCanvas = document.getElementById('dotCanvas');
 const ctx = dotCanvas.getContext('2d');
 const DOT_SPACING = 36;
-const DOT_RADIUS = 1.6;
-const DOT_COLOR = '#888899';
-const DOT_OPACITY = 0.7;
+const DOT_RADIUS = 1;
+const DOT_COLOR = '#3a3a45';
+const DOT_OPACITY = 0.18;
 let scrollY = 0;
 let rafPending = false;
 
