@@ -24,6 +24,9 @@
       <li><a href="/support" onclick="navClick(event,'support')">Support</a></li>
       <li><a href="/purchase" class="nav-cta" onclick="navClick(event,'purchase')">Purchase</a></li>
     </ul>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 </div>
 
@@ -256,6 +259,15 @@
       <button class="modal-confirm" id="modalConfirmBtn">Continue</button>
     </div>
   </div>
+</div>
+
+<div class="mobile-sidebar-overlay" id="sidebarOverlay"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+  <a href="/download" onclick="sidebarNavClick(event,'download')">Download</a>
+  <a href="/preview" onclick="sidebarNavClick(event,'preview')">Preview</a>
+  <a href="/changelog" onclick="sidebarNavClick(event,'changelog')">Changelog</a>
+  <a href="/support" onclick="sidebarNavClick(event,'support')">Support</a>
+  <a href="/purchase" class="nav-cta" onclick="sidebarNavClick(event,'purchase')">Purchase</a>
 </div>
 
 <script src="script.js"></script>
