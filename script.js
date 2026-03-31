@@ -52,9 +52,9 @@ window.addEventListener('DOMContentLoaded', () => {
 const dotCanvas = document.getElementById('dotCanvas');
 const ctx = dotCanvas.getContext('2d');
 const DOT_SPACING = 36;
-const DOT_RADIUS = 1;
-const DOT_COLOR = '#3a3a45';
-const DOT_OPACITY = 0.18;
+const DOT_RADIUS = 1.4;
+const DOT_COLOR = '#5a5a68';
+const DOT_OPACITY = 0.45;
 let scrollY = 0;
 let rafPending = false;
 
