@@ -13,6 +13,12 @@ function getSectionFromUrl() {
   return null;
 }
 
+function navClick(e, id) {
+  e.preventDefault();
+  history.replaceState(null, '', '/' + id);
+  scrollToSection(id, true);
+}
+
 function getActiveSectionId() {
   const scrollPos = window.scrollY + window.innerHeight / 3;
   let active = null;
