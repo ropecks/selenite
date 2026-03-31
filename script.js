@@ -13,10 +13,18 @@ function getSectionFromUrl() {
   return null;
 }
 
+let isProgrammaticScroll = false;
+let programmaticScrollTimer = null;
+
 function navClick(e, id) {
   e.preventDefault();
+  isProgrammaticScroll = true;
+  clearTimeout(programmaticScrollTimer);
   history.replaceState(null, '', '/' + id);
   scrollToSection(id, true);
+  programmaticScrollTimer = setTimeout(() => {
+    isProgrammaticScroll = false;
+  }, 1000);
 }
 
 function getActiveSectionId() {
@@ -85,7 +93,7 @@ drawDots();
 window.addEventListener('scroll', () => {
   scrollY = window.scrollY;
   drawDots();
-  updateUrl(getActiveSectionId());
+  if (!isProgrammaticScroll) updateUrl(getActiveSectionId());
 }, { passive: true });
 
 window.addEventListener('resize', () => {
