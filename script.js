@@ -14,6 +14,7 @@ function getSectionFromUrl() {
 }
 
 let navLockUntil = 0;
+let scrollStopTimer = null;
 
 function navClick(e, id) {
   e.preventDefault();
