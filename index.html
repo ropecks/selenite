@@ -17,11 +17,11 @@
   <nav>
     <div class="nav-logo">Selenite</div>
     <ul class="nav-links">
-      <li><a href="#download">Download</a></li>
-      <li><a href="#preview">Preview</a></li>
-      <li><a href="#changelog">Changelog</a></li>
-      <li><a href="#support">Support</a></li>
-      <li><a href="#purchase" class="nav-cta">Purchase</a></li>
+      <li><a href="/download" onclick="navClick(event,'download')">Download</a></li>
+      <li><a href="/preview" onclick="navClick(event,'preview')">Preview</a></li>
+      <li><a href="/changelog" onclick="navClick(event,'changelog')">Changelog</a></li>
+      <li><a href="/support" onclick="navClick(event,'support')">Support</a></li>
+      <li><a href="/purchase" class="nav-cta" onclick="navClick(event,'purchase')">Purchase</a></li>
     </ul>
   </nav>
 </div>
@@ -32,13 +32,13 @@
     <h1>Selenite<span class="dim">.</span></h1>
     <p class="hero-sub">A clean, powerful mod menu built for Gorilla Tag. Simple to use, hard to ignore.</p>
     <div class="hero-actions">
-      <a href="#download" class="btn btn-primary">
+      <a href="/download" class="btn btn-primary" onclick="navClick(event,'download')">
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
           <path d="M7 1v9M3 7l4 4 4-4M2 13h10" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         Download
       </a>
-      <a href="#purchase" class="btn btn-ghost">
+      <a href="/purchase" class="btn btn-ghost" onclick="navClick(event,'purchase')">
         <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
           <path d="M8 1.5H13V6.5L7.2 12.3a.9.9 0 01-1.27 0L1.7 8.07a.9.9 0 010-1.27L7.5 1.5H8z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="10.5" cy="4" r="0.7" fill="currentColor"/>
