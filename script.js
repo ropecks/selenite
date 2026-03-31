@@ -15,37 +15,37 @@ function getSectionFromUrl() {
 
 function getActiveSectionId() {
   let active = null;
-  const threshold = window.innerHeight * 0.4;
   for (const id of SECTIONS) {
     const el = document.getElementById(id);
     if (!el) continue;
-    const top = el.getBoundingClientRect().top;
-    if (top <= threshold) active = id;
+    if (el.getBoundingClientRect().top <= window.innerHeight * 0.5) {
+      active = id;
+    }
   }
   return active;
 }
 
 function updateUrl(sectionId) {
-  const newPath = sectionId ? '/' + sectionId : '/';
+  const base = window.location.pathname.replace(/\/(download|preview|changelog|support|purchase)(\/.*)?$/, '').replace(/\/$/, '');
+  const newPath = sectionId ? base + '/' + sectionId : base + '/';
   if (window.location.pathname !== newPath) {
     history.replaceState(null, '', newPath);
   }
 }
 
 let navLockUntil = 0;
-let scrollStopTimer = null;
 
 function navClick(e, id) {
   e.preventDefault();
   navLockUntil = Date.now() + 2000;
-  history.replaceState(null, '', '/' + id);
+  updateUrl(id);
   scrollToSection(id, true);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const target = getSectionFromUrl();
   if (target) {
-    history.replaceState(null, '', '/' + target);
+    updateUrl(target);
     setTimeout(() => scrollToSection(target, false), 0);
   }
 });
