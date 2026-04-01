@@ -339,6 +339,29 @@ h2 {
 
 .support-text p { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
+.terms-list { display: flex; flex-direction: column; gap: 12px; }
+
+.terms-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px 28px;
+  display: flex; align-items: flex-start; gap: 20px;
+  transition: border-color 0.2s;
+}
+
+.terms-item:hover { border-color: rgba(255,255,255,0.14); }
+
+.terms-num {
+  background: rgba(255,255,255,0.07); border-radius: 8px;
+  padding: 6px 12px; font-size: 12px; font-weight: 700;
+  color: var(--white); letter-spacing: 0.04em; white-space: nowrap; flex-shrink: 0;
+}
+
+.terms-content { flex: 1; }
+
+.terms-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 6px; }
+
+.terms-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
 footer {
   border-top: 1px solid var(--border); padding: 32px 24px;
   text-align: center; font-size: 12px; color: rgba(255,255,255,0.2);
@@ -529,6 +552,7 @@ footer {
   .preview-span2 { grid-column: span 1; aspect-ratio: 16/10; }
 
   .changelog-item { flex-direction: column; gap: 12px; padding: 20px; }
+  .terms-item { flex-direction: column; gap: 12px; padding: 20px; }
 
   .purchase-card { padding: 32px 20px; }
   .perks { max-width: 100%; }
