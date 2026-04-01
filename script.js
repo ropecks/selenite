@@ -1,4 +1,4 @@
-const SECTIONS = ['download', 'preview', 'changelog', 'support', 'purchase'];
+const SECTIONS = ['download', 'preview', 'changelog', 'support', 'terms', 'purchase'];
 
 function scrollToSection(id, smooth) {
   const el = document.getElementById(id);
